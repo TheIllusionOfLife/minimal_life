@@ -46,14 +46,14 @@ The strongest single-ablation effects arise from disabling reproduction
 interdependent components of organismal viability rather than decorative
 labels.
 A Phase~1 criterion-reduction analysis (30 ablation conditions, 600 simulation
-runs) identifies a 6-feature observable surrogate set via VIF screening and
+runs) identifies six stable non-collinear surrogates via VIF screening and
 stability selection \citep{meinshausen_2010_stability}; directional Elastic Net
 evidence ranks metabolism, response, and homeostasis as the strongest criterion
 contributors.
-The minimal surrogate set predicts regulation quality with $R^2 = 0.668$ on
-held-out runs, with a clear elbow at $k{=}3$ features (energy autocorrelation,
-boundary stability, homeostasis variance), suggesting these three observables
-are the primary life-diagnostic signals.
+A practical elbow at $k{=}3$ (energy autocorrelation, boundary stability,
+homeostasis variance) captures the primary predictive structure
+(alive-AUC cross-validated $R^2=0.257$); the best single-target held-out
+result is regulation quality ($R^2=0.668$).
 \end{abstract}
 
 Submission type: \textbf{Full Paper}\\
@@ -121,8 +121,8 @@ demonstrating each criterion's functional necessity with multiple-comparison
 correction; (4)~pairwise ablation and proxy control experiments
 characterizing criterion interactions and ruling out tautological definitions;
 and (5)~Phase~1 criterion-reduction and observable-surrogate analysis
-identifying a 6-feature minimal predictor set for life-likeness ($R^2=0.668$
-on held-out regulation quality).
+identifying a 6-feature minimal predictor set (alive-AUC cross-validated
+$R^2=0.257$; best single-target held-out $R^2=0.668$ for regulation quality).
 The key contribution is not a new digital organism per se, but a falsifiable
 experimental framework for testing the functional necessity and interaction
 of life criteria in any ALife system.
@@ -1101,10 +1101,11 @@ near all-off, consistent with multiplicative criterion interdependence
 
 Forward Pareto selection (Enet stability order) yields all-negative mean $R^2$
 values (Ridge regression, 24 training conditions; Figure~\ref{fig:pca_reduction},
-right), reflecting insufficient statistical power for the full criterion-reduction
-regression with this sweep size.
-Enet stability rankings are therefore the primary reduction evidence.
-Cohen's $d$=10.68 for full vs.\ all-off validates the sweep design.
+right), reflecting insufficient statistical power; these results are exploratory
+and hypothesis-generating rather than confirmatory.
+Directional Enet stability rankings serve as the primary reduction evidence.
+Cohen's $d$=10.68 (pooled-SD, condition-level means) for full vs.\ all-off
+validates the sweep design.
 
 \begin{figure*}[t]
 \centering
@@ -1299,8 +1300,8 @@ interactions consistent with criteria converging on overlapping viability
 subsystems rather than operating independently.
 
 Phase~1 criterion reduction and surrogate selection identify a 6-observable
-minimal set that predicts life-likeness with $R^2 = 0.668$ for regulation
-quality on held-out data.
+minimal set (alive-AUC cross-validated $R^2=0.257$; regulation quality
+held-out $R^2=0.668$).
 The $k{=}3$ surrogate elbow---energy autocorrelation, boundary stability, and
 homeostasis variance---aligns with the three strongest single-criterion ablation
 effects, providing convergent evidence for a minimal diagnostic principle of life.
