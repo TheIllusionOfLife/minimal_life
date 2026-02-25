@@ -4,6 +4,7 @@ all: figures paper
 
 figures:
 	cd .. && uv run python scripts/generate_figures.py
+	cd .. && uv run python scripts/plot_reduction_figures.py
 
 paper: figures
 	tectonic main.tex
