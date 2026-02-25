@@ -212,9 +212,11 @@ def plot_surrogate_pareto(ax: plt.Axes, surr_data: dict) -> None:
 
     ax.plot(ks, r2, "o-", color="#4878CF", linewidth=1.4, markersize=5, zorder=5)
     ax.fill_between(ks, lo, hi, alpha=0.18, color="#4878CF", label="95% CI")
+    ax.axhline(0, color="#888888", linestyle=":", linewidth=0.8, label="R²=0 reference")
 
-    # Elbow annotation at k=3
-    elbow_r2 = r2[2]  # index 2 → k=3
+    # Elbow annotation at k=3 — look up by k value, not list index.
+    elbow_pt = next((pt for pt in curve if pt["k"] == 3), None)
+    elbow_r2 = elbow_pt["r2_mean"] if elbow_pt is not None else r2[-1]
     ax.annotate(
         "Elbow (k=3)\n+energy_autocorr",
         (3, elbow_r2),
@@ -253,10 +255,12 @@ def plot_pca_biplot(ax: plt.Axes, crit_data: dict) -> None:
     conditions = crit_data["conditions_used"]
     metrics = crit_data["performance_metrics"]
 
-    # Column-wise standardization (z-score) before PCA
+    # Column-wise standardization (z-score) before PCA.
+    # ddof=1 produces NaN when n_rows==1; guard both zero and NaN so PCA
+    # receives finite input even in degenerate synthetic-data scenarios.
     mu = perf_matrix.mean(axis=0)
     sd = perf_matrix.std(axis=0, ddof=1)
-    sd[sd == 0] = 1.0
+    sd[~np.isfinite(sd) | (sd == 0)] = 1.0
     perf_std = (perf_matrix - mu) / sd
 
     pca = PCA(n_components=2, random_state=42)
@@ -264,6 +268,10 @@ def plot_pca_biplot(ax: plt.Axes, crit_data: dict) -> None:
 
     var1, var2 = pca.explained_variance_ratio_[:2] * 100
 
+    if "alive_auc" not in metrics:
+        raise ValueError(
+            f"'alive_auc' not found in performance_metrics; available: {metrics}"
+        )
     alive_auc_idx = metrics.index("alive_auc")
     color_vals = perf_matrix[:, alive_auc_idx]
     norm = mcolors.Normalize(vmin=color_vals.min(), vmax=color_vals.max())
@@ -342,6 +350,14 @@ def plot_stability_heatmap(ax: plt.Axes, crit_data: dict) -> None:
     criteria = crit_data["criteria"]
     stability_enet = crit_data["stability_scores_enet"]
     metrics = list(stability_enet.keys())
+
+    # Validate list lengths before indexing to produce an actionable error.
+    for metric, scores in stability_enet.items():
+        if len(scores) != len(criteria):
+            raise ValueError(
+                f"stability_scores_enet['{metric}'] has {len(scores)} entries, "
+                f"expected {len(criteria)} (one per criterion)"
+            )
 
     # Build matrix: rows=criteria, cols=metrics
     mat = np.zeros((len(criteria), len(metrics)))

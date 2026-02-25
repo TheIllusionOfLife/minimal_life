@@ -188,12 +188,21 @@ class TestFig3SurrogatePareto:
         assert _png_width(out) > 200
 
     def test_reference_line_present(self) -> None:
-        """regulation_score held-out R² reference line must be present."""
+        """Both the R²=0 baseline and the regulation_score reference line must be present."""
         fig, ax = plt.subplots()
-        plot_surrogate_pareto(ax, _make_surr_data())
-        # At least 2 horizontal lines expected (R²=0 baseline + reg reference)
+        surr_data = _make_surr_data()
+        plot_surrogate_pareto(ax, surr_data)
+        # Horizontal lines are axhline calls; each produces a Line2D with xdata = [0, 1].
         h_lines = [ln for ln in ax.get_lines() if len(ln.get_xdata()) == 2]
-        assert len(h_lines) >= 1
+        assert len(h_lines) >= 2, (
+            f"Expected ≥2 h-lines (R²=0 + regulation ref), got {len(h_lines)}"
+        )
+        # Verify one line sits at the regulation_score held-out R² value.
+        reg_r2 = surr_data["held_out_r2"]["regulation_score"]
+        y_values = [float(ln.get_ydata()[0]) for ln in h_lines]
+        assert any(abs(y - reg_r2) < 1e-9 for y in y_values), (
+            f"No h-line at regulation_score R²={reg_r2}; found y-values: {y_values}"
+        )
         plt.close(fig)
 
 
