@@ -9,9 +9,9 @@
 
 ## Workspace Components
 
-- `digital-life-core`: domain model and simulation engine
-- `digital-life-py`: Python bindings and JSON-facing experiment interface
-- `digital-life-spike`: performance/feasibility benchmark binary
+- `minimal-life-core`: domain model and simulation engine
+- `minimal-life-py`: Python bindings and JSON-facing experiment interface
+- `minimal-life-cli`: performance/feasibility benchmark binary
 
 ## Tooling Standards
 

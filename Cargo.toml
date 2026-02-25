@@ -1,8 +1,8 @@
 [workspace]
 members = [
-    "crates/digital-life-core",
-    "crates/digital-life-py",
-    "crates/spike",
+    "crates/minimal-life-core",
+    "crates/minimal-life-py",
+    "crates/minimal-life-cli",
 ]
 resolver = "2"
 

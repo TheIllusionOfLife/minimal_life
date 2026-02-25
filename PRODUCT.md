@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Digital Life explores whether autonomous digital organisms can satisfy all seven biological criteria for life through functional analogy rather than simplified proxies.
+Minimal Life explores whether 2–4 surrogate observables can predict life-likeness as well as the full seven-criteria system does, by finding the minimal diagnostic principles of life.
 
 ## Target Users
 

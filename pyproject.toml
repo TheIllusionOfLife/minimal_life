@@ -3,7 +3,7 @@ requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
 
 [project]
-name = "digital-life"
+name = "minimal-life"
 version = "0.1.0"
 requires-python = ">=3.10"
 dependencies = ["numpy>=1.24.0", "scipy>=1.11.0", "matplotlib>=3.7.0", "scikit-learn>=1.3.0"]
@@ -12,9 +12,9 @@ dependencies = ["numpy>=1.24.0", "scipy>=1.11.0", "matplotlib>=3.7.0", "scikit-l
 dev = ["pytest>=8.3.0", "ruff>=0.9.0"]
 
 [tool.maturin]
-manifest-path = "crates/digital-life-py/Cargo.toml"
+manifest-path = "crates/minimal-life-py/Cargo.toml"
 python-source = "python"
-module-name = "digital_life._core"
+module-name = "minimal_life._core"
 features = ["pyo3/extension-module"]
 
 [tool.ruff]
@@ -38,4 +38,4 @@ select = ["E", "F", "I", "UP", "B"]
 # "." exposes the top-level scripts package (from scripts/__init__.py).
 # "scripts" exposes sub-packages (analyses/, figures/) as top-level imports,
 # matching how the analysis scripts themselves run (scripts/ is their cwd).
-pythonpath = [".", "scripts"]
+pythonpath = [".", "python", "scripts"]
