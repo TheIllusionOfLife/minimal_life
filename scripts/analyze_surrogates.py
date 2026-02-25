@@ -38,7 +38,6 @@ from analyze_criterion_reduction import (
     HELD_OUT_CONDITIONS,
     N_BOOTSTRAPS,
     STABILITY_THRESHOLD,
-    _identify_minimal_set,
     compute_pareto_curve,
     stability_selection,
 )
@@ -133,15 +132,11 @@ def extract_run_features(run_data: dict, total_steps: int) -> dict[str, float]:
     energy_mean_late = float(np.mean(energy_arr[-n_late:]))
 
     # ── 3. energy_autocorr (lag-1 autocorrelation) ────────────────────────
-    if len(energy_arr) >= 2:
-        e_centered = energy_arr - energy_arr.mean()
-        var = np.var(e_centered)
-        if var > _EPS:
-            energy_autocorr = float(
-                np.mean(e_centered[:-1] * e_centered[1:]) / var
-            )
-        else:
-            energy_autocorr = 0.0
+    # Use np.corrcoef for the standard sample Pearson r(lag=1), which is
+    # guaranteed to return values in [-1, 1] regardless of series length.
+    if len(energy_arr) >= 3:
+        corr_matrix = np.corrcoef(energy_arr[:-1], energy_arr[1:])
+        energy_autocorr = float(corr_matrix[0, 1]) if np.all(np.isfinite(corr_matrix)) else 0.0
     else:
         energy_autocorr = 0.0
 
@@ -376,9 +371,12 @@ def run_analysis(
 
     mean_lasso = np.mean(list(all_lasso.values()), axis=0)
     mean_enet = np.mean(list(all_enet.values()), axis=0)
-    minimal_set = _identify_minimal_set(mean_lasso, mean_enet, STABILITY_THRESHOLD)
-    minimal_feature_names = [retained_features[i] for i in range(len(retained_features))
-                             if i in [retained_features.index(f) for f in minimal_set]]
+    # Agreement gate: feature must be stable under BOTH LASSO and Elastic Net
+    # (indexed over retained_features, not CRITERIA — different vocabulary)
+    stable_idx = np.where(
+        (mean_lasso > STABILITY_THRESHOLD) & (mean_enet > STABILITY_THRESHOLD)
+    )[0]
+    minimal_feature_names = [retained_features[i] for i in stable_idx]
     print(f"  Minimal surrogate set: {minimal_feature_names}")
 
     # ── Step E: Pareto curve ──────────────────────────────────────────────

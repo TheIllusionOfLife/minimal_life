@@ -19,7 +19,7 @@ with a timestamp prior to any re-analysis.
 - Bootstrap subsample size: 50% of available observations (no replacement)
 - Models: LASSO (primary) and Elastic Net (secondary)
 - Agreement gate: both models must select the same feature set for it to enter the
-  minimal sufficient set (see Rule 4)
+  minimal sufficient set (see Section 3)
 
 ## 2. Minimal Set Sufficiency
 
@@ -50,9 +50,12 @@ The minimal set is the smallest k satisfying the ≥ 85% threshold.
 > **Rule**: The following 6 conditions are reserved as the held-out test set and are
 > excluded from all model fitting (stability selection, LASSO, PCA):
 >
-> `drop_evolution_metabolism`, `drop_evolution_boundary`,
-> `drop_evolution_homeostasis`, `drop_evolution_response`,
-> `drop_evolution_reproduction`, `drop_evolution_growth`
+> `drop_metabolism_evolution`, `drop_boundary_evolution`,
+> `drop_homeostasis_evolution`, `drop_response_evolution`,
+> `drop_reproduction_evolution`, `drop_evolution_growth`
+>
+> (Names use the canonical ordering from `CRITERIA` list in `experiment_ablation_sweep.py`;
+> `evolution` appears after all criteria except `growth`.)
 >
 > (Equivalently: any pairwise ablation that removes `evolution`.)
 >

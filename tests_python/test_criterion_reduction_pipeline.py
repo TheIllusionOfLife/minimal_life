@@ -7,20 +7,14 @@ of the minimal_life Rust extension.
 
 from __future__ import annotations
 
-import sys
 from itertools import combinations
-from pathlib import Path
 
 import numpy as np
 import pytest
 
-# Ensure scripts/ is on sys.path for importing experiment/analysis modules
-_SCRIPTS = Path(__file__).resolve().parent.parent / "scripts"
-if str(_SCRIPTS) not in sys.path:
-    sys.path.insert(0, str(_SCRIPTS))
-
-# ── experiment_ablation_sweep ─────────────────────────────────────────────────
-
+# scripts/ is on sys.path via pyproject.toml: pythonpath = [".", "python", "scripts"]
+from analyze_criterion_reduction import stability_selection
+from analyze_surrogates import FEATURE_NAMES, extract_run_features
 from experiment_ablation_sweep import (
     CRITERIA,
     ablation_conditions,
@@ -224,11 +218,38 @@ class TestBuildCriterionPresenceMatrix:
         matrix = build_criterion_presence_matrix(["full"], CRITERIA)
         assert matrix.dtype == float or np.issubdtype(matrix.dtype, np.floating)
 
+    def test_all_21_pairwise_conditions_parse_correctly(self):
+        """Split-based parser must correctly zero exactly two columns per pair."""
+        all_names = [n for n, _ in ablation_conditions()]
+        matrix = build_criterion_presence_matrix(all_names, CRITERIA)
+        for name, disabled in ablation_conditions():
+            if not (name.startswith("drop_") and len(disabled) == 2):
+                continue
+            i = all_names.index(name)
+            for j, c in enumerate(CRITERIA):
+                if c in disabled:
+                    assert matrix[i, j] == 0.0, f"{name}: expected 0 for {c}"
+                else:
+                    assert matrix[i, j] == 1.0, f"{name}: expected 1 for {c}"
+
+    def test_unknown_token_in_condition_name_is_ignored(self):
+        """Unknown tokens (not valid criterion names) are silently skipped."""
+        # "invalid" is not a criterion name; only "metabolism" should be disabled
+        matrix = build_criterion_presence_matrix(["drop_invalid_metabolism"], CRITERIA)
+        assert matrix[0, CRITERIA.index("metabolism")] == 0.0
+        for j, c in enumerate(CRITERIA):
+            if c != "metabolism":
+                assert matrix[0, j] == 1.0
+
+    def test_response_reproduction_parsing_unambiguous(self):
+        """Verify 'response' and 'reproduction' are not confused by the parser."""
+        matrix = build_criterion_presence_matrix(["drop_response_reproduction"], CRITERIA)
+        assert matrix[0, CRITERIA.index("response")] == 0.0
+        assert matrix[0, CRITERIA.index("reproduction")] == 0.0
+        assert matrix[0, CRITERIA.index("metabolism")] == 1.0
+
 
 # ── analyze_criterion_reduction: stability_selection ─────────────────────────
-
-
-from analyze_criterion_reduction import stability_selection
 
 
 class TestStabilitySelection:
@@ -265,9 +286,6 @@ class TestStabilitySelection:
 
 
 # ── analyze_surrogates: extract_run_features ─────────────────────────────────
-
-
-from analyze_surrogates import FEATURE_NAMES, extract_run_features
 
 
 def _make_run_data(n_samples: int = 50, total_reproduction_events: int = 10) -> dict:

@@ -54,11 +54,7 @@ try:
     _HAS_STATSMODELS = True
 except ImportError:
     _HAS_STATSMODELS = False
-    warnings.warn(
-        "statsmodels/pandas not installed; LME robustness check will be skipped. "
-        "Install with: uv add statsmodels",
-        stacklevel=1,
-    )
+    # Warning deferred to _run_lme_check() to avoid noise during imports/tests
 
 # NumPy 2.0 compatibility
 try:
@@ -220,6 +216,8 @@ def stability_selection(
     n_sub = max(2, int(n_samples * subsample_ratio))
     rng = np.random.default_rng(random_state)
     counts = np.zeros(n_features)
+    n_success = 0
+    n_failed = 0
 
     for _ in range(n_bootstraps):
         idx = rng.choice(n_samples, size=n_sub, replace=False)
@@ -237,10 +235,23 @@ def stability_selection(
                     est = LassoCV(cv=min(3, n_sub), max_iter=2000, random_state=seed_int)
                 est.fit(X_scaled, y_sub)
                 counts += (np.abs(est.coef_) > 1e-10).astype(float)
+                n_success += 1
             except Exception:
-                pass  # degenerate sub-sample; skip
+                n_failed += 1
 
-    return counts / n_bootstraps
+    if n_success == 0:
+        raise RuntimeError(
+            f"All {n_bootstraps} bootstrap iterations failed in stability_selection "
+            f"(model={model}). Check that X has sufficient variance."
+        )
+    if n_failed > n_bootstraps * 0.05:
+        warnings.warn(
+            f"stability_selection: {n_failed}/{n_bootstraps} bootstrap iterations "
+            f"failed (>{n_failed / n_bootstraps:.0%}). Frequencies may be unreliable.",
+            stacklevel=2,
+        )
+    # Divide by successful fits only — conservative: failed = no selection
+    return counts / n_success
 
 
 def _combined_stability(
@@ -294,11 +305,17 @@ def compute_pareto_curve(
 
         for _ in range(n_boot):
             boot_idx = rng.choice(n, size=n, replace=True)
+            oob_mask = np.ones(n, dtype=bool)
+            oob_mask[np.unique(boot_idx)] = False
+            if not oob_mask.any():
+                continue  # rare: all n points in bootstrap (skip this replicate)
             X_b, y_b = X_k[boot_idx], y[boot_idx]
+            X_oob, y_oob = X_k[oob_mask], y[oob_mask]
             try:
                 est = Ridge(alpha=1.0)
                 est.fit(X_b, y_b)
-                r2_boots.append(float(r2_score(y_b, est.predict(X_b))))
+                # Out-of-bootstrap R²: unbiased estimator, avoids in-sample inflation
+                r2_boots.append(float(r2_score(y_oob, est.predict(X_oob))))
             except Exception:
                 pass
 
@@ -336,6 +353,11 @@ def _run_lme_check(
     Skipped (returns {}) if statsmodels is not installed.
     """
     if not _HAS_STATSMODELS:
+        warnings.warn(
+            "statsmodels/pandas not installed; LME robustness check skipped. "
+            "Install with: uv add statsmodels",
+            stacklevel=2,
+        )
         return {}
 
     results: dict[str, dict] = {}
@@ -479,20 +501,49 @@ def run_analysis(
             y_pred = ridge.predict(X_test[:, min_idx])
             held_out_r2 = float(r2_score(y_test, y_pred)) if len(y_test) > 1 else None
 
-    # ── Step F: Cohen's d vs all-off baseline ─────────────────────────────
-    cohen_d_vs_alloff: float | None = None
+    # ── Step F: Cohen's d baselines ───────────────────────────────────────
+    # F1: Sanity check — full system vs all-off (confirms life is detectable)
+    cohen_d_full_vs_alloff: float | None = None
+    alloff_auc: np.ndarray | None = None
     if "all_off" in condition_data and "full" in condition_data:
-        alloff_runs = condition_data["all_off"]
-        full_runs = condition_data["full"]
         alloff_auc = np.array([
             compute_performance_metrics(r.get("samples", []), STEPS)["alive_auc"]
-            for r in alloff_runs
+            for r in condition_data["all_off"]
         ])
         full_auc = np.array([
             compute_performance_metrics(r.get("samples", []), STEPS)["alive_auc"]
-            for r in full_runs
+            for r in condition_data["full"]
         ])
-        cohen_d_vs_alloff = cohens_d(full_auc, alloff_auc)
+        cohen_d_full_vs_alloff = cohens_d(full_auc, alloff_auc)
+
+    # F2: Sufficiency gate (decision_rules.md §2b) — minimal set vs all-off.
+    # The minimal-set condition exists in the sweep only when exactly 1–2 criteria
+    # are disabled (minimal set has 5–6 criteria). For smaller sets (2–4 criteria),
+    # this requires the confirmatory run (seeds 20–39, 5000 steps).
+    cohen_d_minimal_vs_alloff: float | None = None
+    if minimal_set and alloff_auc is not None:
+        non_minimal = sorted(
+            [c for c in CRITERIA if c not in minimal_set], key=CRITERIA.index
+        )
+        if len(non_minimal) == 1:
+            min_cond_key = f"drop_{non_minimal[0]}"
+        elif len(non_minimal) == 2:
+            min_cond_key = f"drop_{non_minimal[0]}_{non_minimal[1]}"
+        else:
+            min_cond_key = None  # not in the sweep; requires confirmatory run
+
+        if min_cond_key and min_cond_key in condition_data:
+            min_auc = np.array([
+                compute_performance_metrics(r.get("samples", []), STEPS)["alive_auc"]
+                for r in condition_data[min_cond_key]
+            ])
+            cohen_d_minimal_vs_alloff = cohens_d(min_auc, alloff_auc)
+        elif min_cond_key:
+            print(f"  Note: condition '{min_cond_key}' not in sweep — "
+                  "minimal-set Cohen's d requires confirmatory run.")
+        else:
+            print(f"  Note: minimal set disables {len(non_minimal)} criteria — "
+                  "minimal-set Cohen's d requires confirmatory run.")
 
     # ── Step G: LME robustness check ──────────────────────────────────────
     print("Running LME robustness check ...")
@@ -525,7 +576,8 @@ def run_analysis(
         "minimal_sufficient_set": minimal_set,
         "pareto_curve": pareto_curve,
         "held_out_r2": held_out_r2,
-        "cohen_d_full_vs_alloff": cohen_d_vs_alloff,
+        "cohen_d_full_vs_alloff": cohen_d_full_vs_alloff,
+        "cohen_d_minimal_vs_alloff": cohen_d_minimal_vs_alloff,
         "lme_robustness": lme_results,
         "decision_rules": {
             "stability_threshold": STABILITY_THRESHOLD,

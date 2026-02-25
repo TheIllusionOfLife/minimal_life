@@ -129,15 +129,14 @@ def build_criterion_presence_matrix(
         elif name == "full":
             presence[i, :] = 1.0
         elif name.startswith("drop_"):
-            dropped_part = name[len("drop_"):]
-            # Greedily match criterion names (all are single words, no underscores)
-            remaining = dropped_part
-            for c in criteria:
-                if remaining == c or remaining.startswith(c + "_"):
-                    j = criteria.index(c)
+            # All criterion names are single words (no underscores), so a simple
+            # split unambiguously recovers the disabled criteria.
+            criteria_to_idx = {c: j for j, c in enumerate(criteria)}
+            tokens = name[len("drop_"):].split("_")
+            for token in tokens:
+                j = criteria_to_idx.get(token)
+                if j is not None:
                     presence[i, j] = 0.0
-                    consumed = c + ("_" if remaining.startswith(c + "_") else "")
-                    remaining = remaining[len(consumed):]
     return presence
 
 
