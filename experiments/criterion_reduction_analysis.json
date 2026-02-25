@@ -703,7 +703,8 @@
   "cohen_d_minimal_vs_alloff": null,
   "lme_robustness": {
     "alive_auc": {
-      "AIC": NaN,
+      "converged": false,
+      "AIC": null,
       "criterion_coefs": {
         "metabolism": 63.63790978260882,
         "boundary": 33.87980978260873,
@@ -712,10 +713,12 @@
         "reproduction": 71.79475978260893,
         "evolution": -141.6222065217382,
         "growth": 40.60625978260867
-      }
+      },
+      "warning": "non-finite AIC or params; model may not have converged"
     },
     "energy_stability": {
-      "AIC": NaN,
+      "converged": false,
+      "AIC": null,
       "criterion_coefs": {
         "metabolism": 0.22561387029147914,
         "boundary": -0.1264022153265225,
@@ -724,10 +727,12 @@
         "reproduction": 0.0005039075654777308,
         "evolution": -0.17085702173065298,
         "growth": -0.008791926760522643
-      }
+      },
+      "warning": "non-finite AIC or params; model may not have converged"
     },
     "boundary_integrity": {
-      "AIC": NaN,
+      "converged": false,
+      "AIC": null,
       "criterion_coefs": {
         "metabolism": -0.27444902344641325,
         "boundary": 0.14933352480558879,
@@ -736,10 +741,12 @@
         "reproduction": -0.16318036566941305,
         "evolution": -0.09937691302989332,
         "growth": -0.027091716245412383
-      }
+      },
+      "warning": "non-finite AIC or params; model may not have converged"
     },
     "homeostasis_quality": {
-      "AIC": NaN,
+      "converged": false,
+      "AIC": null,
       "criterion_coefs": {
         "metabolism": 5278.124457252858,
         "boundary": 5278.835203698022,
@@ -748,10 +755,12 @@
         "reproduction": 5131.463338267555,
         "evolution": 6597.438181097033,
         "growth": -14804.508912269186
-      }
+      },
+      "warning": "non-finite AIC or params; model may not have converged"
     },
     "reproduction_rate": {
-      "AIC": NaN,
+      "converged": false,
+      "AIC": null,
       "criterion_coefs": {
         "metabolism": 0.016615380434782594,
         "boundary": 0.01185538043478261,
@@ -760,10 +769,12 @@
         "reproduction": 0.01661538043478256,
         "evolution": -0.039807336956521396,
         "growth": 0.007640380434782694
-      }
+      },
+      "warning": "non-finite AIC or params; model may not have converged"
     },
     "genome_diversity_late": {
-      "AIC": NaN,
+      "converged": false,
+      "AIC": null,
       "criterion_coefs": {
         "metabolism": -3.297745581955901,
         "boundary": -0.975646363859889,
@@ -772,10 +783,12 @@
         "reproduction": -1.347868349755894,
         "evolution": 1.9050138467107351,
         "growth": -0.5332367993478869
-      }
+      },
+      "warning": "non-finite AIC or params; model may not have converged"
     },
     "spatial_cohesion": {
-      "AIC": NaN,
+      "converged": false,
+      "AIC": null,
       "criterion_coefs": {
         "metabolism": -5.616608319274964,
         "boundary": -2.961310303094953,
@@ -784,7 +797,8 @@
         "reproduction": -2.8514148470749623,
         "evolution": 4.792409143731209,
         "growth": -1.2238106155909532
-      }
+      },
+      "warning": "non-finite AIC or params; model may not have converged"
     }
   },
   "decision_rules": {

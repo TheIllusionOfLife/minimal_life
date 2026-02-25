@@ -21,7 +21,6 @@
     "energy_autocorr",
     "boundary_stability",
     "homeostasis_var",
-    "turnover_ratio",
     "spatial_cohesion_late",
     "genome_diversity_late",
     "maturity_late"
@@ -32,24 +31,25 @@
     "waste_slope",
     "birth_rate",
     "death_rate",
+    "turnover_ratio",
     "resource_efficiency",
     "reproduction_events"
   ],
   "vif_scores": {
-    "alive_auc": 65.67660840455112,
-    "energy_mean_late": 13.930704726463702,
-    "energy_autocorr": 2.917021838735037,
-    "waste_slope": 18.561469421177463,
-    "boundary_stability": 1.104012943541538,
-    "homeostasis_var": 1.6407855078932962,
-    "birth_rate": 54.91527018676893,
-    "death_rate": 81.48883438774749,
-    "turnover_ratio": 9.805140215994474,
-    "spatial_cohesion_late": 3.554126086637667,
-    "genome_diversity_late": 9.434224946150852,
-    "maturity_late": 6.487861994550816,
-    "resource_efficiency": 403.28308492537167,
-    "reproduction_events": 199.1347616053845
+    "alive_auc": 65.63466273385161,
+    "energy_mean_late": 14.296533097941122,
+    "energy_autocorr": 2.9663836364299576,
+    "waste_slope": 19.56900317489955,
+    "boundary_stability": 1.3177369873169633,
+    "homeostasis_var": 1.6413312212059221,
+    "birth_rate": 55.05630129104653,
+    "death_rate": 83.47366761485478,
+    "turnover_ratio": 10.320490022229794,
+    "spatial_cohesion_late": 3.56933839309385,
+    "genome_diversity_late": 9.593373980349615,
+    "maturity_late": 6.4955625572192695,
+    "resource_efficiency": 404.3095052312398,
+    "reproduction_events": 200.36435122009308
   },
   "target_names": [
     "alive_auc",
@@ -63,17 +63,15 @@
   ],
   "stability_scores_lasso": {
     "alive_auc": [
-      0.388,
-      0.388,
-      0.852,
       1.0,
       1.0,
-      0.714,
-      1.0
+      1.0,
+      1.0,
+      1.0,
+      0.55
     ],
     "regulation_score": [
       1.0,
-      0.986,
       1.0,
       1.0,
       1.0,
@@ -81,37 +79,33 @@
       1.0
     ],
     "interdependence_score": [
-      0.99,
-      0.478,
-      0.678,
+      0.994,
       1.0,
-      0.98,
-      0.954,
-      0.618
+      1.0,
+      1.0,
+      1.0,
+      0.956
     ],
     "adaptation_score": [
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
       1.0,
-      0.0
+      1.0,
+      1.0,
+      0.672,
+      0.0,
+      1.0
     ]
   },
   "stability_scores_enet": {
     "alive_auc": [
-      0.96,
-      0.944,
-      0.998,
       1.0,
       1.0,
-      0.954,
-      1.0
+      1.0,
+      1.0,
+      1.0,
+      0.978
     ],
     "regulation_score": [
       1.0,
-      0.986,
       1.0,
       1.0,
       1.0,
@@ -119,45 +113,42 @@
       1.0
     ],
     "interdependence_score": [
-      0.99,
-      0.476,
-      0.682,
+      0.994,
       1.0,
-      0.978,
-      0.954,
-      0.618
+      1.0,
+      1.0,
+      1.0,
+      0.956
     ],
     "adaptation_score": [
-      0.334,
+      1.0,
+      1.0,
+      1.0,
+      0.81,
       0.0,
-      1.0,
-      1.0,
-      0.006,
-      1.0,
       1.0
     ]
   },
   "mean_stability_lasso": {
-    "energy_autocorr": 0.5945,
-    "boundary_stability": 0.463,
-    "homeostasis_var": 0.6325,
-    "turnover_ratio": 0.75,
-    "spatial_cohesion_late": 0.745,
-    "genome_diversity_late": 0.917,
-    "maturity_late": 0.6545
+    "energy_autocorr": 0.9984999999999999,
+    "boundary_stability": 1.0,
+    "homeostasis_var": 1.0,
+    "spatial_cohesion_late": 0.918,
+    "genome_diversity_late": 0.75,
+    "maturity_late": 0.8765000000000001
   },
   "mean_stability_enet": {
-    "energy_autocorr": 0.8210000000000001,
-    "boundary_stability": 0.6014999999999999,
-    "homeostasis_var": 0.92,
-    "turnover_ratio": 1.0,
-    "spatial_cohesion_late": 0.7459999999999999,
-    "genome_diversity_late": 0.977,
-    "maturity_late": 0.9045
+    "energy_autocorr": 0.9984999999999999,
+    "boundary_stability": 1.0,
+    "homeostasis_var": 1.0,
+    "spatial_cohesion_late": 0.9525,
+    "genome_diversity_late": 0.75,
+    "maturity_late": 0.9835
   },
   "minimal_surrogate_set": [
+    "energy_autocorr",
+    "boundary_stability",
     "homeostasis_var",
-    "turnover_ratio",
     "spatial_cohesion_late",
     "genome_diversity_late",
     "maturity_late"
@@ -165,64 +156,57 @@
   "pareto_curve": [
     {
       "k": 1,
-      "added_feature": "genome_diversity_late",
-      "r2_mean": 0.12920773618773268,
-      "r2_ci_lo": -0.029159325116081332,
-      "r2_ci_hi": 0.21556016573721506
+      "added_feature": "homeostasis_var",
+      "r2_mean": -0.010444321361614467,
+      "r2_ci_lo": -0.05237908459489646,
+      "r2_ci_hi": 0.004733104818190142
     },
     {
       "k": 2,
-      "added_feature": "turnover_ratio",
-      "r2_mean": 0.7315833874705482,
-      "r2_ci_lo": 0.657744178175915,
-      "r2_ci_hi": 0.788204881047686
+      "added_feature": "boundary_stability",
+      "r2_mean": 0.006886374892520381,
+      "r2_ci_lo": -0.04220956234237676,
+      "r2_ci_hi": 0.026370198235916683
     },
     {
       "k": 3,
-      "added_feature": "spatial_cohesion_late",
-      "r2_mean": 0.7394632971199314,
-      "r2_ci_lo": 0.6703012717461897,
-      "r2_ci_hi": 0.7924903170649185
+      "added_feature": "energy_autocorr",
+      "r2_mean": 0.16463519743183685,
+      "r2_ci_lo": 0.05965010070199534,
+      "r2_ci_hi": 0.21600039404177238
     },
     {
       "k": 4,
-      "added_feature": "maturity_late",
-      "r2_mean": 0.7537595455666235,
-      "r2_ci_lo": 0.6821597801577304,
-      "r2_ci_hi": 0.8084474586558112
+      "added_feature": "spatial_cohesion_late",
+      "r2_mean": 0.1798496997667387,
+      "r2_ci_lo": 0.08632209851007375,
+      "r2_ci_hi": 0.23450788000593759
     },
     {
       "k": 5,
-      "added_feature": "homeostasis_var",
-      "r2_mean": 0.7556518372837847,
-      "r2_ci_lo": 0.6813517680212029,
-      "r2_ci_hi": 0.8066499165813353
+      "added_feature": "maturity_late",
+      "r2_mean": 0.19235376623781972,
+      "r2_ci_lo": 0.08352790247471906,
+      "r2_ci_hi": 0.2520761570879606
     },
     {
       "k": 6,
-      "added_feature": "energy_autocorr",
-      "r2_mean": 0.7567274217550505,
-      "r2_ci_lo": 0.6886694969429945,
-      "r2_ci_hi": 0.80434747713125
-    },
-    {
-      "k": 7,
-      "added_feature": "boundary_stability",
-      "r2_mean": 0.75748967154028,
-      "r2_ci_lo": 0.6809340281531459,
-      "r2_ci_hi": 0.8101140523930453
+      "added_feature": "genome_diversity_late",
+      "r2_mean": 0.2570542384850715,
+      "r2_ci_lo": 0.11272526423743627,
+      "r2_ci_hi": 0.32984219099979756
     }
   ],
   "held_out_r2": {
-    "alive_auc": 0.566658638811795,
-    "regulation_score": 0.3421262375847527,
-    "interdependence_score": 0.7311849393299787,
-    "adaptation_score": 0.999970264694882
+    "alive_auc": 0.2190289005563243,
+    "regulation_score": 0.6678112773480681,
+    "interdependence_score": 0.3715728446291471,
+    "adaptation_score": 0.12890076462702582
   },
   "decision_rules": {
     "stability_threshold": 0.6,
     "vif_threshold": 10.0,
     "n_bootstraps": 500
   },
-  "data_leakage_note": "Feature-target semantic aliases detected: [('genome_diversity_late', 'adaptation_score')]. Both feature and target compute the same quantity per run, causing R\u00b2\u21921 and trivially inflated stability for the affected target. Fix: exclude leaking features from stability selection for matching targets."
+  "data_leakage_note": "Feature-target semantic aliases detected: [('genome_diversity_late', 'adaptation_score')]. Both feature and target compute the same quantity per run. Mitigated: aliased features are excluded from stability selection and held-out R\u00b2 for their matching targets (see Step D and Step F)."
 }

@@ -32,6 +32,7 @@ from __future__ import annotations
 import argparse
 import json
 import time
+import warnings
 from itertools import combinations
 from pathlib import Path
 
@@ -122,6 +123,8 @@ def build_criterion_presence_matrix(
     n_cond = len(condition_names)
     n_crit = len(criteria)
     presence = np.ones((n_cond, n_crit), dtype=float)
+    # Hoisted: build once, reuse for every drop_ condition.
+    criteria_to_idx = {c: j for j, c in enumerate(criteria)}
 
     for i, name in enumerate(condition_names):
         if name == "all_off":
@@ -131,12 +134,17 @@ def build_criterion_presence_matrix(
         elif name.startswith("drop_"):
             # All criterion names are single words (no underscores), so a simple
             # split unambiguously recovers the disabled criteria.
-            criteria_to_idx = {c: j for j, c in enumerate(criteria)}
             tokens = name[len("drop_"):].split("_")
             for token in tokens:
                 j = criteria_to_idx.get(token)
                 if j is not None:
                     presence[i, j] = 0.0
+                else:
+                    warnings.warn(
+                        f"build_criterion_presence_matrix: unrecognized token "
+                        f"'{token}' in condition '{name}' (index {i}); skipped.",
+                        stacklevel=2,
+                    )
     return presence
 
 

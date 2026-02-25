@@ -284,6 +284,15 @@ class TestStabilitySelection:
         freqs = stability_selection(X, y, n_bootstraps=20, model="elasticnet")
         assert freqs.shape == (3,)
 
+    def test_raises_on_all_failures(self):
+        # NaN targets cause LassoCV.fit to raise ValueError on every bootstrap
+        # iteration (sklearn check_X_y rejects NaN).  stability_selection must
+        # propagate this as RuntimeError when n_success == 0.
+        X = np.random.default_rng(0).standard_normal((20, 3))
+        y = np.full(20, np.nan)
+        with pytest.raises(RuntimeError, match="All .* bootstrap iterations failed"):
+            stability_selection(X, y, n_bootstraps=10)
+
 
 # ── analyze_surrogates: extract_run_features ─────────────────────────────────
 

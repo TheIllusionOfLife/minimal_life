@@ -83,6 +83,7 @@ TARGET_NAMES: list[str] = [
 ]
 
 _EPS = 1e-8  # denominator guard
+MAX_BOUNDARY_STABILITY = 1e3  # cap to prevent outliers when bnd_std ≈ 0
 
 # Features that compute the same quantity as a target score (semantic aliases).
 # This causes trivially inflated R² / stability for the matching target.
@@ -155,9 +156,12 @@ def extract_run_features(run_data: dict, total_steps: int) -> dict[str, float]:
         waste_slope = 0.0
 
     # ── 5. boundary_stability (1/std of late-phase boundary_mean) ─────────
+    # Capped at MAX_BOUNDARY_STABILITY to prevent extreme values when the
+    # boundary is perfectly constant (bnd_std ≈ 0), which would otherwise
+    # dominate scaling and distort downstream regression.
     bnd_late = boundary_arr[-n_late:]
     bnd_std = float(np.std(bnd_late)) if len(bnd_late) >= 2 else 0.0
-    boundary_stability = 1.0 / (bnd_std + _EPS)
+    boundary_stability = min(1.0 / (bnd_std + _EPS), MAX_BOUNDARY_STABILITY)
 
     # ── 6. homeostasis_var (mean internal_state_std in late phase) ────────
     homeostasis_var = float(np.mean(ist_arr[-n_late:]))
@@ -330,6 +334,9 @@ def run_analysis(
         feature_rows.append([feats[f] for f in FEATURE_NAMES])
         target_rows.append([tgts[t] for t in TARGET_NAMES])
         condition_labels.append(cond_name)
+        # Reuse the same HELD_OUT_CONDITIONS as the criterion analysis so
+        # both analyses exclude identical conditions from training.  This
+        # ensures cross-method comparisons are on equal footing.
         train_mask.append(cond_name not in HELD_OUT_CONDITIONS)
 
     X_raw = np.array(feature_rows, dtype=float)
@@ -358,18 +365,43 @@ def run_analysis(
     X_test_scaled = scaler.transform(X_retained[~is_train]) if (~is_train).any() else None
 
     # ── Step D: Stability selection per target ────────────────────────────
+    # For each target, features that are semantic aliases of that target
+    # (same per-run computation → R²=1) are excluded from the masked X so
+    # they cannot trivially inflate their own selection frequency.
     print(f"Running stability selection ({N_BOOTSTRAPS} bootstraps) ...")
     all_lasso: dict[str, np.ndarray] = {}
     all_enet: dict[str, np.ndarray] = {}
 
     for j, tgt in enumerate(TARGET_NAMES):
         y_train = Y[is_train, j]
-        lf = stability_selection(
-            X_train_scaled, y_train, n_bootstraps=N_BOOTSTRAPS, model="lasso"
+
+        # Build per-target alias exclusion mask
+        aliased = {
+            feat for feat, t in _FEATURE_TARGET_ALIASES.items()
+            if t == tgt and feat in retained_features
+        }
+        if aliased:
+            keep = np.array([f not in aliased for f in retained_features])
+            X_masked = X_train_scaled[:, keep]
+            feat_subset = [f for f in retained_features if f not in aliased]
+        else:
+            X_masked = X_train_scaled
+            feat_subset = retained_features
+
+        lf_sub = stability_selection(
+            X_masked, y_train, n_bootstraps=N_BOOTSTRAPS, model="lasso"
         )
-        ef = stability_selection(
-            X_train_scaled, y_train, n_bootstraps=N_BOOTSTRAPS, model="elasticnet"
+        ef_sub = stability_selection(
+            X_masked, y_train, n_bootstraps=N_BOOTSTRAPS, model="elasticnet"
         )
+        # Map back to the full retained_features index space (aliased → 0.0)
+        lf = np.zeros(len(retained_features))
+        ef = np.zeros(len(retained_features))
+        for sub_i, feat in enumerate(feat_subset):
+            orig_i = retained_features.index(feat)
+            lf[orig_i] = lf_sub[sub_i]
+            ef[orig_i] = ef_sub[sub_i]
+
         all_lasso[tgt] = lf
         all_enet[tgt] = ef
         stable_l = [retained_features[i] for i in np.where(lf > STABILITY_THRESHOLD)[0]]
@@ -393,32 +425,43 @@ def run_analysis(
         X_train_scaled, y_primary_train, retained_features, mean_lasso, n_boot=500
     )
 
+    # ── Detect feature-target leakage ─────────────────────────────────────
+    # adaptation_score = genome_diversity_late (same per-run computation).
+    # Stability selection already excludes these per target (Step D).
+    # The held-out R² below also excludes them so results are leakage-free.
+    leakage_pairs = [
+        (feat, t)
+        for feat, t in _FEATURE_TARGET_ALIASES.items()
+        if feat in retained_features and t in TARGET_NAMES
+    ]
+
     # ── Step F: Held-out R² ───────────────────────────────────────────────
+    # For each target, aliased features are excluded from the model so that
+    # R² reflects genuine predictive power, not feature-target identity.
     held_out_r2: dict[str, float | None] = {}
     if X_test_scaled is not None and len(minimal_feature_names) > 0:
-        min_idx_local = [retained_features.index(f) for f in minimal_feature_names]
         for j, tgt in enumerate(TARGET_NAMES):
             y_train_j = Y[is_train, j]
             y_test_j = Y[~is_train, j]
             if len(y_test_j) < 2:
                 held_out_r2[tgt] = None
                 continue
+            # Exclude aliased features for this target
+            aliased_for_tgt = {
+                feat for feat, t in _FEATURE_TARGET_ALIASES.items()
+                if t == tgt and feat in minimal_feature_names
+            }
+            tgt_features = [f for f in minimal_feature_names if f not in aliased_for_tgt]
+            if not tgt_features:
+                held_out_r2[tgt] = None
+                continue
+            tgt_idx = [retained_features.index(f) for f in tgt_features]
             ridge = Ridge(alpha=1.0)
-            ridge.fit(X_train_scaled[:, min_idx_local], y_train_j)
-            y_pred_j = ridge.predict(X_test_scaled[:, min_idx_local])
+            ridge.fit(X_train_scaled[:, tgt_idx], y_train_j)
+            y_pred_j = ridge.predict(X_test_scaled[:, tgt_idx])
             held_out_r2[tgt] = float(r2_score(y_test_j, y_pred_j))
     else:
         held_out_r2 = {t: None for t in TARGET_NAMES}
-
-    # ── Detect feature-target leakage ─────────────────────────────────────
-    # adaptation_score = genome_diversity_late (same computation per run).
-    # This inflates genome_diversity_late's mean stability score.
-    # Flagged here for transparency; to be addressed in the figures PR.
-    leakage_pairs = [
-        (feat, tgt)
-        for feat, tgt in _FEATURE_TARGET_ALIASES.items()
-        if feat in retained_features and tgt in TARGET_NAMES
-    ]
 
     # ── Assemble output ───────────────────────────────────────────────────
     result = {
@@ -452,15 +495,15 @@ def run_analysis(
         },
         "data_leakage_note": (
             f"Feature-target semantic aliases detected: {leakage_pairs}. "
-            "Both feature and target compute the same quantity per run, causing R²→1 "
-            "and trivially inflated stability for the affected target. "
-            "Fix: exclude leaking features from stability selection for matching targets."
+            "Both feature and target compute the same quantity per run. "
+            "Mitigated: aliased features are excluded from stability selection and "
+            "held-out R² for their matching targets (see Step D and Step F)."
         ) if leakage_pairs else None,
     }
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w") as f:
-        json.dump(result, f, indent=2)
+        json.dump(result, f, indent=2, allow_nan=False)
     print(f"Results written to {out_path}")
 
     # Print summary

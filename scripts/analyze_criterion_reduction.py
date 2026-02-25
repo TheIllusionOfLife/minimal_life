@@ -28,7 +28,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import warnings
+from itertools import combinations
 from pathlib import Path
 
 import numpy as np
@@ -78,7 +80,7 @@ PERFORMANCE_METRICS = [
 # (6 conditions, chosen a priori; see decision_rules.md §5)
 HELD_OUT_CONDITIONS: frozenset[str] = frozenset(
     f"drop_{c1}_{c2}"
-    for c1, c2 in __import__("itertools").combinations(CRITERIA, 2)
+    for c1, c2 in combinations(CRITERIA, 2)
     if "evolution" in (c1, c2)
 )
 
@@ -376,12 +378,21 @@ def _run_lme_check(
                     f"target ~ {formula}", df, groups=df["seed_group"]
                 )
                 mdf = md.fit(reml=True, method="lbfgs")
-            results[met] = {
-                "AIC": float(mdf.aic),
-                "criterion_coefs": {
-                    c: float(mdf.params.get(f"c_{c}", 0.0)) for c in CRITERIA
-                },
+            aic = float(mdf.aic)
+            coefs = {c: float(mdf.params.get(f"c_{c}", 0.0)) for c in CRITERIA}
+            converged = math.isfinite(aic) and all(
+                math.isfinite(v) for v in coefs.values()
+            )
+            entry: dict = {
+                "converged": converged,
+                "AIC": aic if converged else None,
+                "criterion_coefs": coefs,
             }
+            if not converged:
+                entry["warning"] = (
+                    "non-finite AIC or params; model may not have converged"
+                )
+            results[met] = entry
         except Exception as exc:
             results[met] = {"error": str(exc)}
 
@@ -590,7 +601,7 @@ def run_analysis(
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w") as f:
-        json.dump(result, f, indent=2)
+        json.dump(result, f, indent=2, allow_nan=False)
     print(f"Results written to {out_path}")
 
     # Print summary
