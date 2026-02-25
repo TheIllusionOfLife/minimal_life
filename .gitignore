@@ -33,6 +33,9 @@ build/
 !/experiments/coupling_analysis.json
 !/experiments/final_graph_statistics.json
 !/experiments/final_statistics.json
+# Keep Phase 1 analysis outputs (synthesized, small, not raw sweep data).
+!/experiments/criterion_reduction_analysis.json
+!/experiments/surrogate_analysis.json
 
 # Generated paper artifacts
 paper/main.pdf

@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "n_runs": 600,
+  "feature_names": [
+    "alive_auc",
+    "energy_mean_late",
+    "energy_autocorr",
+    "waste_slope",
+    "boundary_stability",
+    "homeostasis_var",
+    "birth_rate",
+    "death_rate",
+    "turnover_ratio",
+    "spatial_cohesion_late",
+    "genome_diversity_late",
+    "maturity_late",
+    "resource_efficiency",
+    "reproduction_events"
+  ],
+  "retained_features": [
+    "energy_autocorr",
+    "boundary_stability",
+    "homeostasis_var",
+    "spatial_cohesion_late",
+    "genome_diversity_late",
+    "maturity_late"
+  ],
+  "removed_features_vif": [
+    "alive_auc",
+    "energy_mean_late",
+    "waste_slope",
+    "birth_rate",
+    "death_rate",
+    "turnover_ratio",
+    "resource_efficiency",
+    "reproduction_events"
+  ],
+  "vif_scores": {
+    "alive_auc": 65.63466273385161,
+    "energy_mean_late": 14.296533097941122,
+    "energy_autocorr": 2.9663836364299576,
+    "waste_slope": 19.56900317489955,
+    "boundary_stability": 1.3177369873169633,
+    "homeostasis_var": 1.6413312212059221,
+    "birth_rate": 55.05630129104653,
+    "death_rate": 83.47366761485478,
+    "turnover_ratio": 10.320490022229794,
+    "spatial_cohesion_late": 3.56933839309385,
+    "genome_diversity_late": 9.593373980349615,
+    "maturity_late": 6.4955625572192695,
+    "resource_efficiency": 404.3095052312398,
+    "reproduction_events": 200.36435122009308
+  },
+  "target_names": [
+    "alive_auc",
+    "regulation_score",
+    "interdependence_score",
+    "adaptation_score"
+  ],
+  "feature_matrix_shape": [
+    600,
+    14
+  ],
+  "stability_scores_lasso": {
+    "alive_auc": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.55
+    ],
+    "regulation_score": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "interdependence_score": [
+      0.994,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.956
+    ],
+    "adaptation_score": [
+      1.0,
+      1.0,
+      1.0,
+      0.672,
+      0.0,
+      1.0
+    ]
+  },
+  "stability_scores_enet": {
+    "alive_auc": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.978
+    ],
+    "regulation_score": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "interdependence_score": [
+      0.994,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.956
+    ],
+    "adaptation_score": [
+      1.0,
+      1.0,
+      1.0,
+      0.81,
+      0.0,
+      1.0
+    ]
+  },
+  "mean_stability_lasso": {
+    "energy_autocorr": 0.9984999999999999,
+    "boundary_stability": 1.0,
+    "homeostasis_var": 1.0,
+    "spatial_cohesion_late": 0.918,
+    "genome_diversity_late": 0.75,
+    "maturity_late": 0.8765000000000001
+  },
+  "mean_stability_enet": {
+    "energy_autocorr": 0.9984999999999999,
+    "boundary_stability": 1.0,
+    "homeostasis_var": 1.0,
+    "spatial_cohesion_late": 0.9525,
+    "genome_diversity_late": 0.75,
+    "maturity_late": 0.9835
+  },
+  "minimal_surrogate_set": [
+    "energy_autocorr",
+    "boundary_stability",
+    "homeostasis_var",
+    "spatial_cohesion_late",
+    "genome_diversity_late",
+    "maturity_late"
+  ],
+  "pareto_curve": [
+    {
+      "k": 1,
+      "added_feature": "homeostasis_var",
+      "r2_mean": -0.010444321361614467,
+      "r2_ci_lo": -0.05237908459489646,
+      "r2_ci_hi": 0.004733104818190142
+    },
+    {
+      "k": 2,
+      "added_feature": "boundary_stability",
+      "r2_mean": 0.006886374892520381,
+      "r2_ci_lo": -0.04220956234237676,
+      "r2_ci_hi": 0.026370198235916683
+    },
+    {
+      "k": 3,
+      "added_feature": "energy_autocorr",
+      "r2_mean": 0.16463519743183685,
+      "r2_ci_lo": 0.05965010070199534,
+      "r2_ci_hi": 0.21600039404177238
+    },
+    {
+      "k": 4,
+      "added_feature": "spatial_cohesion_late",
+      "r2_mean": 0.1798496997667387,
+      "r2_ci_lo": 0.08632209851007375,
+      "r2_ci_hi": 0.23450788000593759
+    },
+    {
+      "k": 5,
+      "added_feature": "maturity_late",
+      "r2_mean": 0.19235376623781972,
+      "r2_ci_lo": 0.08352790247471906,
+      "r2_ci_hi": 0.2520761570879606
+    },
+    {
+      "k": 6,
+      "added_feature": "genome_diversity_late",
+      "r2_mean": 0.2570542384850715,
+      "r2_ci_lo": 0.11272526423743627,
+      "r2_ci_hi": 0.32984219099979756
+    }
+  ],
+  "held_out_r2": {
+    "alive_auc": 0.2190289005563243,
+    "regulation_score": 0.6678112773480681,
+    "interdependence_score": 0.3715728446291471,
+    "adaptation_score": 0.12890076462702582
+  },
+  "decision_rules": {
+    "stability_threshold": 0.6,
+    "vif_threshold": 10.0,
+    "n_bootstraps": 500
+  },
+  "data_leakage_note": "Feature-target semantic aliases detected: [('genome_diversity_late', 'adaptation_score')]. Both feature and target compute the same quantity per run. Mitigated: aliased features are excluded from stability selection and held-out R\u00b2 for their matching targets (see Step D and Step F)."
+}

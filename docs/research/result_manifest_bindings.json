@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "description": "Maps paper figure/table labels to the experiment manifests that produced their data.",
+  "bindings": [
+    {"paper_ref": "tab:ablation",          "manifest": "experiments/final_graph_manifest.json"},
+    {"paper_ref": "fig:coupling",           "manifest": "experiments/final_graph_manifest.json"},
+    {"paper_ref": "tab:intervention",       "manifest": "experiments/pairwise_manifest.json"},
+    {"paper_ref": "fig:evolution",          "manifest": "experiments/evolution_manifest.json"},
+    {"paper_ref": "fig:persistent_clusters","manifest": "experiments/evolution_manifest.json"},
+    {"paper_ref": "fig:protocol_extensions","manifest": "experiments/midrun_ablation_manifest.json"},
+    {"paper_ref": "fig:ecology_stress",     "manifest": "experiments/ecology_stress_manifest.json"}
+  ]
+}
