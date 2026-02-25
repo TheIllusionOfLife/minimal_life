@@ -84,6 +84,13 @@ TARGET_NAMES: list[str] = [
 
 _EPS = 1e-8  # denominator guard
 
+# Features that compute the same quantity as a target score (semantic aliases).
+# This causes trivially inflated R² / stability for the matching target.
+# Keys = feature name, values = affected target name.
+_FEATURE_TARGET_ALIASES: dict[str, str] = {
+    "genome_diversity_late": "adaptation_score",
+}
+
 
 # ── feature extraction ────────────────────────────────────────────────────────
 
@@ -403,6 +410,16 @@ def run_analysis(
     else:
         held_out_r2 = {t: None for t in TARGET_NAMES}
 
+    # ── Detect feature-target leakage ─────────────────────────────────────
+    # adaptation_score = genome_diversity_late (same computation per run).
+    # This inflates genome_diversity_late's mean stability score.
+    # Flagged here for transparency; to be addressed in the figures PR.
+    leakage_pairs = [
+        (feat, tgt)
+        for feat, tgt in _FEATURE_TARGET_ALIASES.items()
+        if feat in retained_features and tgt in TARGET_NAMES
+    ]
+
     # ── Assemble output ───────────────────────────────────────────────────
     result = {
         "schema_version": 1,
@@ -433,6 +450,12 @@ def run_analysis(
             "vif_threshold": vif_threshold,
             "n_bootstraps": N_BOOTSTRAPS,
         },
+        "data_leakage_note": (
+            f"Feature-target semantic aliases detected: {leakage_pairs}. "
+            "Both feature and target compute the same quantity per run, causing R²→1 "
+            "and trivially inflated stability for the affected target. "
+            "Fix: exclude leaking features from stability selection for matching targets."
+        ) if leakage_pairs else None,
     }
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
