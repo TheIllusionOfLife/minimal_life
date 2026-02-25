@@ -33,6 +33,11 @@ select = ["E", "F", "I", "UP", "B"]
 "scripts/figures/__init__.py" = ["E402", "F403", "F405"]
 # experiment_utils.py fires a DeprecationWarning before re-exporting — E402 is intentional.
 "scripts/experiment_utils.py" = ["E402"]
+# generate_figures.py inserts scripts/ onto sys.path before the from-figures imports — same pattern.
+"scripts/generate_figures.py" = ["E402", "I001"]
+# plot_reduction_figures.py calls matplotlib.use("Agg") before importing pyplot — same pattern.
+"scripts/plot_reduction_figures.py" = ["E402", "I001"]
+"tests_python/test_plot_reduction_figures.py" = ["E402", "I001"]
 
 [tool.pytest.ini_options]
 # "." exposes the top-level scripts package (from scripts/__init__.py).
