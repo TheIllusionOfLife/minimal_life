@@ -225,7 +225,9 @@ review rounds must complete before archival.
 7. Manual: go to https://zenodo.org/account/settings/github/
    └─ verify the code record was created and has correct metadata
    └─ note the code DOI (separate from the dataset DOI)
-8. Submit paper to ALIFE 2026 portal
+8. Add code DOI badge to README.md (next to the dataset badge):
+   [![DOI](https://zenodo.org/badge/DOI/<CODE_DOI>.svg)](https://doi.org/<CODE_DOI>)
+9. Submit paper to ALIFE 2026 portal
 ```
 
 **Why this order matters:**
