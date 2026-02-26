@@ -64,10 +64,14 @@ For each major experiment release:
 
 ### Prerequisites
 
-- `ZENODO_TOKEN` must be available in your shell.
-  Verify: `zsh -ic 'echo ${ZENODO_TOKEN:+present}'` should print `present`.
-- If non-interactive shells cannot see the token, run publish commands via
-  `zsh -ic '<command>'`.
+- **Python**: `requests` must be installed (`uv sync` pulls it from
+  `pyproject.toml`).
+- **`ZENODO_TOKEN`**: personal access token with `deposit:write` and
+  `deposit:actions` scopes.
+  - Create at <https://zenodo.org/account/settings/applications/>.
+  - Export in your shell profile (e.g., `~/.zshrc`):
+    `export ZENODO_TOKEN="your_token_here"`
+  - Verify: `echo ${ZENODO_TOKEN:+present}` should print `present`.
 
 ### Step 1: Prepare artifacts
 
@@ -113,23 +117,59 @@ uv run python scripts/prepare_zenodo_metadata.py \
 
 ### Step 4: Upload to Zenodo
 
-1. Go to <https://zenodo.org/uploads/new> (or use the Zenodo API with
-   `ZENODO_TOKEN`).
-2. Upload all `.tar.gz` files from `zenodo_staging/`.
-3. Fill in metadata:
-   - **Title**: `minimal_life: Experiment Data for ALIFE 2026 Submission`
-   - **Version**: Git tag (e.g., `v1.0-submission`)
-   - **Description**: Criterion-ablation, pairwise, evolution, ecology stress,
-     invariance, and midrun experiment raw outputs.
-   - **License**: MIT
-   - **Related identifiers**: GitHub repository URL
-4. Publish and record the DOI.
+Upload artifacts using the `upload_zenodo.py` script, which calls the
+[Zenodo REST API](https://developers.zenodo.org/) via Python `requests`.
+
+**Dry run (draft only — recommended first):**
+
+```bash
+uv run python scripts/upload_zenodo.py \
+  --metadata docs/research/zenodo_metadata.json \
+  --creator "Last, First; Affiliation" \
+  --version v1.0-submission \
+  --github-url https://github.com/TheIllusionOfLife/minimal_life
+```
+
+This creates a draft deposit, uploads all files, and sets metadata — but does
+**not** publish. You can review the draft in the Zenodo web UI before
+committing.
+
+**Publish (irreversible):**
+
+```bash
+uv run python scripts/upload_zenodo.py \
+  --metadata docs/research/zenodo_metadata.json \
+  --creator "Last, First; Affiliation" \
+  --version v1.0-submission \
+  --github-url https://github.com/TheIllusionOfLife/minimal_life \
+  --publish
+```
+
+**Testing with sandbox:**
+
+```bash
+# Uses sandbox.zenodo.org (requires a separate ZENODO_TOKEN from sandbox)
+uv run python scripts/upload_zenodo.py \
+  --metadata docs/research/zenodo_metadata.json --sandbox
+```
+
+The script:
+1. Reads artifact paths and SHA256 checksums from `zenodo_metadata.json`.
+2. Verifies local files match the recorded checksums before uploading.
+3. Creates a draft deposit via `POST /deposit/depositions`.
+4. Uploads each archive via `PUT` to the bucket URL.
+5. Sets title, description, creators, license, and related identifiers.
+6. Optionally publishes via `POST /deposit/depositions/{id}/actions/publish`.
+
+After publishing, record the DOI printed to stderr.
 
 ### Step 5: Update repository references
 
 1. Update the DOI in `paper/main.tex` (data availability paragraph).
 2. Add a `@misc` entry to `paper/references.bib`.
-3. Commit `docs/research/zenodo_metadata.json` and
+3. Re-run `prepare_zenodo_metadata.py` with the published `--zenodo-doi` to
+   update `docs/research/zenodo_metadata.json`.
+4. Commit `docs/research/zenodo_metadata.json` and
    `docs/research/zenodo_archive_sha256.txt`.
 
 ## Paper-Ready Release Checklist
