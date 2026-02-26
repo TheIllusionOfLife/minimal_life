@@ -80,7 +80,7 @@ mkdir -p zenodo_staging
 tar -czf zenodo_staging/ablation_sweep.tar.gz experiments/ablation_sweep/
 
 # Other heavy experiment families
-for family in ecology_stress invariance midrun_ablation trait_evo; do
+for family in ecology_stress invariance midrun trait_evo; do
   tar -czf "zenodo_staging/${family}.tar.gz" experiments/${family}_*.json
 done
 ```
@@ -129,9 +129,8 @@ uv run python scripts/prepare_zenodo_metadata.py \
 
 1. Update the DOI in `paper/main.tex` (data availability paragraph).
 2. Add a `@misc` entry to `paper/references.bib`.
-3. Commit `docs/research/zenodo_metadata.json`,
-   `docs/research/zenodo_archive_sha256.txt`, and
-   `docs/research/zenodo_perfile_sha256.txt`.
+3. Commit `docs/research/zenodo_metadata.json` and
+   `docs/research/zenodo_archive_sha256.txt`.
 
 ## Paper-Ready Release Checklist
 
