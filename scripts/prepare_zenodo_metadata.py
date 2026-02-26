@@ -93,7 +93,7 @@ def parse_args() -> argparse.Namespace:
 
 def build_metadata(args: argparse.Namespace) -> dict:
     artifact_entries = []
-    for path in args.files:
+    for path in sorted(args.files):
         resolved = path.resolve()
         if not resolved.exists():
             raise FileNotFoundError(f"artifact not found: {path}")
@@ -110,9 +110,9 @@ def build_metadata(args: argparse.Namespace) -> dict:
         "schema_version": 1,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "experiment_name": args.experiment_name,
-        "git_commit": _detect_git_commit(),
+        "artifact_source_commit": _detect_git_commit(),
         "entrypoint": args.entrypoint,
-        "metadata_generation_argv": list(sys.argv[1:]),
+        "metadata_generation_argv": list(sys.argv[1:]),  # never pass secrets via CLI
         "seed_range": {"start": args.seed_start, "end": args.seed_end},
         "steps": args.steps,
         "artifacts": artifact_entries,

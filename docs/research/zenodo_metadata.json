@@ -2,7 +2,7 @@
   "schema_version": 1,
   "generated_at_utc": "2026-02-26T06:58:38.277968+00:00",
   "experiment_name": "ablation_criterion_reduction",
-  "git_commit": "c3aef5bc19d33d765a84a49424f6e531c79fd0b1",
+  "artifact_source_commit": "c3aef5bc19d33d765a84a49424f6e531c79fd0b1",
   "entrypoint": "see STRUCTURE.md Experiment Execution Order",
   "metadata_generation_argv": [
     "zenodo_staging/ablation_sweep.tar.gz",

@@ -91,10 +91,10 @@ done
 # Per-archive checksum
 shasum -a 256 zenodo_staging/*.tar.gz > docs/research/zenodo_archive_sha256.txt
 
-# Per-file checksums (for independent verification)
-find experiments/ -name '*.json' -size +1M | sort | \
-  while read -r f; do shasum -a 256 "$f"; done \
-  > docs/research/zenodo_perfile_sha256.txt
+# Optional: per-file checksums (if reviewers request individual verification)
+# find experiments/ -name '*.json' -size +1M | sort | \
+#   while read -r f; do shasum -a 256 "$f"; done \
+#   > docs/research/zenodo_perfile_sha256.txt
 ```
 
 ### Step 3: Generate metadata
@@ -143,7 +143,7 @@ Before calling a paper PR submission-ready:
    - [ ] Manifests and binding registry up to date
 2. Zenodo bundle contains raw experimental evidence:
    - [ ] All `experiments/` raw outputs for reported results
-   - [ ] Per-archive and per-file SHA256 checksums
+   - [ ] Per-archive SHA256 checksums (per-file optional)
    - [ ] Metadata JSON with commit provenance
 3. Cross-linking complete:
    - [ ] Zenodo DOI in `paper/main.tex` data availability section
