@@ -29,6 +29,8 @@ build/
 /experiments/*.gz
 /experiments/logs/
 /experiments/*_part_*.json
+/experiments/ablation_sweep/
+/zenodo_staging/
 # Keep manifest-bound source artifacts trackable.
 !/experiments/coupling_analysis.json
 !/experiments/final_graph_statistics.json
