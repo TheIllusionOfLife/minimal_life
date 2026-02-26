@@ -115,7 +115,7 @@ life-likeness.
 
 This paper contributes: (1)~a hybrid swarm-organism architecture integrating
 all seven criteria as functionally interdependent processes;
-(2)~an operational \emph{functional-analogy} definition with three falsifiable
+(2)~an operational \emph{functional analogy} definition with three falsifiable
 conditions and a criterion-ablation methodology; (3)~pairwise ablation and
 proxy control experiments ruling out tautological definitions; and
 (4)~Phase~1 criterion-reduction analysis identifying a 6-feature minimal
@@ -237,7 +237,8 @@ targeted stable baseline populations only. All final experiments use the
 Graph metabolism engine.
 
 \paragraph{Parameters.}
-Simulations run for 2,000 steps (sampled every 50) on a 100$\times$100
+Each simulation runs for 2000 timesteps with population sampled every 50
+on a 100$\times$100
 toroidal grid with 30 initial organisms (25 swarm agents each); resources
 regenerate at 0.01/cell/step; ablation toggles skip disabled processes
 without altering event ordering. Run manifests (\texttt{*\_manifest.json})
@@ -952,7 +953,7 @@ effects are minimal (only 10\% of no-homeostasis seeds reach $N_T \leq 5$;
 all other conditions 0\% at floor). Sub-additivity thus reflects genuine shared
 failure pathways rather than mechanical floor compression.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Pairwise ablation synergy scores ($n$=30 per condition, Graph
 metabolism). Negative synergy indicates sub-additive interaction.
@@ -988,7 +989,7 @@ The (reproduction, growth) pair shows $\Delta_{AB} \approx
 effect is dominated by the reproduction gate in this context. However, the
 developmental program creates independent viability effects through boundary
 repair and sensing radius coupling: disabling growth with reproduction also
-disabled still produces measurably lower boundary integrity than the growth-on
+disabled still produces measurably lower boundary integrity than the growth-enabled
 control, confirming growth's contribution extends beyond reproduction gating.
 
 % ----------------------------------------------------------------------------
