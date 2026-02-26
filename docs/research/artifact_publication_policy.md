@@ -202,23 +202,64 @@ This prints the BibTeX entry to stdout, which can be appended to
 4. Commit `docs/research/zenodo_metadata.json` and
    `docs/research/zenodo_archive_sha256.txt`.
 
-## Paper-Ready Release Checklist
+## Submission Sequence
 
-Before calling a paper PR submission-ready:
+The following steps must happen **in order**. The key constraint is that
+Zenodo records and GitHub Releases are immutable once published, so all
+review rounds must complete before archival.
 
-1. GitHub PR contains the lightweight paper package:
+```
+1. Merge all paper/code PRs to main
+2. AI peer review rounds (CodeRabbit, Codex, Gemini, etc.)
+   └─ iterate: fix issues → push → re-review → until clean
+3. Final "submission-ready" commit on main
+4. Upload dataset to Zenodo (if not already done)
+   └─ uv run python scripts/upload_zenodo.py ... --publish
+5. Move tag to final commit:
+   git tag -f v1.0-submission
+   git push origin v1.0-submission --force
+6. Create GitHub Release (triggers Zenodo code archival):
+   gh release create v1.0-submission \
+     --title "v1.0-submission: ALIFE 2026 Paper" \
+     --notes "Initial submission to ALIFE 2026."
+7. Manual: go to https://zenodo.org/account/settings/github/
+   └─ verify the code record was created and has correct metadata
+   └─ note the code DOI (separate from the dataset DOI)
+8. Submit paper to ALIFE 2026 portal
+```
+
+**Why this order matters:**
+- Steps 1–3 allow code to change freely during review.
+- Step 4 can happen earlier if experiment data is stable (dataset DOI is
+  independent of code changes).
+- Steps 5–6 freeze the code; the tag must not move after the Release.
+- Step 7 is a **manual verification** on the Zenodo website — the GitHub
+  integration is automatic but the result should be checked (author names,
+  related identifiers, license).
+
+## Paper-Ready Checklist
+
+Before creating the GitHub Release (step 6 above):
+
+1. GitHub main branch contains the final paper package:
    - [ ] Updated manuscript source and `paper/main.pdf`
    - [ ] Generated figures under `paper/figures/`
    - [ ] Compact analysis summaries used by paper text
    - [ ] Manifests and binding registry up to date
-2. Zenodo bundle contains raw experimental evidence:
+   - [ ] `.zenodo.json` has real author names (not placeholders)
+2. Zenodo dataset record is published:
    - [ ] All `experiments/` raw outputs for reported results
    - [ ] Per-archive SHA256 checksums (per-file optional)
    - [ ] Metadata JSON with commit provenance
 3. Cross-linking complete:
-   - [ ] Zenodo DOI in `paper/main.tex` data availability section
+   - [ ] Zenodo dataset DOI in `paper/main.tex` data availability section
    - [ ] Dataset entry in `paper/references.bib`
    - [ ] DOI consistent between paper text and repository docs
+4. Manual Zenodo actions:
+   - [ ] Repository toggled ON at
+     <https://zenodo.org/account/settings/github/>
+   - [ ] After Release: verify code record at Zenodo (author, license,
+     related identifiers link to dataset DOI)
 
 ## Citation in the Paper
 
