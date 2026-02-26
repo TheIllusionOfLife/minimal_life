@@ -46,10 +46,10 @@ The strongest single-ablation effects arise from disabling reproduction
 interdependent components of organismal viability rather than decorative
 labels.
 A Phase~1 criterion-reduction analysis (30 ablation conditions, 600 simulation
-runs) identifies six stable non-collinear surrogates via VIF screening and
-stability selection \citep{meinshausen_2010_stability}; directional Elastic Net
-evidence ranks metabolism, response, and homeostasis as the strongest criterion
-contributors.
+runs; full vs.\ all-off Cohen's $d$=10.68) identifies six stable non-collinear
+surrogates via VIF screening and stability selection
+\citep{meinshausen_2010_stability}; directional Elastic Net evidence ranks
+metabolism, response, and homeostasis as the strongest criterion contributors.
 A practical elbow at $k{=}3$ (energy autocorrelation, boundary stability,
 homeostasis variance) captures the primary predictive structure
 (alive-AUC cross-validated $R^2=0.257$); the best single-target held-out
@@ -511,7 +511,7 @@ by outliers.}
 \includegraphics[width=\textwidth]{figures/fig_timeseries.pdf}
 \caption{Population dynamics under criterion ablation. Lines show mean alive
 count across 30 seeds (100--129); shaded bands show $\pm$1 SEM. Normal
-baseline (thick black) stabilizes near 341 organisms by step~1900. Removing reproduction,
+baseline (thick black) stabilizes near 349 organisms by step~1900. Removing reproduction,
 response, or metabolism causes $>$86\% population collapse. Evolution ablation
 shows a modest 8\% decline (Cliff's $\delta$=0.39), consistent with optimization
 rather than short-term survival necessity.}
@@ -633,9 +633,8 @@ We define the interaction metric formally as
 $\text{synergy}_{A,B} = \Delta_{AB} - (\Delta_A + \Delta_B)$ where
 $\Delta_X = \bar{N}_{\text{normal}} - \bar{N}_X$ on the raw alive-count
 scale. Results are robust across scales: on $\log(N_T + 1)$ and
-percentage-decline scales, all five sub-additive pairs remain
-sub-additive and the one super-additive pair (boundary, homeostasis)
-remains super-additive (bootstrap 95\% CI excludes zero for 5/6 pairs).
+percentage-decline scales, all six sub-additive pairs remain
+sub-additive (bootstrap 95\% CI excludes zero for 5/6 pairs).
 Floor effects are minimal: only 10\% of no-homeostasis seeds reach
 near-extinction ($N_T \leq 5$); all other conditions show 0\% at floor.
 Sub-additivity thus reflects genuine shared failure pathways rather than
@@ -838,6 +837,7 @@ validation~(§S3).}
 \begin{table}[t]
 \caption{Phase~1 Analysis Summary}
 \label{tab:phase1}
+\small
 \begin{tabular}{lll}
 \toprule
 Analysis & Finding & Value \\
@@ -992,7 +992,7 @@ values use per-target masked feature sets.
 \paragraph{Criterion interdependence.}
 Single ablations reveal a hierarchy: reproduction, response, and metabolism
 form an essential triad ($>$86\% decline), while growth and homeostasis
-occupy a middle tier ($\sim$46\%), followed by boundary ($\sim$31\%).
+occupy a middle tier ($\sim$46\%), followed by boundary ($\sim$35\%).
 Pairwise ablations show uniformly sub-additive interactions
 (Table~\ref{tab:pairwise}), consistent with criteria converging on a
 \emph{shared viability attractor}---boundary collapse---reachable via
@@ -1039,7 +1039,7 @@ not definitive evidence: no criterion clears the pre-registered LASSO threshold
 of 0.60 (maximum mean stability: metabolism=0.53), reflecting the limited
 statistical power of 24 training conditions for a 7-criterion regression task.
 The Enet stability ranking---metabolism$>$response$>$homeostasis as strongest,
-evolution$>$growth as weakest---is directionally consistent with the single-ablation
+growth$>$evolution as weakest---is directionally consistent with the single-ablation
 effect hierarchy (Table~\ref{tab:ablation}), providing convergent evidence that
 these three criteria contribute most to system-level life-likeness.
 Expanding the sweep to $\geq$100 conditions would likely push LASSO stability
