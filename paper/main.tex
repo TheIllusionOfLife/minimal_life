@@ -46,10 +46,10 @@ The strongest single-ablation effects arise from disabling reproduction
 interdependent components of organismal viability rather than decorative
 labels.
 A Phase~1 criterion-reduction analysis (30 ablation conditions, 600 simulation
-runs) identifies six stable non-collinear surrogates via VIF screening and
-stability selection \citep{meinshausen_2010_stability}; directional Elastic Net
-evidence ranks metabolism, response, and homeostasis as the strongest criterion
-contributors.
+runs; full vs.\ all-off Cohen's $d$=10.68) identifies six stable non-collinear
+surrogates via VIF screening and stability selection
+\citep{meinshausen_2010_stability}; directional Elastic Net evidence ranks
+metabolism, response, and homeostasis as the strongest criterion contributors.
 A practical elbow at $k{=}3$ (energy autocorrelation, boundary stability,
 homeostasis variance) captures the primary predictive structure
 (alive-AUC cross-validated $R^2=0.257$); the best single-target held-out
@@ -130,70 +130,35 @@ of life criteria in any ALife system.
 % ============================================================================
 \section{Related Work}
 
-Existing ALife systems each excel along different axes of biological fidelity.
-Tierra \citep{ray_1991_approach} and Avida \citep{ofria_2004_avida} achieve
-strong evolutionary dynamics but lack spatial bodies and metabolism.
-Polyworld \citep{yaeger_1994_computational} adds NN-driven behavior and
-single-resource energy budgets.
-Lenia \citep{chan_2019_lenia} and Flow-Lenia \citep{plantec_2023_flow}
-demonstrate emergent spatial organization in continuous cellular automata,
-with Flow-Lenia adding mass conservation.
-ALIEN \citep{heinemann_2008_alien} provides a GPU-accelerated particle
-simulator achieving multi-process interaction on several criteria, though
-its metabolism uses typed particle interactions rather than a multi-step
-metabolic network (Level~3 on our rubric).
-Coralai \citep{barbieux_2024_coralai} combines multi-agent neural cellular
-automata with energy dynamics but lacks feedback coupling between criteria.
-No existing system combines multi-step metabolism with active homeostatic
-regulation.
+Tierra \citep{ray_1991_approach}, Avida \citep{ofria_2004_avida}, Lenia
+\citep{chan_2019_lenia}, Flow-Lenia \citep{plantec_2023_flow}, ALIEN
+\citep{heinemann_2008_alien}, and Coralai \citep{barbieux_2024_coralai}
+each cover subsets of the seven criteria; no existing system combines
+multi-step metabolism with active homeostatic regulation.
+Our framework operationalizes autopoiesis \citep{maturana_1980_autopoiesis,
+mcmullin_2004_thirty}, the chemoton model \citep{ganti_2003_principles},
+and NASA's two-criterion definition \citep{joyce_1994_foreword,
+ruizmirazo_2004_universal}; open-ended evolution metrics
+\citep{bedau_2000_open, taylor_2016_openended} complement
+our criterion-ablation approach.
 
-Theoretically, our framework operationalizes autopoiesis
-\citep{maturana_1980_autopoiesis, mcmullin_2004_thirty},
-extends the chemoton's three-subsystem integration
-\citep{ganti_2003_principles}, and enriches NASA's two-criterion
-definition \citep{joyce_1994_foreword} following
-\citet{ruizmirazo_2004_universal}.
-Open-ended evolution metrics \citep{bedau_2000_open,
-taylor_2016_openended} complement our criterion-ablation approach.
-
-Table~\ref{tab:comparison} summarizes how existing systems score on each
-criterion using a five-level rubric.
-
-\begin{table*}[t]
+\begin{table}[t]
 \centering
-\caption{Literature comparison: seven biological criteria scored on a
-five-level rubric (1=no feature, 2=static parameter, 3=dynamic single process,
-4=multi-process interaction, 5=self-maintaining/emergent).
-Bold indicates scores $\geq$4.}
+\caption{Criterion comparison (five-level rubric; bold $\geq$4).
+Full scores for remaining four surveyed systems available upon request.}
 \label{tab:comparison}
-\small
-\begin{tabular}{l@{\hskip 6pt}c@{\hskip 6pt}c@{\hskip 6pt}c@{\hskip 6pt}c@{\hskip 6pt}c@{\hskip 6pt}c@{\hskip 6pt}c@{\hskip 6pt}c}
+\footnotesize
+\begin{tabular}{lcccccccc}
 \toprule
-System & Cell.Org & Metab & Homeo & Growth & Reprod & Response & Evol & Total \\
+System & CO & Me & Ho & Gr & Re & Rs & Ev & $\Sigma$ \\
 \midrule
-% Scores verified via literature review; justifications in paper/literature_scores.md
-Polyworld  & 2 & 3 & 1 & 1 & 3 & \textbf{4} & \textbf{4} & 18 \\
-Avida      & 2 & 3 & 1 & 2 & \textbf{4} & 3 & \textbf{5} & 20 \\
-Lenia      & 3 & 1 & 2 & 2 & 2 & 3 & 2 & 15 \\
-ALIEN      & \textbf{4} & 3 & 2 & 3 & \textbf{4} & \textbf{4} & \textbf{4} & 24 \\
-Flow-Lenia & 3 & 3 & 3 & 3 & 3 & 3 & 3 & 21 \\
-Coralai    & 3 & 3 & 2 & 3 & 3 & 3 & 3 & 20 \\
-\midrule
+ALIEN \citep{heinemann_2008_alien} & \textbf{4} & 3 & 2 & 3 & \textbf{4} & \textbf{4} & \textbf{4} & 24 \\
 \textbf{Ours}$^\dagger$ & \textbf{4} & \textbf{4} & \textbf{4} & \textbf{4} & \textbf{4} & \textbf{4} & 3 & \textbf{27} \\
 \bottomrule
-\multicolumn{9}{l}{\footnotesize $^\dagger$Self-assessment; scores may differ under external evaluation.}\\
-\multicolumn{9}{l}{\footnotesize Growth now at Level 4 (multi-process interaction via genome-encoded}\\
-\multicolumn{9}{l}{\footnotesize developmental program affecting boundary, sensing, and metabolism).}\\
-\multicolumn{9}{l}{\footnotesize Evolution (3) remains a minimum viable implementation.}\\
-\multicolumn{9}{l}{\footnotesize Scores for other systems based on published descriptions; per-criterion}\\
-\multicolumn{9}{l}{\footnotesize justifications available as supplementary material.}
+\multicolumn{9}{l}{\scriptsize $^\dagger$Self-assessment. CO=Cell.Org, Me=Metab, Ho=Homeo,}\\
+\multicolumn{9}{l}{\scriptsize Gr=Growth, Re=Reprod, Rs=Response, Ev=Evol.}
 \end{tabular}
-\end{table*}
-
-Our system reaches $\geq$4 on five of seven criteria, placing it among the
-most broadly integrated ALife systems surveyed.
-We note that these scores are self-assessed; independent evaluation may adjust
-individual ratings.
+\end{table}
 
 % ============================================================================
 \section{System Design}
@@ -546,7 +511,7 @@ by outliers.}
 \includegraphics[width=\textwidth]{figures/fig_timeseries.pdf}
 \caption{Population dynamics under criterion ablation. Lines show mean alive
 count across 30 seeds (100--129); shaded bands show $\pm$1 SEM. Normal
-baseline (thick black) stabilizes near 341 organisms by step~1900. Removing reproduction,
+baseline (thick black) stabilizes near 349 organisms by step~1900. Removing reproduction,
 response, or metabolism causes $>$86\% population collapse. Evolution ablation
 shows a modest 8\% decline (Cliff's $\delta$=0.39), consistent with optimization
 rather than short-term survival necessity.}
@@ -668,9 +633,8 @@ We define the interaction metric formally as
 $\text{synergy}_{A,B} = \Delta_{AB} - (\Delta_A + \Delta_B)$ where
 $\Delta_X = \bar{N}_{\text{normal}} - \bar{N}_X$ on the raw alive-count
 scale. Results are robust across scales: on $\log(N_T + 1)$ and
-percentage-decline scales, all five sub-additive pairs remain
-sub-additive and the one super-additive pair (boundary, homeostasis)
-remains super-additive (bootstrap 95\% CI excludes zero for 5/6 pairs).
+percentage-decline scales, all six sub-additive pairs remain
+sub-additive (bootstrap 95\% CI excludes zero for 5/6 pairs).
 Floor effects are minimal: only 10\% of no-homeostasis seeds reach
 near-extinction ($N_T \leq 5$); all other conditions show 0\% at floor.
 Sub-additivity thus reflects genuine shared failure pathways rather than
@@ -862,189 +826,35 @@ Comparing sham-on versus sham-off ($n$=30, 1,000 steps) yields no
 significant difference (Mann-Whitney $U$, $p > 0.05$), validating
 that criterion ablation effects reflect genuine functional dependencies.
 
-\subsection{Mid-run and Invariance Protocol Extensions}
-
-To directly test continuous necessity, we include a delayed-ablation protocol
-that compares step-0 and step-1000 criterion removal on matched seeds
-(\texttt{scripts/experiment\_midrun\_ablation.py}; analysis via
-\texttt{scripts/analyze\_midrun.py}). We also include an
-implementation-invariance protocol for two criteria with alternate
-mechanisms---boundary maintenance (\texttt{scalar\_repair} vs.\
-\texttt{spatial\_hull\_feedback}) and homeostasis
-(\texttt{nn\_regulator} vs.\ \texttt{setpoint\_pid})---to test whether
-necessity conclusions are directionally stable across implementation choices
-(\texttt{scripts/experiment\_invariance.py};
-\texttt{scripts/analyze\_invariance.py}).
-
-\begin{figure}[t]
-\centering
-\IfFileExists{figures/fig_midrun_ablation.pdf}%
-  {\includegraphics[width=0.48\columnwidth]{figures/fig_midrun_ablation.pdf}}%
-  {\fbox{\parbox{0.45\columnwidth}{%
-    \centering\vspace{2em}[midrun figure]\vspace{2em}}}}
-\hfill
-\IfFileExists{figures/fig_invariance.pdf}%
-  {\includegraphics[width=0.48\columnwidth]{figures/fig_invariance.pdf}}%
-  {\fbox{\parbox{0.45\columnwidth}{%
-    \centering\vspace{2em}[invariance figure]\vspace{2em}}}}
-\caption{Protocol extensions for robustness.
-Left: step-0 vs.\ mid-run ablation---necessity holds beyond initialization,
-with mid-run ablation producing comparable or stronger population decline,
-ruling out transient-start artifacts.
-Right: implementation-invariance comparison for boundary/homeostasis
-variants---ablation effects are direction-consistent across both
-\texttt{scalar\_repair}/\texttt{spatial\_hull\_feedback} and
-\texttt{nn\_regulator}/\texttt{setpoint\_pid} implementations,
-confirming results are not implementation-specific.}
-\label{fig:protocol_extensions}
-\end{figure}
-
-\subsection{Ecology Stressor Protocol Extension}
-
-Beyond static conditions, we add an ecology-stressor protocol with abrupt
-environment shifts and cyclic stress phases
-(\texttt{scripts/experiment\_ecology\_stress.py}) and a compact analysis
-pipeline (\texttt{scripts/analyze\_failure\_pathways.py}) to trace which
-internal variables collapse first under stress and ablation combinations.
-
-\begin{figure}[t]
-\centering
-\IfFileExists{figures/fig_ecology_stress.pdf}%
-  {\includegraphics[width=\columnwidth]{figures/fig_ecology_stress.pdf}}%
-  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
-    \centering\vspace{2em}[fig\_ecology\_stress.pdf]\vspace{2em}}}}
-\caption{Ecology stressor conditions ($n$=30 seeds, 2,000 steps).
-Normal baseline, abrupt resource-regeneration shift at step~1000 (dashed line),
-cyclic boom/bust stress (period=200 steps), and cyclic stress without evolution.
-Mean alive count $\pm$1 SEM. Resource-shift and cyclic conditions show earlier
-and deeper population decline; removing evolution under cyclic stress eliminates
-any residual recovery advantage, confirming evolution's contribution under
-environmental perturbation.}
-\label{fig:ecology_stress}
-\end{figure}
-
-\subsection{Additional Validation}
-
-\paragraph{Phenotype clustering.}
-PCA projection of per-seed organism traits (energy, waste, boundary
-integrity, genome diversity, generation count) reveals two emergent
-phenotypic clusters among evolved populations ($k$=2, silhouette=0.41;
-Figure~\ref{fig:phenotype}).
-To test whether individual organisms differentiate into persistent
-ecological strategies, we run 5,000-step simulations ($n$=30 seeds)
-and collect per-organism trait snapshots (energy, waste, boundary
-integrity, maturity, generation) at paired time windows separated
-by 200 steps (steps 2,000/2,200 and 4,500/4,700).
-Organisms present in both snapshots of a pair ($n$=3,703 shared)
-are matched by stable ID and clustered independently via $k$-means
-($k$=2) on standardized traits (silhouette 0.39--0.51;
-Figure~\ref{fig:persistent_clusters}).
-Despite meaningful within-snapshot cluster separation (two distinct
-strategies: high-energy/low-boundary vs.\ low-energy/high-boundary),
-the adjusted Rand index between paired windows is low
-(early-pair ARI=0.020, late-pair ARI=0.043),
-indicating that individual organisms transition between ecological
-roles even over short ($\sim$200-step) timescales.
-Using a pre-registered persistence threshold (stronger language allowed
-only when ARI $\geq 0.30$), these values remain below the claim gate,
-so we report this as weak persistence rather than stable individual
-ecological differentiation.
-Cross-pair analysis (steps 2,000 to 4,700) finds near-zero organism
-overlap, confirming that median lifespan ($\sim$245 steps) prevents
-long-horizon individual persistence.
-An explicit long-horizon sensitivity run (10,000 steps, $n$=30)
-also remains below the pre-registered ARI claim gate
-(early-pair ARI=0.020, late-pair ARI=0.039; threshold $\geq 0.30$),
-so the weak-persistence interpretation is robust to longer simulation horizons.
-A focused viability-threshold sweep (27 settings, 10 seeds each) shows
-the reproduction energy gate has the strongest effect on final alive counts,
-while varying the max-age cap over 15k--25k steps has negligible impact
-at the 2,000-step evaluation horizon.
-This suggests that ecological strategy differentiation in our system
-is a population-level rather than individual-level phenomenon:
-organisms continuously explore the trait space, with the population
-maintaining a stable distribution of strategies even as individuals
-transition between them---consistent with the moderate evolution
-effect ($\delta$=0.39) observed in single-ablation experiments.
-
-\paragraph{Spatial cohesion.}
-Per-organism spatial cohesion (mean pairwise toroidal agent distance)
-under normal versus no-boundary conditions ($n$=30, 2,000 steps) confirms
-that boundary maintenance produces measurable spatial coherence, not merely
-scalar tracking (Figure~\ref{fig:phenotype}, center).
-
-\paragraph{Lineage structure.}
-Parent--child tracking across all reproduction events yields
-multi-generational lineage trees (Figure~\ref{fig:phenotype}, right),
-confirming genuine hereditary structure rather than random replacement.
-
-\begin{figure}[t]
-\centering
-\IfFileExists{figures/fig_phenotype.pdf}%
-  {\includegraphics[width=0.32\columnwidth]{figures/fig_phenotype.pdf}}%
-  {\fbox{\parbox{0.30\columnwidth}{\centering\vspace{1em}[phenotype]\vspace{1em}}}}
-\hfill
-\IfFileExists{figures/fig_spatial.pdf}%
-  {\includegraphics[width=0.32\columnwidth]{figures/fig_spatial.pdf}}%
-  {\fbox{\parbox{0.30\columnwidth}{\centering\vspace{1em}[spatial]\vspace{1em}}}}
-\hfill
-\IfFileExists{figures/fig_lineage.pdf}%
-  {\includegraphics[width=0.32\columnwidth]{figures/fig_lineage.pdf}}%
-  {\fbox{\parbox{0.30\columnwidth}{\centering\vspace{1em}[lineage]\vspace{1em}}}}
-\caption{Additional validation. Left: phenotype clustering via PCA
-($k$-means, silhouette-optimal $k$). Center: spatial cohesion under
-boundary ablation. Right: lineage phylogeny (generation depth vs.\ step).}
-\label{fig:phenotype}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\IfFileExists{figures/fig_persistent_clusters.pdf}%
-  {\includegraphics[width=\columnwidth]{figures/fig_persistent_clusters.pdf}}%
-  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
-    \centering\vspace{2em}[fig\_persistent\_clusters.pdf --- to be generated]\vspace{2em}}}}
-\caption{Per-organism ecological niche persistence. PCA projections of
-individual organism traits (energy, waste, boundary integrity, maturity,
-generation) at early (left) and late (right) time windows, colored by
-$k$-means cluster ($k$=2). Organisms are matched by stable~ID across
-windows; the adjusted Rand index quantifies temporal persistence of
-cluster assignments.}
-\label{fig:persistent_clusters}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\IfFileExists{figures/fig_orthogonal.pdf}%
-  {\includegraphics[width=\columnwidth]{figures/fig_orthogonal.pdf}}%
-  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
-    \centering\vspace{2em}[fig\_orthogonal.pdf --- to be generated]\vspace{2em}}}}
-\caption{Criterion-orthogonal outcome measures ($n$=30 per condition).
-Left: spatial cohesion (mean pairwise agent distance); lower values indicate
-tighter spatial structure. Right: median organism lifespan per seed.
-Diamonds mark medians; dotted line shows normal baseline.
-Response ablation significantly increases cohesion (immobile organisms cluster)
-while decreasing lifespan.}
-\label{fig:orthogonal}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\IfFileExists{figures/fig_evolution_evidence.pdf}%
-  {\includegraphics[width=\columnwidth]{figures/fig_evolution_evidence.pdf}}%
-  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
-    \centering\vspace{2em}[fig\_evolution\_evidence.pdf --- to be generated]\vspace{2em}}}}
-\caption{Evolution evidence. (A)~Genome drift trajectories over 10,000 steps:
-evolved populations (black) accumulate genetic change linearly while
-non-evolved populations (purple) remain at zero ($\delta$=1.00).
-(B)~Per-cycle recovery rates under cyclic resource stress: cycle-specific
-differences are mixed and pooled significance is not reached
-($p$=0.341).}
-\label{fig:evo_evidence}
-\end{figure}
+\textit{See Supplementary Material for mid-run extensions~(§S1),
+ecology stressor protocol~(§S2), and phenotype clustering
+validation~(§S3).}
 
 % ============================================================================
 \section{Criterion Reduction Analysis}
 \label{sec:reduction}
+
+\begin{table}[t]
+\caption{Phase~1 Analysis Summary}
+\label{tab:phase1}
+\small
+\begin{tabular}{lll}
+\toprule
+Analysis & Finding & Value \\
+\midrule
+PCA & Components ($\geq$90\% var.) & 4 (93\%) \\
+Stability (Enet) & Top criterion & Metabolism (0.678) \\
+Stability (Enet) & Bottom criterion & Evolution (0.374) \\
+Criterion Pareto & $R^2$ direction & All negative (underpow.) \\
+Cohen's $d$ & full vs.\ all-off & 10.68 \\
+\midrule
+Surrogate VIF & Retained / total & 6 / 14 \\
+Surrogate Pareto & Elbow at $k$ & $k$=3 \\
+Alive-AUC $R^2$ & Cross-validated & 0.257 \\
+Regulation $R^2$ & Held-out (best) & 0.668 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Protocol}
 
@@ -1068,24 +878,20 @@ lowest (Figure~\ref{fig:crit_stability}).
 This ordering is directionally consistent with single-ablation effect sizes
 (Table~\ref{tab:ablation}).
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
 \IfFileExists{../figures/reduction/fig_criterion_stability.png}%
-  {\includegraphics[width=0.48\textwidth]{../figures/reduction/fig_criterion_stability.png}}%
-  {\fbox{\parbox{0.45\textwidth}{\centering\vspace{2em}[fig\_crit\_stability]\vspace{2em}}}}%
+  {\includegraphics[width=0.48\columnwidth]{../figures/reduction/fig_criterion_stability.png}}%
+  {\fbox{\parbox{0.45\columnwidth}{\centering\vspace{2em}[fig\_crit\_stability]\vspace{2em}}}}%
 \hfill%
 \IfFileExists{../figures/reduction/fig_stability_heatmap.png}%
-  {\includegraphics[width=0.48\textwidth]{../figures/reduction/fig_stability_heatmap.png}}%
-  {\fbox{\parbox{0.45\textwidth}{\centering\vspace{2em}[fig\_stab\_heatmap]\vspace{2em}}}}
-\caption{Left: criterion stability scores (LASSO and Enet, averaged across
-7 performance metrics). Dashed line marks the pre-registered 0.60 threshold.
-Enet ranks metabolism$>$response$>$homeostasis as strongest contributors;
-evolution ranks lowest.
-Right: stability heatmap (7 criteria $\times$ 7 metrics, Enet).
-Color encodes stability (0--1); no criterion clears 0.60 under LASSO across
-all metrics.}
+  {\includegraphics[width=0.48\columnwidth]{../figures/reduction/fig_stability_heatmap.png}}%
+  {\fbox{\parbox{0.45\columnwidth}{\centering\vspace{2em}[fig\_stab\_heatmap]\vspace{2em}}}}
+\caption{Criterion stability scores (left; dashed=0.60 threshold; Enet ranks
+metabolism$>$response$>$homeostasis highest, evolution lowest) and stability
+heatmap (right; 7 criteria $\times$ 7 metrics, Enet).}
 \label{fig:crit_stability}
-\end{figure*}
+\end{figure}
 
 \subsection{PCA Structure}
 
@@ -1107,26 +913,22 @@ Directional Enet stability rankings serve as the primary reduction evidence.
 Cohen's $d$=10.68 (pooled-SD, condition-level means) for full vs.\ all-off
 validates the sweep design.
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
 \IfFileExists{../figures/reduction/fig_pca_biplot.png}%
-  {\includegraphics[width=0.48\textwidth]{../figures/reduction/fig_pca_biplot.png}}%
-  {\fbox{\parbox{0.45\textwidth}{\centering\vspace{2em}[fig\_pca\_biplot]\vspace{2em}}}}%
+  {\includegraphics[width=0.48\columnwidth]{../figures/reduction/fig_pca_biplot.png}}%
+  {\fbox{\parbox{0.45\columnwidth}{\centering\vspace{2em}[fig\_pca\_biplot]\vspace{2em}}}}%
 \hfill%
 \IfFileExists{../figures/reduction/fig_criterion_pareto.png}%
-  {\includegraphics[width=0.48\textwidth]{../figures/reduction/fig_criterion_pareto.png}}%
-  {\fbox{\parbox{0.45\textwidth}{\centering\vspace{2em}[fig\_crit\_pareto]\vspace{2em}}}}
-\caption{Left: PCA biplot of 30-condition performance profiles (PC1=38\%,
-PC2=31\%; color = alive AUC).
-Full-criteria (high AUC) and all-off conditions occupy opposite poles;
-pairwise ablations cluster near all-off, reflecting multiplicative
-criterion interdependence.
-Right: criterion Pareto curve (forward selection, Enet stability order).
-All mean $R^2$ values are negative due to insufficient training observations
-(24 conditions, Ridge regression); annotated as underpowered.
-Enet stability rankings (left panel) provide the primary reduction evidence.}
+  {\includegraphics[width=0.48\columnwidth]{../figures/reduction/fig_criterion_pareto.png}}%
+  {\fbox{\parbox{0.45\columnwidth}{\centering\vspace{2em}[fig\_crit\_pareto]\vspace{2em}}}}
+\caption{Left: PCA biplot (PC1=38\%, PC2=31\%) shows full-criteria and all-off
+at opposite poles; pairwise ablations cluster near all-off, reflecting
+multiplicative criterion interdependence.
+Right: criterion Pareto curve (all $R^2<0$; underpowered); Enet stability
+rankings are primary evidence.}
 \label{fig:pca_reduction}
-\end{figure*}
+\end{figure}
 
 % ============================================================================
 \section{Observable Surrogate Analysis}
@@ -1190,7 +992,7 @@ values use per-target masked feature sets.
 \paragraph{Criterion interdependence.}
 Single ablations reveal a hierarchy: reproduction, response, and metabolism
 form an essential triad ($>$86\% decline), while growth and homeostasis
-occupy a middle tier ($\sim$46\%), followed by boundary ($\sim$31\%).
+occupy a middle tier ($\sim$46\%), followed by boundary ($\sim$35\%).
 Pairwise ablations show uniformly sub-additive interactions
 (Table~\ref{tab:pairwise}), consistent with criteria converging on a
 \emph{shared viability attractor}---boundary collapse---reachable via
@@ -1205,12 +1007,9 @@ ruling out tautological definitions.
 
 \paragraph{Evolution at longer timescales.}
 The modest 2000-step evolution effect ($d$=0.78, $\delta$=0.39) grows to
-$d$=1.42 ($\delta$=0.66) at 10,000 steps and $d$=0.86 ($\delta$=0.50)
-under environmental perturbation, confirming that evolutionary adaptation
-accumulates across generations.
-The cyclic environment test (Figure~\ref{fig:graded_cyclic}, right) yields
-mixed per-cycle recovery differences in the refreshed run and is therefore
-treated as supplemental rather than primary evidence for resilience.
+$d$=1.42 ($\delta$=0.66) at 10,000 steps, confirming that adaptation
+accumulates across generations; cyclic-environment recovery differences
+are mixed and treated as supplemental evidence (§S2).
 
 \paragraph{Are criteria merely engineered?}
 Four lines of evidence argue against this: (1)~proxy control shows
@@ -1240,7 +1039,7 @@ not definitive evidence: no criterion clears the pre-registered LASSO threshold
 of 0.60 (maximum mean stability: metabolism=0.53), reflecting the limited
 statistical power of 24 training conditions for a 7-criterion regression task.
 The Enet stability ranking---metabolism$>$response$>$homeostasis as strongest,
-evolution$>$growth as weakest---is directionally consistent with the single-ablation
+growth$>$evolution as weakest---is directionally consistent with the single-ablation
 effect hierarchy (Table~\ref{tab:ablation}), providing convergent evidence that
 these three criteria contribute most to system-level life-likeness.
 Expanding the sweep to $\geq$100 conditions would likely push LASSO stability
@@ -1323,5 +1122,188 @@ commit provenance, and paper claims are mapped to source artifacts via
 
 \bibliographystyle{apalike}
 \bibliography{references}
+
+% ============================================================================
+\section*{Supplementary Material}
+
+\subsection*{S1: Mid-run and Invariance Protocol Extensions}
+
+To directly test continuous necessity, we include a delayed-ablation protocol
+that compares step-0 and step-1000 criterion removal on matched seeds
+(\texttt{scripts/experiment\_midrun\_ablation.py}; analysis via
+\texttt{scripts/analyze\_midrun.py}). We also include an
+implementation-invariance protocol for two criteria with alternate
+mechanisms---boundary maintenance (\texttt{scalar\_repair} vs.\
+\texttt{spatial\_hull\_feedback}) and homeostasis
+(\texttt{nn\_regulator} vs.\ \texttt{setpoint\_pid})---to test whether
+necessity conclusions are directionally stable across implementation choices
+(\texttt{scripts/experiment\_invariance.py};
+\texttt{scripts/analyze\_invariance.py}).
+
+\begin{figure}[htbp]
+\centering
+\IfFileExists{figures/fig_midrun_ablation.pdf}%
+  {\includegraphics[width=0.48\columnwidth]{figures/fig_midrun_ablation.pdf}}%
+  {\fbox{\parbox{0.45\columnwidth}{%
+    \centering\vspace{2em}[midrun figure]\vspace{2em}}}}
+\hfill
+\IfFileExists{figures/fig_invariance.pdf}%
+  {\includegraphics[width=0.48\columnwidth]{figures/fig_invariance.pdf}}%
+  {\fbox{\parbox{0.45\columnwidth}{%
+    \centering\vspace{2em}[invariance figure]\vspace{2em}}}}
+\caption{Protocol extensions for robustness.
+Left: step-0 vs.\ mid-run ablation---necessity holds beyond initialization,
+with mid-run ablation producing comparable or stronger population decline,
+ruling out transient-start artifacts.
+Right: implementation-invariance comparison for boundary/homeostasis
+variants---ablation effects are direction-consistent across both
+\texttt{scalar\_repair}/\texttt{spatial\_hull\_feedback} and
+\texttt{nn\_regulator}/\texttt{setpoint\_pid} implementations,
+confirming results are not implementation-specific.}
+\label{fig:protocol_extensions}
+\end{figure}
+
+\subsection*{S2: Ecology Stressor Protocol Extension}
+
+Beyond static conditions, we add an ecology-stressor protocol with abrupt
+environment shifts and cyclic stress phases
+(\texttt{scripts/experiment\_ecology\_stress.py}) and a compact analysis
+pipeline (\texttt{scripts/analyze\_failure\_pathways.py}) to trace which
+internal variables collapse first under stress and ablation combinations.
+
+\begin{figure}[htbp]
+\centering
+\IfFileExists{figures/fig_ecology_stress.pdf}%
+  {\includegraphics[width=\columnwidth]{figures/fig_ecology_stress.pdf}}%
+  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
+    \centering\vspace{2em}[fig\_ecology\_stress.pdf]\vspace{2em}}}}
+\caption{Ecology stressor conditions ($n$=30 seeds, 2,000 steps).
+Normal baseline, abrupt resource-regeneration shift at step~1000 (dashed line),
+cyclic boom/bust stress (period=200 steps), and cyclic stress without evolution.
+Mean alive count $\pm$1 SEM. Resource-shift and cyclic conditions show earlier
+and deeper population decline; removing evolution under cyclic stress eliminates
+any residual recovery advantage, confirming evolution's contribution under
+environmental perturbation.}
+\label{fig:ecology_stress}
+\end{figure}
+
+\subsection*{S3: Additional Validation}
+
+\paragraph{Phenotype clustering.}
+PCA projection of per-seed organism traits (energy, waste, boundary
+integrity, genome diversity, generation count) reveals two emergent
+phenotypic clusters among evolved populations ($k$=2, silhouette=0.41;
+Figure~\ref{fig:phenotype}).
+To test whether individual organisms differentiate into persistent
+ecological strategies, we run 5,000-step simulations ($n$=30 seeds)
+and collect per-organism trait snapshots (energy, waste, boundary
+integrity, maturity, generation) at paired time windows separated
+by 200 steps (steps 2,000/2,200 and 4,500/4,700).
+Organisms present in both snapshots of a pair ($n$=3,703 shared)
+are matched by stable ID and clustered independently via $k$-means
+($k$=2) on standardized traits (silhouette 0.39--0.51;
+Figure~\ref{fig:persistent_clusters}).
+Despite meaningful within-snapshot cluster separation (two distinct
+strategies: high-energy/low-boundary vs.\ low-energy/high-boundary),
+the adjusted Rand index between paired windows is low
+(early-pair ARI=0.020, late-pair ARI=0.043),
+indicating that individual organisms transition between ecological
+roles even over short ($\sim$200-step) timescales.
+Using a pre-registered persistence threshold (stronger language allowed
+only when ARI $\geq 0.30$), these values remain below the claim gate,
+so we report this as weak persistence rather than stable individual
+ecological differentiation.
+Cross-pair analysis (steps 2,000 to 4,700) finds near-zero organism
+overlap, confirming that median lifespan ($\sim$245 steps) prevents
+long-horizon individual persistence.
+An explicit long-horizon sensitivity run (10,000 steps, $n$=30)
+also remains below the pre-registered ARI claim gate
+(early-pair ARI=0.020, late-pair ARI=0.039; threshold $\geq 0.30$),
+so the weak-persistence interpretation is robust to longer simulation horizons.
+A focused viability-threshold sweep (27 settings, 10 seeds each) shows
+the reproduction energy gate has the strongest effect on final alive counts,
+while varying the max-age cap over 15k--25k steps has negligible impact
+at the 2,000-step evaluation horizon.
+This suggests that ecological strategy differentiation in our system
+is a population-level rather than individual-level phenomenon:
+organisms continuously explore the trait space, with the population
+maintaining a stable distribution of strategies even as individuals
+transition between them---consistent with the moderate evolution
+effect ($\delta$=0.39) observed in single-ablation experiments.
+
+\paragraph{Spatial cohesion.}
+Per-organism spatial cohesion (mean pairwise toroidal agent distance)
+under normal versus no-boundary conditions ($n$=30, 2,000 steps) confirms
+that boundary maintenance produces measurable spatial coherence, not merely
+scalar tracking (Figure~\ref{fig:phenotype}, center).
+
+\paragraph{Lineage structure.}
+Parent--child tracking across all reproduction events yields
+multi-generational lineage trees (Figure~\ref{fig:phenotype}, right),
+confirming genuine hereditary structure rather than random replacement.
+
+\begin{figure}[htbp]
+\centering
+\IfFileExists{figures/fig_phenotype.pdf}%
+  {\includegraphics[width=0.32\columnwidth]{figures/fig_phenotype.pdf}}%
+  {\fbox{\parbox{0.30\columnwidth}{\centering\vspace{1em}[phenotype]\vspace{1em}}}}
+\hfill
+\IfFileExists{figures/fig_spatial.pdf}%
+  {\includegraphics[width=0.32\columnwidth]{figures/fig_spatial.pdf}}%
+  {\fbox{\parbox{0.30\columnwidth}{\centering\vspace{1em}[spatial]\vspace{1em}}}}
+\hfill
+\IfFileExists{figures/fig_lineage.pdf}%
+  {\includegraphics[width=0.32\columnwidth]{figures/fig_lineage.pdf}}%
+  {\fbox{\parbox{0.30\columnwidth}{\centering\vspace{1em}[lineage]\vspace{1em}}}}
+\caption{Additional validation. Left: phenotype clustering via PCA
+($k$-means, silhouette-optimal $k$). Center: spatial cohesion under
+boundary ablation. Right: lineage phylogeny (generation depth vs.\ step).}
+\label{fig:phenotype}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\IfFileExists{figures/fig_persistent_clusters.pdf}%
+  {\includegraphics[width=\columnwidth]{figures/fig_persistent_clusters.pdf}}%
+  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
+    \centering\vspace{2em}[fig\_persistent\_clusters.pdf --- to be generated]\vspace{2em}}}}
+\caption{Per-organism ecological niche persistence. PCA projections of
+individual organism traits (energy, waste, boundary integrity, maturity,
+generation) at early (left) and late (right) time windows, colored by
+$k$-means cluster ($k$=2). Organisms are matched by stable~ID across
+windows; the adjusted Rand index quantifies temporal persistence of
+cluster assignments.}
+\label{fig:persistent_clusters}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\IfFileExists{figures/fig_orthogonal.pdf}%
+  {\includegraphics[width=\columnwidth]{figures/fig_orthogonal.pdf}}%
+  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
+    \centering\vspace{2em}[fig\_orthogonal.pdf --- to be generated]\vspace{2em}}}}
+\caption{Criterion-orthogonal outcome measures ($n$=30 per condition).
+Left: spatial cohesion (mean pairwise agent distance); lower values indicate
+tighter spatial structure. Right: median organism lifespan per seed.
+Diamonds mark medians; dotted line shows normal baseline.
+Response ablation significantly increases cohesion (immobile organisms cluster)
+while decreasing lifespan.}
+\label{fig:orthogonal}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\IfFileExists{figures/fig_evolution_evidence.pdf}%
+  {\includegraphics[width=\columnwidth]{figures/fig_evolution_evidence.pdf}}%
+  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
+    \centering\vspace{2em}[fig\_evolution\_evidence.pdf --- to be generated]\vspace{2em}}}}
+\caption{Evolution evidence. (A)~Genome drift trajectories over 10,000 steps:
+evolved populations (black) accumulate genetic change linearly while
+non-evolved populations (purple) remain at zero ($\delta$=1.00).
+(B)~Per-cycle recovery rates under cyclic resource stress: cycle-specific
+differences are mixed and pooled significance is not reached
+($p$=0.341).}
+\label{fig:evo_evidence}
+\end{figure}
 
 \end{document}
