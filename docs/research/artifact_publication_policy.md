@@ -236,6 +236,31 @@ a `@misc` entry to `paper/references.bib`:
 }
 ```
 
+## GitHub–Zenodo Integration (Code Archival)
+
+In addition to the dataset DOI (uploaded via `upload_zenodo.py`), the
+repository is connected to Zenodo's GitHub integration. Creating a
+**GitHub Release** triggers Zenodo to auto-archive a `.zip` of the source
+code and mint a separate **code DOI**.
+
+Setup:
+1. Toggle the repository ON at
+   <https://zenodo.org/account/settings/github/>.
+2. Maintain `.zenodo.json` at the repository root — this controls the
+   metadata (authors, keywords, license, related identifiers) that Zenodo
+   uses instead of guessing from GitHub.
+3. Create a GitHub Release from the submission tag:
+   ```bash
+   gh release create v1.0-submission \
+     --title "v1.0-submission: ALIFE 2026 Paper" \
+     --notes "Initial submission to ALIFE 2026."
+   ```
+4. Zenodo auto-creates a code record; add the code DOI to the README.
+
+This gives the project **two citable DOIs**:
+- **Dataset DOI** (`upload_zenodo.py`): raw experiment data
+- **Code DOI** (GitHub integration): source code snapshot
+
 ## Reproducibility Note
 
 The repository allows users to:
