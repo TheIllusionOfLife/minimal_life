@@ -141,18 +141,18 @@ our criterion-ablation approach.
 \begin{table}[t]
 \centering
 \caption{Criterion comparison (five-level rubric; bold $\geq$4).
-Full scores for remaining four surveyed systems available upon request.}
+Full scores for remaining four surveyed systems in the project repository.}
 \label{tab:comparison}
 \footnotesize
-\begin{tabular}{lcccccccc}
+\begin{tabular}{@{}l@{\hskip 4pt}c@{\hskip 4pt}c@{\hskip 4pt}c@{\hskip 4pt}c@{\hskip 4pt}c@{\hskip 4pt}c@{\hskip 4pt}c@{\hskip 4pt}c@{}}
 \toprule
 System & CO & Me & Ho & Gr & Re & Rs & Ev & $\Sigma$ \\
 \midrule
 ALIEN \citep{heinemann_2008_alien} & \textbf{4} & 3 & 2 & 3 & \textbf{4} & \textbf{4} & \textbf{4} & 24 \\
 \textbf{Ours}$^\dagger$ & \textbf{4} & \textbf{4} & \textbf{4} & \textbf{4} & \textbf{4} & \textbf{4} & 3 & \textbf{27} \\
 \bottomrule
-\multicolumn{9}{l}{\scriptsize $^\dagger$Self-assessment. CO=Cell.Org, Me=Metab, Ho=Homeo,}\\
-\multicolumn{9}{l}{\scriptsize Gr=Growth, Re=Reprod, Rs=Response, Ev=Evol.}
+\multicolumn{9}{@{}l@{}}{\scriptsize $^\dagger$Self-assessed. CO=Cell.Org, Me=Metab, Ho=Homeo,}\\
+\multicolumn{9}{@{}l@{}}{\scriptsize Gr=Growth, Re=Reprod, Rs=Response, Ev=Evol.}
 \end{tabular}
 \end{table}
 
@@ -379,18 +379,18 @@ graded/cyclic experiments~(§S7).}
 \caption{Phase~1 Analysis Summary}
 \label{tab:phase1}
 \small
-\begin{tabular}{lll}
+\begin{tabular}{@{}llr@{}}
 \toprule
 Analysis & Finding & Value \\
 \midrule
-PCA & Components ($\geq$90\% var.) & 4 (93\%) \\
-Stability (Enet) & Top criterion & Metabolism (0.678) \\
-Stability (Enet) & Bottom criterion & Evolution (0.374) \\
-Criterion Pareto & $R^2$ direction & All negative (underpow.) \\
+PCA & Comp.\ $\geq$90\% var. & 4 (93\%) \\
+Stability (Enet) & Top criterion & Met.\ 0.678 \\
+Stability (Enet) & Bottom criterion & Evo.\ 0.374 \\
+Crit.\ Pareto & $R^2$ direction & All neg. \\
 Cohen's $d$ & full vs.\ all-off & 10.68 \\
 \midrule
-Surrogate VIF & Retained / total & 6 / 14 \\
-Surrogate Pareto & Elbow at $k$ & $k$=3 \\
+Surr.\ VIF & Retained / total & 6/14 \\
+Surr.\ Pareto & Elbow at $k$ & $k$=3 \\
 Alive-AUC $R^2$ & Cross-validated & 0.257 \\
 Regulation $R^2$ & Held-out (best) & 0.668 \\
 \bottomrule
@@ -927,19 +927,21 @@ and evolution (4). All segments are initialized and subject to mutation; segment
 \paragraph{Simulation parameters.}
 
 \smallskip
+\scriptsize
 \begin{tabular}{@{}ll@{}}
 \toprule
 Parameter & Value \\
 \midrule
-World size & $100{\times}100$ toroidal \\
-Initial organisms & 30 (25 swarm agents each) \\
-Timesteps & 2,000 (sampled every 50) \\
-Resource regen. & 0.01/cell/step \\
-Point mutation rate & 0.02/gene, scale 0.15 \\
-Calibration seeds & 0--99 \\
+World & $100{\times}100$ toroidal \\
+Organisms & 30 (25 agents/org) \\
+Steps & 2,000 (sample /50) \\
+Resource & 0.01/cell/step \\
+Mutation & 0.02/gene, s.\ 0.15 \\
+Cal.\ seeds & 0--99 \\
 Test seeds & 100--129 ($n$=30) \\
 \bottomrule
 \end{tabular}
+\normalsize
 
 % ----------------------------------------------------------------------------
 \subsection*{S5: Pairwise Ablation Analysis}
