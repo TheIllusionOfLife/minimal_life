@@ -839,20 +839,20 @@ validation~(§S3).}
 \caption{Phase~1 Analysis Summary}
 \label{tab:phase1}
 \begin{tabular}{lll}
-\hline
+\toprule
 Analysis & Finding & Value \\
-\hline
+\midrule
 PCA & Components ($\geq$90\% var.) & 4 (93\%) \\
 Stability (Enet) & Top criterion & Metabolism (0.678) \\
 Stability (Enet) & Bottom criterion & Evolution (0.374) \\
 Criterion Pareto & $R^2$ direction & All negative (underpow.) \\
 Cohen's $d$ & full vs.\ all-off & 10.68 \\
-\hline
+\midrule
 Surrogate VIF & Retained / total & 6 / 14 \\
 Surrogate Pareto & Elbow at $k$ & $k$=3 \\
 Alive-AUC $R^2$ & Cross-validated & 0.257 \\
 Regulation $R^2$ & Held-out (best) & 0.668 \\
-\hline
+\bottomrule
 \end{tabular}
 \end{table}
 
@@ -922,10 +922,11 @@ validates the sweep design.
 \IfFileExists{../figures/reduction/fig_criterion_pareto.png}%
   {\includegraphics[width=0.48\columnwidth]{../figures/reduction/fig_criterion_pareto.png}}%
   {\fbox{\parbox{0.45\columnwidth}{\centering\vspace{2em}[fig\_crit\_pareto]\vspace{2em}}}}
-\caption{Left: PCA biplot (PC1=38\%, PC2=31\%; full-criteria vs.\ all-off at
-opposite poles; pairwise ablations cluster near all-off).
-Right: criterion Pareto curve (all $R^2<0$; underpowered; Enet rankings are
-primary evidence).}
+\caption{Left: PCA biplot (PC1=38\%, PC2=31\%) shows full-criteria and all-off
+at opposite poles; pairwise ablations cluster near all-off, reflecting
+multiplicative criterion interdependence.
+Right: criterion Pareto curve (all $R^2<0$; underpowered); Enet stability
+rankings are primary evidence.}
 \label{fig:pca_reduction}
 \end{figure}
 
