@@ -157,11 +157,41 @@ The script:
 1. Reads artifact paths and SHA256 checksums from `zenodo_metadata.json`.
 2. Verifies local files match the recorded checksums before uploading.
 3. Creates a draft deposit via `POST /deposit/depositions`.
-4. Uploads each archive via `PUT` to the bucket URL.
-5. Sets title, description, creators, license, and related identifiers.
+4. Uploads each archive via `PUT` to the bucket URL (new API, up to 50 GB).
+5. Sets title, description, creators, license, keywords, conference info,
+   and related identifiers.
 6. Optionally publishes via `POST /deposit/depositions/{id}/actions/publish`.
 
 After publishing, record the DOI printed to stderr.
+
+**Creating a new version of an existing record:**
+
+```bash
+uv run python scripts/upload_zenodo.py \
+  --metadata docs/research/zenodo_metadata.json \
+  --new-version 18780935 \
+  --creator "Last, First; Affiliation" \
+  --version v2.0 --publish
+```
+
+This creates a version draft from the published record, removes inherited
+files, uploads fresh artifacts, and publishes with a new DOI.
+
+**Editing metadata of a published record (no re-upload):**
+
+```bash
+uv run python scripts/upload_zenodo.py \
+  --edit 18780935 --title "Updated title" --publish
+```
+
+**Fetching BibTeX for a published record:**
+
+```bash
+uv run python scripts/upload_zenodo.py --fetch-bibtex 18780935
+```
+
+This prints the BibTeX entry to stdout, which can be appended to
+`paper/references.bib`.
 
 ### Step 5: Update repository references
 
