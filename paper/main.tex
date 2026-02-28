@@ -1243,11 +1243,16 @@ second, etc.
 
 For the essential triad:
 \textbf{Metabolism ablation} shows energy collapse as the first break
-(within $\sim$100 steps), followed by boundary decay;
-\textbf{Response ablation} shows energy collapse first (organisms cannot
-reach resources), then boundary failure;
-\textbf{Reproduction ablation} shows a more gradual decline with boundary
-integrity breaking first as the un-replaced population ages.
+(median break step~20), with waste and internal state collapsing simultaneously
+(step~20); boundary never reaches the $z < -2$ threshold, indicating that
+organisms die before boundary integrity degrades.
+\textbf{Response ablation} shows the same pattern: energy breaks first
+(step~20), followed by waste and internal state (step~20), then boundary
+decay (step~100).
+\textbf{Reproduction ablation} shows a distinct signature: only waste and
+internal state break (step~20), while energy and boundary remain above
+the $z < -2$ threshold---the un-replaced population maintains individual
+homeostasis but the system fails through demographic attrition.
 
 See Figure~\ref{fig:failure_modes} for normalized time-series with break
 markers.
@@ -1288,8 +1293,23 @@ event linkage.
 Seeds 100--129 ($n$=30), 10,000 steps with snapshots every 1,000 steps,
 graph metabolism. Two conditions: evolved (normal) vs.\ clonal control
 (evolution disabled).
-Effect size: Cohen's $d$ for evolved vs.\ clonal at the final snapshot.
-Success criterion: H1 $p < 0.05$ AND H2 slope 95\% CI excludes zero.
+
+\textbf{Results.}
+H1 (directional selection): The Jonckheere-Terpstra test does \emph{not}
+reject the null ($J = 1.62 \times 10^{9}$, $p = 0.947$); cohort mean
+energies are flat across generations (0.81 for all four cohorts).
+The clonal control is similarly flat ($p > 0.99$).
+This indicates that evolution in our system does not operate through
+directional energy maximization.
+H2 (heritability): The parent-offspring regression slope is $\hat{b} = 0.747$,
+95\% bootstrap CI $[0.730, 0.763]$ ($n = 68{,}497$ pairs), excluding zero
+and confirming strong heritability of the energy phenotype.
+Cohen's $d = 0.058$ (evolved $n = 11{,}340$ vs.\ clonal $n = 10{,}312$
+at the final snapshot), indicating negligible mean energy divergence between
+conditions despite confirmed heritability.
+The combination of H1 failure with H2 success suggests that selection acts on
+traits other than energy (e.g., spatial efficiency, reproduction timing) or
+that energy is under stabilizing rather than directional selection.
 
 See Figure~\ref{fig:fitness_landscape} for the 2-panel summary.
 
@@ -1316,7 +1336,21 @@ $\{0.05, 0.1, 0.15, 0.2\}$ and \texttt{death\_energy\_threshold} over
 $\{0.0, 0.05, 0.1\}$ across 4 ablation conditions (normal, no metabolism,
 no reproduction, no response) with 15 seeds each (720 runs total).
 We assess rank stability via Spearman correlation of each threshold
-combo's $\Delta$\% ranking against the default-threshold ranking.
+combo's $\Delta$\% ranking against the default-threshold ranking
+(bt=0.1, et=0.0).
+
+\textbf{Results.}
+9 of 11 non-reference threshold combinations yield Spearman $\rho = 1.0$
+with the default ranking, confirming perfect rank preservation.
+Two combinations (bt=0.05 with et=0.05 and et=0.1) yield $\rho = 0.5$:
+at these thresholds, the metabolism and response $\Delta$\% values
+converge ($-88.3$\% vs.\ $-88.3$\% and $-88.9$\%, respectively),
+producing a near-tie that swaps their ranks.
+Across all 12 combinations, metabolism ablation causes $\Delta$\% $\approx
+-88.3$ to $-88.7$\%, reproduction ablation $\approx -91.8$ to $-92.2$\%,
+and response ablation $\approx -85.1$ to $-88.9$\%.
+Reproduction ablation consistently produces the largest effect, confirming
+that the hierarchy is robust to threshold parameterisation.
 See Figure~\ref{fig:threshold_sensitivity}.
 
 \begin{figure}[htbp]
@@ -1335,8 +1369,22 @@ is assessed via Spearman correlation with the default-threshold ranking.}
 To test whether findings generalize beyond the toroidal environment
 (Reviewer C~Q4), we compare the ablation effect hierarchy under toroidal
 (wrap-around) and bounded (wall) topologies across 4 conditions with 30
-seeds each (240 runs total). We report Mann-Whitney $U$ per condition and
-Spearman rank correlation between topologies.
+seeds each (240 runs total).
+
+\textbf{Results.}
+The $\Delta$\% rank ordering is perfectly preserved across topologies
+(Spearman $\rho = 1.0$, $p < 10^{-6}$): reproduction ablation is most
+severe, followed by metabolism, then response, in both topologies.
+Mann-Whitney $U$ tests show that absolute alive counts differ significantly
+between topologies for metabolism ($U = 900$, $p < 10^{-10}$,
+rank-biserial $r = -1.0$) and reproduction ($U = 900$, $p < 10^{-10}$,
+$r = -1.0$), but not for response ($U = 358$, $p = 0.175$, $r = 0.20$)
+or the normal baseline ($U = 533$, $p = 0.223$, $r = -0.18$).
+Mean alive counts: toroidal normal $= 399$, bounded normal $= 373$;
+toroidal no-metabolism $= 46$, bounded no-metabolism $= 11$;
+toroidal no-reproduction $= 31$, bounded no-reproduction $= 11$.
+The bounded topology is harsher overall (organisms cannot wrap around walls),
+but the relative criterion hierarchy is topology-invariant.
 See Figure~\ref{fig:boundary_topology}.
 
 \begin{figure}[htbp]
