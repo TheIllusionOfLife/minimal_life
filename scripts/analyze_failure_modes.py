@@ -30,8 +30,11 @@ def compute_z_scores(
     baseline mean and std are computed across the *entire* baseline series,
     then each test value is compared to that distribution.
 
-    When baseline std is zero (constant baseline), any deviation from the
-    mean yields z = ±(value − mean) / epsilon, clamped to avoid inf.
+    **Stationarity assumption**: the global mean/std treat the baseline as
+    stationary.  For trending baselines, consider a rolling-window variant.
+
+    When baseline std is zero (constant baseline), a small epsilon replaces
+    std so deviations still produce finite z-scores.
     """
     n = len(baseline_series)
     if n == 0:
@@ -59,14 +62,19 @@ def detect_first_break(
     threshold: float = -2.0,
     sustained: int = 3,
 ) -> int | None:
-    """Return the step at which z drops below *threshold* for *sustained*
-    consecutive samples, or ``None`` if no sustained break is found.
+    """Return the **onset** step at which z drops below *threshold* for
+    *sustained* consecutive samples, or ``None`` if no sustained break is
+    found.
+
+    The returned step is the *beginning* of the sustained run (earliest
+    onset), not the step at which the run was confirmed.
     """
+    n = min(len(z_scores), len(steps))
     run_length = 0
     run_start_step = None
 
-    for i, z in enumerate(z_scores):
-        if z < threshold:
+    for i in range(n):
+        if z_scores[i] < threshold:
             if run_length == 0:
                 run_start_step = steps[i]
             run_length += 1
@@ -227,13 +235,13 @@ def analyze_failure_modes(
     results: dict = {}
 
     for condition in conditions:
-        cond_runs = []
+        cond_runs: list[tuple[int, dict]] = []
         for i in range(n_seeds):
             path = data_dir / f"drop_{condition}_seed{i}.json"
             if not path.exists():
                 continue
             with open(path) as f:
-                cond_runs.append(json.load(f))
+                cond_runs.append((i, json.load(f)))
 
         if not cond_runs:
             results[condition] = {"error": "no data found"}
@@ -242,7 +250,7 @@ def analyze_failure_modes(
         per_seed_results = []
         per_seed_cascades = []
 
-        for seed_idx, run in enumerate(cond_runs):
+        for seed_id, run in cond_runs:
             seed_break_points: dict[str, int | None] = {}
 
             for metric in TRACKED_METRICS:
@@ -254,7 +262,7 @@ def analyze_failure_modes(
 
             cascade = detect_cascade_order(seed_break_points)
             per_seed_results.append({
-                "seed": seed_idx,
+                "seed": seed_id,
                 "break_points": {k: v for k, v in seed_break_points.items()},
                 "cascade": [[m, s] for m, s in cascade],
             })
