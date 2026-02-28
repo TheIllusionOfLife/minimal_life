@@ -14,9 +14,15 @@ from pathlib import Path
 # Helpers to create synthetic experiment data matching the RunSummary schema
 # ---------------------------------------------------------------------------
 
-def _make_sample(step: int, energy: float, boundary: float,
-                 internal_state_0: float, waste: float,
-                 alive_count: int = 50) -> dict:
+
+def _make_sample(
+    step: int,
+    energy: float,
+    boundary: float,
+    internal_state_0: float,
+    waste: float,
+    alive_count: int = 50,
+) -> dict:
     """Create a single sample dict matching Rust RunSummary schema."""
     return {
         "step": step,
@@ -58,29 +64,35 @@ def _make_run(samples: list[dict], final_alive: int = 50) -> dict:
     }
 
 
-def _make_stable_baseline(n_seeds: int = 20, n_steps: int = 100,
-                          sample_every: int = 20) -> list[dict]:
+def _make_stable_baseline(
+    n_seeds: int = 20, n_steps: int = 100, sample_every: int = 20
+) -> list[dict]:
     """Create n_seeds baseline runs with stable metric values."""
     runs = []
     for _seed in range(n_seeds):
         samples = []
         for step in range(sample_every, n_steps + 1, sample_every):
-            samples.append(_make_sample(
-                step=step,
-                energy=0.5,
-                boundary=0.8,
-                internal_state_0=0.5,
-                waste=0.1,
-            ))
+            samples.append(
+                _make_sample(
+                    step=step,
+                    energy=0.5,
+                    boundary=0.8,
+                    internal_state_0=0.5,
+                    waste=0.1,
+                )
+            )
         runs.append(_make_run(samples))
     return runs
 
 
-def _make_drop_condition(n_seeds: int = 20, n_steps: int = 100,
-                         sample_every: int = 20,
-                         break_metric: str = "energy_mean",
-                         break_step: int = 60,
-                         break_value: float = 0.0) -> list[dict]:
+def _make_drop_condition(
+    n_seeds: int = 20,
+    n_steps: int = 100,
+    sample_every: int = 20,
+    break_metric: str = "energy_mean",
+    break_step: int = 60,
+    break_value: float = 0.0,
+) -> list[dict]:
     """Create runs where one metric drops at break_step."""
     metric_defaults = {
         "energy_mean": 0.5,
@@ -98,13 +110,15 @@ def _make_drop_condition(n_seeds: int = 20, n_steps: int = 100,
                     vals["internal_state_0"] = break_value
                 else:
                     vals[break_metric] = break_value
-            samples.append(_make_sample(
-                step=step,
-                energy=vals["energy_mean"],
-                boundary=vals["boundary_mean"],
-                internal_state_0=vals["internal_state_0"],
-                waste=vals["waste_mean"],
-            ))
+            samples.append(
+                _make_sample(
+                    step=step,
+                    energy=vals["energy_mean"],
+                    boundary=vals["boundary_mean"],
+                    internal_state_0=vals["internal_state_0"],
+                    waste=vals["waste_mean"],
+                )
+            )
         runs.append(_make_run(samples))
     return runs
 
@@ -112,6 +126,7 @@ def _make_drop_condition(n_seeds: int = 20, n_steps: int = 100,
 # ---------------------------------------------------------------------------
 # Tests
 # ---------------------------------------------------------------------------
+
 
 class TestComputeZScores:
     """Test z-score computation against baseline."""
@@ -264,8 +279,11 @@ class TestEndToEndAnalysis:
         # Create synthetic data
         baseline = _make_stable_baseline(n_seeds=5, n_steps=200, sample_every=20)
         drop_metab = _make_drop_condition(
-            n_seeds=5, n_steps=200, sample_every=20,
-            break_metric="energy_mean", break_step=80,
+            n_seeds=5,
+            n_steps=200,
+            sample_every=20,
+            break_metric="energy_mean",
+            break_step=80,
         )
 
         data_dir = tmp_path / "ablation_sweep"

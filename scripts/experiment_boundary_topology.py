@@ -56,7 +56,10 @@ def run_boundary_topology() -> None:
             for seed in SEEDS:
                 t0 = time.perf_counter()
                 result = run_single(
-                    seed, combined, steps=STEPS, sample_every=SAMPLE_EVERY,
+                    seed,
+                    combined,
+                    steps=STEPS,
+                    sample_every=SAMPLE_EVERY,
                 )
                 elapsed = time.perf_counter() - t0
                 completed += 1

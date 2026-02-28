@@ -40,11 +40,16 @@ def generate_fitness_landscape() -> None:
         cohort_labels = [f"{i * 5}–{i * 5 + 4}" for i in range(len(e_means) - 1)]
         cohort_labels.append(f"{(len(e_means) - 1) * 5}+")
         x = np.arange(len(e_means))
-        ax.bar(x - 0.15, e_means, 0.3, label="Evolved",
-               color=COLORS["normal"], alpha=0.8)
+        ax.bar(x - 0.15, e_means, 0.3, label="Evolved", color=COLORS["normal"], alpha=0.8)
         if c_means:
-            ax.bar(x + 0.15, c_means[:len(x)], 0.3, label="Clonal",
-                   color=COLORS["no_evolution"], alpha=0.8)
+            ax.bar(
+                x + 0.15,
+                c_means[: len(x)],
+                0.3,
+                label="Clonal",
+                color=COLORS["no_evolution"],
+                alpha=0.8,
+            )
         ax.set_xticks(x)
         ax.set_xticklabels(cohort_labels, fontsize=7)
         ax.set_xlabel("Generation Cohort")
@@ -53,8 +58,16 @@ def generate_fitness_landscape() -> None:
         ax.set_title(f"H1: Directional Selection (p={p_val:.3g})", fontsize=9)
         ax.legend(fontsize=7)
     else:
-        ax.text(0.5, 0.5, "No cohort data", transform=ax.transAxes,
-                ha="center", va="center", fontsize=8, color="gray")
+        ax.text(
+            0.5,
+            0.5,
+            "No cohort data",
+            transform=ax.transAxes,
+            ha="center",
+            va="center",
+            fontsize=8,
+            color="gray",
+        )
         ax.set_title("H1: Directional Selection", fontsize=9)
 
     # Panel B: Parent-offspring regression
@@ -83,9 +96,16 @@ def generate_fitness_landscape() -> None:
             fontsize=8,
         )
     else:
-        ax.text(0.5, 0.5, "Insufficient linkage data",
-                transform=ax.transAxes, ha="center", va="center",
-                fontsize=8, color="gray")
+        ax.text(
+            0.5,
+            0.5,
+            "Insufficient linkage data",
+            transform=ax.transAxes,
+            ha="center",
+            va="center",
+            fontsize=8,
+            color="gray",
+        )
         ax.set_title("H2: Parent-Offspring Regression", fontsize=9)
 
     fig.tight_layout()

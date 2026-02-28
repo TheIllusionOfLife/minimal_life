@@ -34,7 +34,8 @@ DATA_DIR = PROJECT_ROOT / "experiments" / "ablation_sweep"
 
 
 def _load_metric_series(
-    runs: list[dict], metric: str,
+    runs: list[dict],
+    metric: str,
 ) -> tuple[list[int], np.ndarray]:
     """Load per-seed metric series and return (steps, 2D array[seeds, steps])."""
     all_series = []
@@ -91,8 +92,16 @@ def generate_failure_modes() -> None:
         runs = _load_condition_runs(condition)
         if not runs:
             ax.set_title(title)
-            ax.text(0.5, 0.5, "No data", transform=ax.transAxes,
-                    ha="center", va="center", fontsize=8, color="gray")
+            ax.text(
+                0.5,
+                0.5,
+                "No data",
+                transform=ax.transAxes,
+                ha="center",
+                va="center",
+                fontsize=8,
+                color="gray",
+            )
             continue
 
         for metric, style in METRIC_STYLES.items():
@@ -103,11 +112,17 @@ def generate_failure_modes() -> None:
             mean = normed.mean(axis=0)
             sem = normed.std(axis=0) / np.sqrt(normed.shape[0])
 
-            ax.plot(steps, mean, color=style["color"], label=style["label"],
-                    linewidth=1.2, marker=style["marker"], markersize=2,
-                    markevery=max(1, len(steps) // 8))
-            ax.fill_between(steps, mean - sem, mean + sem,
-                            color=style["color"], alpha=0.15)
+            ax.plot(
+                steps,
+                mean,
+                color=style["color"],
+                label=style["label"],
+                linewidth=1.2,
+                marker=style["marker"],
+                markersize=2,
+                markevery=max(1, len(steps) // 8),
+            )
+            ax.fill_between(steps, mean - sem, mean + sem, color=style["color"], alpha=0.15)
 
         # Vertical markers at median break steps
         cond_analysis = analysis.get(condition, {})
@@ -115,8 +130,7 @@ def generate_failure_modes() -> None:
         for metric, style in METRIC_STYLES.items():
             step = median_breaks.get(metric)
             if step is not None:
-                ax.axvline(step, color=style["color"], linestyle="--",
-                           linewidth=0.8, alpha=0.7)
+                ax.axvline(step, color=style["color"], linestyle="--", linewidth=0.8, alpha=0.7)
 
         ax.set_title(title, fontsize=9)
         ax.set_xlabel("Step")

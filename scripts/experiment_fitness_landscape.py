@@ -43,7 +43,10 @@ def run_fitness_landscape() -> None:
             t0 = time.perf_counter()
             config_json = make_config(seed, overrides)
             result_json = minimal_life.run_niche_experiment_json(
-                config_json, steps, sample_every, snapshot_steps,
+                config_json,
+                steps,
+                sample_every,
+                snapshot_steps,
             )
             result = json.loads(result_json)
             elapsed = time.perf_counter() - t0
@@ -54,10 +57,7 @@ def run_fitness_landscape() -> None:
 
             alive = result.get("final_alive_count", 0)
             n_snaps = len(result.get("organism_snapshots", []))
-            log(
-                f"  seed={seed:3d}  alive={alive:4d}"
-                f"  snaps={n_snaps}  {elapsed:.2f}s"
-            )
+            log(f"  seed={seed:3d}  alive={alive:4d}  snaps={n_snaps}  {elapsed:.2f}s")
 
         log(f"  Condition time: {time.perf_counter() - cond_start:.1f}s\n")
 

@@ -16,9 +16,7 @@ from figures._shared import FIG_DIR
 # Topology-specific colors (not condition-based)
 TOPO_COLORS = {"toroidal": "#0072B2", "bounded": "#D55E00"}  # Okabe-Ito blue/vermillion
 
-ANALYSIS_PATH = (
-    PROJECT_ROOT / "experiments" / "boundary_topology_analysis.json"
-)
+ANALYSIS_PATH = PROJECT_ROOT / "experiments" / "boundary_topology_analysis.json"
 
 
 def generate_boundary_topology() -> None:
@@ -58,14 +56,21 @@ def generate_boundary_topology() -> None:
     for i, topo in enumerate(["toroidal", "bounded"]):
         topo_data = summary.get(topo, {})
         means = [topo_data.get(c, {}).get("mean", 0) for c in conditions]
-        ax.bar(x + i * width - width / 2, means, width,
-               label=topo.title(), color=TOPO_COLORS[topo],
-               alpha=0.8)
+        ax.bar(
+            x + i * width - width / 2,
+            means,
+            width,
+            label=topo.title(),
+            color=TOPO_COLORS[topo],
+            alpha=0.8,
+        )
 
     ax.set_xticks(x)
     ax.set_xticklabels(
         [c.replace("no_", "No ").replace("_", " ").title() for c in conditions],
-        fontsize=7, rotation=20, ha="right",
+        fontsize=7,
+        rotation=20,
+        ha="right",
     )
     ax.set_ylabel("Mean Final Alive Count")
     ax.set_title("Alive Counts by Topology", fontsize=9)
@@ -79,15 +84,19 @@ def generate_boundary_topology() -> None:
     toro_vals = [toro_deltas.get(c, 0) for c in conditions]
     bounded_vals = [bounded_deltas.get(c, 0) for c in conditions]
 
-    ax.bar(x - width / 2, toro_vals, width, label="Toroidal",
-           color=TOPO_COLORS["toroidal"], alpha=0.8)
-    ax.bar(x + width / 2, bounded_vals, width, label="Bounded",
-           color=TOPO_COLORS["bounded"], alpha=0.8)
+    ax.bar(
+        x - width / 2, toro_vals, width, label="Toroidal", color=TOPO_COLORS["toroidal"], alpha=0.8
+    )
+    ax.bar(
+        x + width / 2, bounded_vals, width, label="Bounded", color=TOPO_COLORS["bounded"], alpha=0.8
+    )
 
     ax.set_xticks(x)
     ax.set_xticklabels(
         [c.replace("no_", "No ").replace("_", " ").title() for c in conditions],
-        fontsize=7, rotation=20, ha="right",
+        fontsize=7,
+        rotation=20,
+        ha="right",
     )
     ax.set_ylabel("Δ% vs Baseline")
     rho = rank_info.get("spearman_rho", float("nan"))

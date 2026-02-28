@@ -20,6 +20,7 @@ from pathlib import Path
 # Jonckheere-Terpstra trend test
 # ---------------------------------------------------------------------------
 
+
 def jonckheere_terpstra_test(
     groups: list[list[float]],
 ) -> tuple[float, float]:
@@ -77,6 +78,7 @@ def jonckheere_terpstra_test(
 # ---------------------------------------------------------------------------
 # Parent-offspring regression
 # ---------------------------------------------------------------------------
+
 
 def parent_offspring_regression(
     parent_energies: list[float],
@@ -136,6 +138,7 @@ def parent_offspring_regression(
 # Cohort segmentation
 # ---------------------------------------------------------------------------
 
+
 def segment_by_generation_cohort(
     organisms: list[dict],
     bins: list[int] | None = None,
@@ -165,6 +168,7 @@ def segment_by_generation_cohort(
 # ---------------------------------------------------------------------------
 # Lineage linkage
 # ---------------------------------------------------------------------------
+
 
 def link_parent_offspring_energies(
     snapshot_frames: list[dict],
@@ -205,6 +209,7 @@ def link_parent_offspring_energies(
 # Cohen's d
 # ---------------------------------------------------------------------------
 
+
 def cohens_d(group1: list[float], group2: list[float]) -> float:
     """Compute Cohen's d effect size between two groups."""
     n1, n2 = len(group1), len(group2)
@@ -223,6 +228,7 @@ def cohens_d(group1: list[float], group2: list[float]) -> float:
 # ---------------------------------------------------------------------------
 # Main analysis
 # ---------------------------------------------------------------------------
+
 
 def analyze_fitness_landscape(
     data_dir: Path,
@@ -285,16 +291,12 @@ def analyze_fitness_landscape(
     for run in evolved_runs:
         snaps = run.get("organism_snapshots", [])
         if snaps:
-            evolved_final.extend(
-                o.get("energy", 0.0) for o in snaps[-1].get("organisms", [])
-            )
+            evolved_final.extend(o.get("energy", 0.0) for o in snaps[-1].get("organisms", []))
     clonal_final = []
     for run in clonal_runs:
         snaps = run.get("organism_snapshots", [])
         if snaps:
-            clonal_final.extend(
-                o.get("energy", 0.0) for o in snaps[-1].get("organisms", [])
-            )
+            clonal_final.extend(o.get("energy", 0.0) for o in snaps[-1].get("organisms", []))
 
     d = cohens_d(evolved_final, clonal_final)
 
@@ -302,28 +304,21 @@ def analyze_fitness_landscape(
     return {
         "alpha": alpha,
         "h1_reject": not math.isnan(jt_p) and jt_p < alpha,
-        "h2_reject": (
-            not math.isnan(regression["ci_lower"])
-            and regression["ci_lower"] > 0
-        ),
+        "h2_reject": (not math.isnan(regression["ci_lower"]) and regression["ci_lower"] > 0),
         "h1_trend_test": {
             "evolved": {
                 "jt_statistic": jt_stat,
                 "p_value": jt_p,
                 "n_cohorts": len(non_empty_cohorts),
                 "cohort_sizes": [len(c) for c in non_empty_cohorts],
-                "cohort_means": [
-                    sum(c) / len(c) if c else 0.0 for c in non_empty_cohorts
-                ],
+                "cohort_means": [sum(c) / len(c) if c else 0.0 for c in non_empty_cohorts],
             },
             "clonal_control": {
                 "jt_statistic": clonal_jt_stat,
                 "p_value": clonal_jt_p,
                 "n_cohorts": len(non_empty_clonal),
                 "cohort_sizes": [len(c) for c in non_empty_clonal],
-                "cohort_means": [
-                    sum(c) / len(c) if c else 0.0 for c in non_empty_clonal
-                ],
+                "cohort_means": [sum(c) / len(c) if c else 0.0 for c in non_empty_clonal],
             },
         },
         "h2_regression": regression,
@@ -340,6 +335,7 @@ def analyze_fitness_landscape(
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(

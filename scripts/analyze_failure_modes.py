@@ -20,6 +20,7 @@ from pathlib import Path
 # Z-score computation
 # ---------------------------------------------------------------------------
 
+
 def compute_z_scores(
     baseline_series: list[float],
     test_series: list[float],
@@ -55,6 +56,7 @@ def compute_z_scores(
 # ---------------------------------------------------------------------------
 # First-break detection
 # ---------------------------------------------------------------------------
+
 
 def detect_first_break(
     z_scores: list[float],
@@ -148,6 +150,7 @@ def majority_vote_cascade(
 # Data loading
 # ---------------------------------------------------------------------------
 
+
 def _extract_metric_series(
     runs: list[dict],
     metric: str,
@@ -192,6 +195,7 @@ def _extract_steps(runs: list[dict]) -> list[int]:
 # Main analysis
 # ---------------------------------------------------------------------------
 
+
 def analyze_failure_modes(
     data_dir: Path,
     conditions: list[str] | None = None,
@@ -210,8 +214,13 @@ def analyze_failure_modes(
     """
     if conditions is None:
         conditions = [
-            "metabolism", "boundary", "homeostasis", "response",
-            "reproduction", "evolution", "growth",
+            "metabolism",
+            "boundary",
+            "homeostasis",
+            "response",
+            "reproduction",
+            "evolution",
+            "growth",
         ]
 
     # Load baseline
@@ -261,11 +270,13 @@ def analyze_failure_modes(
                 seed_break_points[metric] = break_step
 
             cascade = detect_cascade_order(seed_break_points)
-            per_seed_results.append({
-                "seed": seed_id,
-                "break_points": {k: v for k, v in seed_break_points.items()},
-                "cascade": [[m, s] for m, s in cascade],
-            })
+            per_seed_results.append(
+                {
+                    "seed": seed_id,
+                    "break_points": {k: v for k, v in seed_break_points.items()},
+                    "cascade": [[m, s] for m, s in cascade],
+                }
+            )
             per_seed_cascades.append(cascade)
 
         consensus = majority_vote_cascade(per_seed_cascades)
@@ -297,6 +308,7 @@ def analyze_failure_modes(
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(
@@ -331,9 +343,7 @@ def main() -> None:
     output = args.output
     if output is None:
         output = (
-            Path(__file__).resolve().parent.parent
-            / "experiments"
-            / "failure_mode_analysis.json"
+            Path(__file__).resolve().parent.parent / "experiments" / "failure_mode_analysis.json"
         )
 
     result = analyze_failure_modes(

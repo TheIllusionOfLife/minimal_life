@@ -16,7 +16,8 @@ from scipy import stats
 
 
 def mann_whitney_comparison(
-    a: list[float], b: list[float],
+    a: list[float],
+    b: list[float],
 ) -> dict:
     """Run Mann-Whitney U test comparing two groups.
 
@@ -24,9 +25,11 @@ def mann_whitney_comparison(
     """
     if len(a) < 2 or len(b) < 2:
         return {
-            "U": float("nan"), "p_value": float("nan"),
+            "U": float("nan"),
+            "p_value": float("nan"),
             "rank_biserial_r": float("nan"),
-            "n_a": len(a), "n_b": len(b),
+            "n_a": len(a),
+            "n_b": len(b),
         }
 
     u_stat, p_val = stats.mannwhitneyu(a, b, alternative="two-sided")
@@ -34,9 +37,11 @@ def mann_whitney_comparison(
     n_a, n_b = len(a), len(b)
     r = 1.0 - (2.0 * u_stat) / (n_a * n_b)
     return {
-        "U": float(u_stat), "p_value": float(p_val),
+        "U": float(u_stat),
+        "p_value": float(p_val),
         "rank_biserial_r": float(r),
-        "n_a": n_a, "n_b": n_b,
+        "n_a": n_a,
+        "n_b": n_b,
     }
 
 

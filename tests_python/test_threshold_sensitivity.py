@@ -14,6 +14,7 @@ from pathlib import Path
 # Synthetic data helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_sample(step: int, alive_count: int = 50) -> dict:
     return {
         "step": step,
@@ -59,6 +60,7 @@ def _make_run(final_alive: int = 50) -> dict:
 # Tests: Spearman rank correlation
 # ---------------------------------------------------------------------------
 
+
 class TestSpearmanRank:
     """Test Spearman rank correlation computation."""
 
@@ -97,6 +99,7 @@ class TestSpearmanRank:
 # Tests: Delta computation
 # ---------------------------------------------------------------------------
 
+
 class TestDeltaComputation:
     """Test Δ% computation for ablation vs baseline."""
 
@@ -119,6 +122,7 @@ class TestDeltaComputation:
 # ---------------------------------------------------------------------------
 # Tests: Rank stability
 # ---------------------------------------------------------------------------
+
 
 class TestRankStability:
     """Test rank stability assessment across threshold combos."""
@@ -152,6 +156,7 @@ class TestRankStability:
 # ---------------------------------------------------------------------------
 # Tests: End-to-end
 # ---------------------------------------------------------------------------
+
 
 class TestEndToEnd:
     """Integration test with synthetic threshold sweep data."""

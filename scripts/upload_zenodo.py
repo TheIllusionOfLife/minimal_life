@@ -382,11 +382,13 @@ DEFAULT_DESCRIPTION = (
 def _build_related(args: argparse.Namespace) -> list[dict[str, str]] | None:
     related: list[dict[str, str]] = []
     if args.github_url:
-        related.append({
-            "identifier": args.github_url,
-            "relation": "isSupplementTo",
-            "scheme": "url",
-        })
+        related.append(
+            {
+                "identifier": args.github_url,
+                "relation": "isSupplementTo",
+                "scheme": "url",
+            }
+        )
     return related or None
 
 
@@ -396,9 +398,7 @@ def _build_creators(args: argparse.Namespace) -> list[dict[str, str]]:
     return [{"name": "<authors>"}]
 
 
-def _apply_metadata(
-    base_url: str, token: str, dep_id: int, args: argparse.Namespace
-) -> None:
+def _apply_metadata(base_url: str, token: str, dep_id: int, args: argparse.Namespace) -> None:
     set_metadata(
         base_url,
         token,
@@ -415,9 +415,7 @@ def _apply_metadata(
     )
 
 
-def _load_and_verify_artifacts(
-    args: argparse.Namespace, meta: dict
-) -> list[Path]:
+def _load_and_verify_artifacts(args: argparse.Namespace, meta: dict) -> list[Path]:
     artifacts = meta.get("artifacts", [])
     if not artifacts:
         print("ERROR: no artifacts listed in metadata.", file=sys.stderr)
@@ -483,9 +481,7 @@ def workflow_upload(args: argparse.Namespace, base_url: str, token: str) -> int:
     return 0
 
 
-def workflow_new_version(
-    args: argparse.Namespace, base_url: str, token: str
-) -> int:
+def workflow_new_version(args: argparse.Namespace, base_url: str, token: str) -> int:
     """Create a new version of a published record, replace files, publish."""
     if not args.metadata.exists():
         print(f"ERROR: metadata file not found: {args.metadata}", file=sys.stderr)

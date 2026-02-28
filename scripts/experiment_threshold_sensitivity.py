@@ -39,12 +39,7 @@ def run_threshold_sensitivity() -> None:
     out_dir = experiment_output_dir() / "threshold_sweep"
     out_dir.mkdir(exist_ok=True)
 
-    total_runs = (
-        len(BOUNDARY_THRESHOLDS)
-        * len(ENERGY_THRESHOLDS)
-        * len(CONDITIONS)
-        * len(SEEDS)
-    )
+    total_runs = len(BOUNDARY_THRESHOLDS) * len(ENERGY_THRESHOLDS) * len(CONDITIONS) * len(SEEDS)
     log(f"Total runs: {total_runs}")
     total_start = time.perf_counter()
     completed = 0
@@ -64,8 +59,10 @@ def run_threshold_sensitivity() -> None:
                 for seed in SEEDS:
                     t0 = time.perf_counter()
                     result = run_single(
-                        seed, cond_overrides,
-                        steps=STEPS, sample_every=SAMPLE_EVERY,
+                        seed,
+                        cond_overrides,
+                        steps=STEPS,
+                        sample_every=SAMPLE_EVERY,
                     )
                     elapsed = time.perf_counter() - t0
                     completed += 1

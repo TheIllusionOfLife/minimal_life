@@ -14,6 +14,7 @@ from pathlib import Path
 # Synthetic data helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_organism_snapshot(
     stable_id: int,
     generation: int,
@@ -74,6 +75,7 @@ def _make_niche_result(
 # Tests: Jonckheere-Terpstra
 # ---------------------------------------------------------------------------
 
+
 class TestJonckheereTerpstra:
     """Test the Jonckheere-Terpstra trend test implementation."""
 
@@ -113,6 +115,7 @@ class TestJonckheereTerpstra:
 # Tests: Parent-offspring regression
 # ---------------------------------------------------------------------------
 
+
 class TestParentOffspringRegression:
     """Test parent-offspring energy regression and bootstrap CI."""
 
@@ -123,7 +126,9 @@ class TestParentOffspringRegression:
         parent_energies = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
         offspring_energies = [0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85]
         result = parent_offspring_regression(
-            parent_energies, offspring_energies, n_bootstrap=100,
+            parent_energies,
+            offspring_energies,
+            n_bootstrap=100,
         )
         assert result["slope"] > 0
         assert result["ci_lower"] > 0  # CI should exclude zero
@@ -135,7 +140,9 @@ class TestParentOffspringRegression:
         parent_energies = [0.1, 0.9, 0.2, 0.8, 0.3, 0.7]
         offspring_energies = [0.8, 0.2, 0.7, 0.3, 0.9, 0.1]
         result = parent_offspring_regression(
-            parent_energies, offspring_energies, n_bootstrap=100,
+            parent_energies,
+            offspring_energies,
+            n_bootstrap=100,
         )
         # CI should include zero (or slope close to zero)
         assert result["ci_lower"] < 0 or abs(result["slope"]) < 0.3
@@ -150,6 +157,7 @@ class TestParentOffspringRegression:
 # ---------------------------------------------------------------------------
 # Tests: Cohort segmentation
 # ---------------------------------------------------------------------------
+
 
 class TestCohortSegmentation:
     """Test organism segmentation by generation cohort."""
@@ -177,6 +185,7 @@ class TestCohortSegmentation:
 # Tests: Lineage linkage
 # ---------------------------------------------------------------------------
 
+
 class TestLineageLinkage:
     """Test parent-offspring linkage from lineage_events + snapshots."""
 
@@ -184,17 +193,20 @@ class TestLineageLinkage:
         from analyze_fitness_landscape import link_parent_offspring_energies
 
         snapshots = [
-            _make_snapshot_frame(5000, [
-                _make_organism_snapshot(0, 0, energy=0.5),
-                _make_organism_snapshot(1, 1, energy=0.6),
-            ]),
+            _make_snapshot_frame(
+                5000,
+                [
+                    _make_organism_snapshot(0, 0, energy=0.5),
+                    _make_organism_snapshot(1, 1, energy=0.6),
+                ],
+            ),
         ]
         lineage = [
-            _make_lineage_event(step=3000, parent_stable_id=0,
-                                child_stable_id=1, generation=1),
+            _make_lineage_event(step=3000, parent_stable_id=0, child_stable_id=1, generation=1),
         ]
         parents, offspring = link_parent_offspring_energies(
-            snapshots, lineage,
+            snapshots,
+            lineage,
         )
         assert len(parents) == 1
         assert parents[0] == 0.5
@@ -204,16 +216,19 @@ class TestLineageLinkage:
         from analyze_fitness_landscape import link_parent_offspring_energies
 
         snapshots = [
-            _make_snapshot_frame(5000, [
-                _make_organism_snapshot(0, 0, energy=0.5),
-            ]),
+            _make_snapshot_frame(
+                5000,
+                [
+                    _make_organism_snapshot(0, 0, energy=0.5),
+                ],
+            ),
         ]
         lineage = [
-            _make_lineage_event(step=3000, parent_stable_id=0,
-                                child_stable_id=99, generation=1),
+            _make_lineage_event(step=3000, parent_stable_id=0, child_stable_id=99, generation=1),
         ]
         parents, offspring = link_parent_offspring_energies(
-            snapshots, lineage,
+            snapshots,
+            lineage,
         )
         # child 99 not in snapshots, so no linkage
         assert len(parents) == 0
@@ -223,6 +238,7 @@ class TestLineageLinkage:
 # Tests: End-to-end
 # ---------------------------------------------------------------------------
 
+
 class TestEndToEnd:
     """Integration test with synthetic niche result files."""
 
@@ -231,14 +247,20 @@ class TestEndToEnd:
 
         # Create synthetic evolved data with increasing energy
         snapshots = [
-            _make_snapshot_frame(2000, [
-                _make_organism_snapshot(i, gen, energy=0.3 + gen * 0.05)
-                for i, gen in enumerate([0, 0, 1, 2])
-            ]),
-            _make_snapshot_frame(5000, [
-                _make_organism_snapshot(i, gen, energy=0.4 + gen * 0.05)
-                for i, gen in enumerate([0, 1, 2, 5])
-            ]),
+            _make_snapshot_frame(
+                2000,
+                [
+                    _make_organism_snapshot(i, gen, energy=0.3 + gen * 0.05)
+                    for i, gen in enumerate([0, 0, 1, 2])
+                ],
+            ),
+            _make_snapshot_frame(
+                5000,
+                [
+                    _make_organism_snapshot(i, gen, energy=0.4 + gen * 0.05)
+                    for i, gen in enumerate([0, 1, 2, 5])
+                ],
+            ),
         ]
         lineage = [
             _make_lineage_event(1000, 0, 2, 1),
@@ -256,14 +278,12 @@ class TestEndToEnd:
             )
             # Clonal control: flat energy, no lineage
             flat_snaps = [
-                _make_snapshot_frame(2000, [
-                    _make_organism_snapshot(i, 0, energy=0.4)
-                    for i in range(4)
-                ]),
-                _make_snapshot_frame(5000, [
-                    _make_organism_snapshot(i, 0, energy=0.4)
-                    for i in range(4)
-                ]),
+                _make_snapshot_frame(
+                    2000, [_make_organism_snapshot(i, 0, energy=0.4) for i in range(4)]
+                ),
+                _make_snapshot_frame(
+                    5000, [_make_organism_snapshot(i, 0, energy=0.4) for i in range(4)]
+                ),
             ]
             control = _make_niche_result(flat_snaps, [])
             (data_dir / f"fitness_no_evolution_seed{seed}.json").write_text(

@@ -15,6 +15,7 @@ from pathlib import Path
 # Spearman rank correlation
 # ---------------------------------------------------------------------------
 
+
 def _rank(values: list[float]) -> list[float]:
     """Assign ranks to values (1-based, average ties)."""
     n = len(values)
@@ -63,6 +64,7 @@ def spearman_rank_correlation(x: list[float], y: list[float]) -> float:
 # Delta% computation
 # ---------------------------------------------------------------------------
 
+
 def compute_delta_percent(
     baseline_alive: list[int],
     ablation_alive: list[int],
@@ -80,6 +82,7 @@ def compute_delta_percent(
 # ---------------------------------------------------------------------------
 # Rank stability assessment
 # ---------------------------------------------------------------------------
+
 
 def assess_rank_stability(
     deltas_by_combo: dict[str, dict[str, float]],
@@ -117,9 +120,7 @@ def assess_rank_stability(
         ref_shared = [ref_deltas[c] for c in shared]
         correlations[key] = spearman_rank_correlation(ref_shared, other_values)
 
-    all_stable = all(
-        not math.isnan(r) and r >= 0.8 for r in correlations.values()
-    )
+    all_stable = all(not math.isnan(r) and r >= 0.8 for r in correlations.values())
 
     return {
         "reference_key": reference_key,
@@ -131,6 +132,7 @@ def assess_rank_stability(
 # ---------------------------------------------------------------------------
 # Main analysis
 # ---------------------------------------------------------------------------
+
 
 def analyze_threshold_sensitivity(
     data_dir: Path,
@@ -189,7 +191,8 @@ def analyze_threshold_sensitivity(
 
                 if abl_alive:
                     combo_deltas[cond] = compute_delta_percent(
-                        baseline_alive, abl_alive,
+                        baseline_alive,
+                        abl_alive,
                     )
 
             if combo_deltas:
@@ -212,6 +215,7 @@ def analyze_threshold_sensitivity(
 # CLI
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Threshold sensitivity analysis.",
@@ -219,11 +223,7 @@ def main() -> None:
     parser.add_argument(
         "--data-dir",
         type=Path,
-        default=(
-            Path(__file__).resolve().parent.parent
-            / "experiments"
-            / "threshold_sweep"
-        ),
+        default=(Path(__file__).resolve().parent.parent / "experiments" / "threshold_sweep"),
     )
     parser.add_argument("--n-seeds", type=int, default=15)
     parser.add_argument("--output", type=Path, default=None)

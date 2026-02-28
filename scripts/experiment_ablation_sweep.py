@@ -52,9 +52,9 @@ CRITERIA = [
     "growth",
 ]
 
-SEEDS = list(range(20))   # discovery seeds (calibration set)
+SEEDS = list(range(20))  # discovery seeds (calibration set)
 STEPS = 2000
-SAMPLE_EVERY = 20          # finer sampling than existing experiments (which use 50)
+SAMPLE_EVERY = 20  # finer sampling than existing experiments (which use 50)
 OUT_SUBDIR = "ablation_sweep"
 
 
@@ -74,7 +74,7 @@ def ablation_conditions(
     """
     result: list[tuple[str, list[str]]] = []
     result.append(("all_off", list(CRITERIA)))  # negative-control floor
-    result.append(("full", []))                 # all-criteria ceiling
+    result.append(("full", []))  # all-criteria ceiling
     for c in CRITERIA:
         result.append((f"drop_{c}", [c]))
     for c1, c2 in combinations(CRITERIA, 2):
@@ -134,7 +134,7 @@ def build_criterion_presence_matrix(
         elif name.startswith("drop_"):
             # All criterion names are single words (no underscores), so a simple
             # split unambiguously recovers the disabled criteria.
-            tokens = name[len("drop_"):].split("_")
+            tokens = name[len("drop_") :].split("_")
             for token in tokens:
                 j = criteria_to_idx.get(token)
                 if j is not None:
@@ -196,22 +196,15 @@ def compute_performance_metrics(
     boundary_integrity = float(sum(s["boundary_mean"] for s in late) / n_late)
 
     # internal_state_std is [f32; 4] in Rust → 4-element list in JSON
-    ist_means = [
-        float(sum(s.get("internal_state_std", [0.0, 0.0, 0.0, 0.0])) / 4.0)
-        for s in late
-    ]
+    ist_means = [float(sum(s.get("internal_state_std", [0.0, 0.0, 0.0, 0.0])) / 4.0) for s in late]
     mean_ist = sum(ist_means) / max(len(ist_means), 1)
     homeostasis_quality = 1.0 / (mean_ist + 1e-6)
 
     total_births = sum(s["birth_count"] for s in samples)
     reproduction_rate = float(total_births) / max(total_steps, 1)
 
-    genome_diversity_late = float(
-        sum(s.get("genome_diversity", 0.0) for s in late) / n_late
-    )
-    spatial_cohesion = float(
-        sum(s.get("spatial_cohesion_mean", 0.0) for s in late) / n_late
-    )
+    genome_diversity_late = float(sum(s.get("genome_diversity", 0.0) for s in late) / n_late)
+    spatial_cohesion = float(sum(s.get("spatial_cohesion_mean", 0.0) for s in late) / n_late)
 
     return {
         "alive_auc": alive_auc,
@@ -248,10 +241,7 @@ def run_ablation_sweep(
     sweep_dir.mkdir(parents=True, exist_ok=True)
 
     total_runs = len(conditions) * len(seeds)
-    log(
-        f"Ablation sweep: {len(conditions)} conditions × {len(seeds)} seeds"
-        f" = {total_runs} runs"
-    )
+    log(f"Ablation sweep: {len(conditions)} conditions × {len(seeds)} seeds = {total_runs} runs")
     log(f"Output directory: {sweep_dir}")
 
     if dry_run:
@@ -279,9 +269,7 @@ def run_ablation_sweep(
 
             cfg = make_ablation_config(disabled, seed)
             t0 = time.perf_counter()
-            result_json = minimal_life.run_experiment_json(
-                json.dumps(cfg), STEPS, SAMPLE_EVERY
-            )
+            result_json = minimal_life.run_experiment_json(json.dumps(cfg), STEPS, SAMPLE_EVERY)
             result = json.loads(result_json)
             elapsed = time.perf_counter() - t0
 
@@ -298,9 +286,7 @@ def run_ablation_sweep(
         log("")
 
     elapsed_total = time.perf_counter() - total_start
-    log(
-        f"Done: {run_count} runs ({skip_count} cached) in {elapsed_total:.1f}s"
-    )
+    log(f"Done: {run_count} runs ({skip_count} cached) in {elapsed_total:.1f}s")
 
 
 # ── CLI ───────────────────────────────────────────────────────────────────────

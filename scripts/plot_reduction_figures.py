@@ -126,9 +126,7 @@ def plot_criterion_stability(ax: plt.Axes, crit_data: dict) -> None:
     )
 
     ax.set_xticks(x)
-    ax.set_xticklabels(
-        [CRITERION_LABELS.get(c, c) for c in criteria], rotation=25, ha="right"
-    )
+    ax.set_xticklabels([CRITERION_LABELS.get(c, c) for c in criteria], rotation=25, ha="right")
     ax.set_ylabel("Stability Frequency")
     ax.set_ylim(0, 1.05)
     ax.set_title("Criterion Stability (500-bootstrap Enet vs LASSO)")
@@ -269,9 +267,7 @@ def plot_pca_biplot(ax: plt.Axes, crit_data: dict) -> None:
     var1, var2 = pca.explained_variance_ratio_[:2] * 100
 
     if "alive_auc" not in metrics:
-        raise ValueError(
-            f"'alive_auc' not found in performance_metrics; available: {metrics}"
-        )
+        raise ValueError(f"'alive_auc' not found in performance_metrics; available: {metrics}")
     alive_auc_idx = metrics.index("alive_auc")
     color_vals = perf_matrix[:, alive_auc_idx]
     norm = mcolors.Normalize(vmin=color_vals.min(), vmax=color_vals.max())
@@ -404,9 +400,7 @@ def plot_stability_heatmap(ax: plt.Axes, crit_data: dict) -> None:
         [METRIC_LABELS.get(m, m) for m in metrics], rotation=35, ha="right", fontsize=7
     )
     ax.set_yticks(range(len(crit_sorted)))
-    ax.set_yticklabels(
-        [CRITERION_LABELS.get(c, c) for c in crit_sorted], fontsize=8
-    )
+    ax.set_yticklabels([CRITERION_LABELS.get(c, c) for c in crit_sorted], fontsize=8)
     ax.set_title("Enet Stability Heatmap: Criterion × Performance Metric")
 
 

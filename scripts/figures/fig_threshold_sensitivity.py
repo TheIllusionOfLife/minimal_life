@@ -13,9 +13,7 @@ import numpy as np
 from _project_root import PROJECT_ROOT
 from figures._shared import FIG_DIR
 
-ANALYSIS_PATH = (
-    PROJECT_ROOT / "experiments" / "threshold_sensitivity_analysis.json"
-)
+ANALYSIS_PATH = PROJECT_ROOT / "experiments" / "threshold_sensitivity_analysis.json"
 
 
 def generate_threshold_sensitivity() -> None:
@@ -53,15 +51,19 @@ def generate_threshold_sensitivity() -> None:
 
     fig, ax = plt.subplots(figsize=(5, 3))
     im = ax.imshow(
-        matrix, aspect="auto", cmap="RdYlBu",
-        vmin=-100, vmax=max(0, float(np.nanmax(matrix))) if not np.all(np.isnan(matrix)) else 0,
+        matrix,
+        aspect="auto",
+        cmap="RdYlBu",
+        vmin=-100,
+        vmax=max(0, float(np.nanmax(matrix))) if not np.all(np.isnan(matrix)) else 0,
     )
 
     ax.set_xticks(range(len(conditions)))
     ax.set_xticklabels(
-        [c.replace("no_", "No ").replace("_", " ").title()
-         for c in conditions],
-        fontsize=7, rotation=30, ha="right",
+        [c.replace("no_", "No ").replace("_", " ").title() for c in conditions],
+        fontsize=7,
+        rotation=30,
+        ha="right",
     )
     ax.set_yticks(range(len(combo_keys)))
     ax.set_yticklabels(combo_keys, fontsize=7)
@@ -73,8 +75,15 @@ def generate_threshold_sensitivity() -> None:
         for j in range(len(conditions)):
             val = matrix[i, j]
             if not np.isnan(val):
-                ax.text(j, i, f"{val:.0f}%", ha="center", va="center",
-                        fontsize=6, color="black" if val > -50 else "white")
+                ax.text(
+                    j,
+                    i,
+                    f"{val:.0f}%",
+                    ha="center",
+                    va="center",
+                    fontsize=6,
+                    color="black" if val > -50 else "white",
+                )
 
     # Add rank stability info
     stability = data.get("rank_stability", {})
