@@ -13,11 +13,13 @@ import argparse
 import json
 import math
 import random
-from collections import Counter
 from pathlib import Path
 
+import numpy as np
+from analyses.results.statistics import jonckheere_terpstra
+
 # ---------------------------------------------------------------------------
-# Jonckheere-Terpstra trend test
+# Jonckheere-Terpstra trend test (delegates to shared implementation)
 # ---------------------------------------------------------------------------
 
 
@@ -26,53 +28,35 @@ def jonckheere_terpstra_test(
 ) -> tuple[float, float]:
     """Non-parametric test for ordered alternatives (one-sided increasing).
 
-    Counts concordant pairs across ordered groups.  Uses normal
-    approximation for p-value when groups are large enough.
-
     Returns (J statistic, p-value).  Returns (0, nan) for degenerate cases.
+    The J statistic counts concordant pairs where later-group values exceed
+    earlier-group values (increasing convention).
     """
-    k = len(groups)
-    if k < 2:
+    if len(groups) < 2:
         return (0.0, float("nan"))
 
-    # Count concordant pairs
-    j_stat = 0.0
-    for i in range(k - 1):
-        for j in range(i + 1, k):
-            for xi in groups[i]:
-                for xj in groups[j]:
-                    if xj > xi:
-                        j_stat += 1.0
-                    elif xj == xi:
-                        j_stat += 0.5
+    np_groups = [np.array(g) for g in groups]
+    stat_dec, p_two = jonckheere_terpstra(np_groups)
 
-    # Expected value and variance under null
-    n_total = sum(len(g) for g in groups)
-    ns = [len(g) for g in groups]
+    # Shared implementation uses "earlier > later" (decreasing) convention.
+    # Convert to "later > earlier" (increasing) convention:
+    #   J_inc + J_dec = total_pairs  (ties get 0.5 credit in both)
+    k = len(np_groups)
+    total_pairs = sum(
+        len(np_groups[i]) * len(np_groups[j]) for i in range(k) for j in range(i + 1, k)
+    )
+    stat_inc = total_pairs - stat_dec
 
-    e_j = (n_total * n_total - sum(ni * ni for ni in ns)) / 4.0
+    # Two-sided p is symmetric; for one-sided increasing:
+    # If stat_inc > E[J] (= total_pairs/2), trend is increasing → p = p_two/2
+    # Otherwise, trend is not increasing → p = 1 - p_two/2
+    e_j = total_pairs / 2.0
+    if stat_inc >= e_j:
+        p_one = p_two / 2.0
+    else:
+        p_one = 1.0 - p_two / 2.0
 
-    # Variance formula with tie correction.
-    # Ties within groups are counted and subtracted from the variance.
-    a = n_total * (n_total - 1) * (2 * n_total + 5)
-    b = sum(ni * (ni - 1) * (2 * ni + 5) for ni in ns)
-    # Tie correction: count runs of identical values within each group
-    tie_term = 0.0
-    for g in groups:
-        counts = Counter(g)
-        for t in counts.values():
-            if t > 1:
-                tie_term += t * (t - 1) * (2 * t + 5)
-    var_j = (a - b - tie_term) / 72.0
-
-    if var_j <= 0:
-        return (j_stat, float("nan"))
-
-    z = (j_stat - e_j) / math.sqrt(var_j)
-
-    # One-sided p-value (upper tail: increasing trend)
-    p = 0.5 * math.erfc(z / math.sqrt(2))
-    return (j_stat, p)
+    return (float(stat_inc), float(p_one))
 
 
 # ---------------------------------------------------------------------------

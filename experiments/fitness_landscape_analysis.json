@@ -5,7 +5,7 @@
   "h1_trend_test": {
     "evolved": {
       "jt_statistic": 1621130151.0,
-      "p_value": 0.9468901028788397,
+      "p_value": 0.9440795665229582,
       "n_cohorts": 4,
       "cohort_sizes": [
         11220,
@@ -22,7 +22,7 @@
     },
     "clonal_control": {
       "jt_statistic": 1634157104.5,
-      "p_value": 0.9999999999979045,
+      "p_value": 0.9999999999972934,
       "n_cohorts": 4,
       "cohort_sizes": [
         15392,

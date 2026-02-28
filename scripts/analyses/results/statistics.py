@@ -81,17 +81,22 @@ def holm_bonferroni(p_values: list[float]) -> list[float]:
     """Apply Holm-Bonferroni correction to a list of p-values.
 
     Returns corrected p-values in the original order.
+    NaN p-values are preserved as NaN (not silently converted to finite values).
     """
     n = len(p_values)
     if n == 0:
         return []
-    indexed = sorted(enumerate(p_values), key=lambda x: x[1])
+    # Sort NaN to the end so they don't corrupt the cumulative max
+    indexed = sorted(enumerate(p_values), key=lambda x: (np.isnan(x[1]), x[1]))
     corrected = [0.0] * n
     cumulative_max = 0.0
     for rank, (orig_idx, p) in enumerate(indexed):
-        adjusted = p * (n - rank)
-        cumulative_max = max(cumulative_max, adjusted)
-        corrected[orig_idx] = min(cumulative_max, 1.0)
+        if np.isnan(p):
+            corrected[orig_idx] = float("nan")
+        else:
+            adjusted = p * (n - rank)
+            cumulative_max = max(cumulative_max, adjusted)
+            corrected[orig_idx] = min(cumulative_max, 1.0)
     return corrected
 
 

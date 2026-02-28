@@ -61,6 +61,24 @@ class TestHolmBonferroni:
         # raw[1]=0.001 is smallest: corrected[1] = 0.001*2 = 0.002
         assert corrected[1] == pytest.approx(0.002)
 
+    def test_nan_preserved(self):
+        """NaN p-values must pass through as NaN, not become finite."""
+        raw = [0.01, float("nan"), 0.05]
+        corrected = holm_bonferroni(raw)
+        assert np.isnan(corrected[1])
+        # The finite p-values should still be corrected normally
+        assert not np.isnan(corrected[0])
+        assert not np.isnan(corrected[2])
+
+    def test_nan_does_not_corrupt_finite(self):
+        """NaN values must not affect the correction of finite p-values."""
+        raw_with_nan = [0.01, float("nan"), 0.05]
+        corrected = holm_bonferroni(raw_with_nan)
+        # Finite p-values must remain finite and correctly ordered
+        assert corrected[0] < corrected[2]
+        assert corrected[0] <= 1.0
+        assert corrected[2] <= 1.0
+
 
 class TestCohensD:
     def test_identical_groups_zero(self):

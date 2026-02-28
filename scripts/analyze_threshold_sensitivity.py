@@ -11,53 +11,25 @@ import json
 import math
 from pathlib import Path
 
-# ---------------------------------------------------------------------------
-# Spearman rank correlation
-# ---------------------------------------------------------------------------
+from scipy import stats
 
-
-def _rank(values: list[float]) -> list[float]:
-    """Assign ranks to values (1-based, average ties)."""
-    n = len(values)
-    indexed = sorted(range(n), key=lambda i: values[i])
-    ranks = [0.0] * n
-    i = 0
-    while i < n:
-        j = i
-        while j < n - 1 and values[indexed[j + 1]] == values[indexed[j]]:
-            j += 1
-        avg_rank = (i + j) / 2.0 + 1.0
-        for k in range(i, j + 1):
-            ranks[indexed[k]] = avg_rank
-        i = j + 1
-    return ranks
+# ---------------------------------------------------------------------------
+# Spearman rank correlation (thin wrapper around scipy)
+# ---------------------------------------------------------------------------
 
 
 def spearman_rank_correlation(x: list[float], y: list[float]) -> float:
     """Compute Spearman rank correlation coefficient.
 
-    Returns nan for fewer than 2 data points.
+    Returns nan for fewer than 2 data points or constant inputs.
     """
     if len(x) != len(y):
         raise ValueError(f"x and y must have same length, got {len(x)} and {len(y)}")
-    n = len(x)
-    if n < 2:
+    if len(x) < 2:
         return float("nan")
 
-    rx = _rank(x)
-    ry = _rank(y)
-
-    mean_rx = sum(rx) / n
-    mean_ry = sum(ry) / n
-
-    num = sum((rx[i] - mean_rx) * (ry[i] - mean_ry) for i in range(n))
-    den_x = math.sqrt(sum((rx[i] - mean_rx) ** 2 for i in range(n)))
-    den_y = math.sqrt(sum((ry[i] - mean_ry) ** 2 for i in range(n)))
-
-    if den_x < 1e-12 or den_y < 1e-12:
-        return float("nan")
-
-    return num / (den_x * den_y)
+    rho, _ = stats.spearmanr(x, y)
+    return float(rho)
 
 
 # ---------------------------------------------------------------------------
