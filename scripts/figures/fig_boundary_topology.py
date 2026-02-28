@@ -6,11 +6,15 @@ Side-by-side boxplots: toroidal vs bounded for each ablation condition.
 from __future__ import annotations
 
 import json
+import math
 
 import matplotlib.pyplot as plt
 import numpy as np
 from _project_root import PROJECT_ROOT
-from figures._shared import COLORS, FIG_DIR
+from figures._shared import FIG_DIR
+
+# Topology-specific colors (not condition-based)
+TOPO_COLORS = {"toroidal": "#0072B2", "bounded": "#D55E00"}  # Okabe-Ito blue/vermillion
 
 ANALYSIS_PATH = (
     PROJECT_ROOT / "experiments" / "boundary_topology_analysis.json"
@@ -51,14 +55,11 @@ def generate_boundary_topology() -> None:
     x = np.arange(len(conditions))
     width = 0.35
 
-    for i, (topo, color_key) in enumerate([
-        ("toroidal", "normal"),
-        ("bounded", "no_evolution"),
-    ]):
+    for i, topo in enumerate(["toroidal", "bounded"]):
         topo_data = summary.get(topo, {})
         means = [topo_data.get(c, {}).get("mean", 0) for c in conditions]
         ax.bar(x + i * width - width / 2, means, width,
-               label=topo.title(), color=COLORS.get(color_key, "#888888"),
+               label=topo.title(), color=TOPO_COLORS[topo],
                alpha=0.8)
 
     ax.set_xticks(x)
@@ -79,9 +80,9 @@ def generate_boundary_topology() -> None:
     bounded_vals = [bounded_deltas.get(c, 0) for c in conditions]
 
     ax.bar(x - width / 2, toro_vals, width, label="Toroidal",
-           color=COLORS.get("normal", "#888888"), alpha=0.8)
+           color=TOPO_COLORS["toroidal"], alpha=0.8)
     ax.bar(x + width / 2, bounded_vals, width, label="Bounded",
-           color=COLORS.get("no_evolution", "#888888"), alpha=0.8)
+           color=TOPO_COLORS["bounded"], alpha=0.8)
 
     ax.set_xticks(x)
     ax.set_xticklabels(
@@ -91,7 +92,8 @@ def generate_boundary_topology() -> None:
     ax.set_ylabel("Δ% vs Baseline")
     rho = rank_info.get("spearman_rho", float("nan"))
     match_str = "match" if rank_info.get("ranks_match", False) else "differ"
-    ax.set_title(f"Effect Hierarchy (ρ={rho:.2f}, ranks {match_str})", fontsize=8)
+    rho_str = f"{rho:.2f}" if not math.isnan(rho) else "N/A"
+    ax.set_title(f"Effect Hierarchy (ρ={rho_str}, ranks {match_str})", fontsize=8)
     ax.legend(fontsize=7)
 
     fig.tight_layout()

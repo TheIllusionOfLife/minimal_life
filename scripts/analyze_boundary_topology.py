@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import json
 import math
+import re
+import sys
 from pathlib import Path
 
 from scipy import stats
@@ -18,19 +20,34 @@ def mann_whitney_comparison(
 ) -> dict:
     """Run Mann-Whitney U test comparing two groups.
 
-    Returns dict with U statistic, p-value, and sample sizes.
+    Returns dict with U statistic, p-value, rank-biserial r, and sample sizes.
     """
     if len(a) < 2 or len(b) < 2:
-        return {"U": float("nan"), "p_value": float("nan"), "n_a": len(a), "n_b": len(b)}
+        return {
+            "U": float("nan"), "p_value": float("nan"),
+            "rank_biserial_r": float("nan"),
+            "n_a": len(a), "n_b": len(b),
+        }
 
     u_stat, p_val = stats.mannwhitneyu(a, b, alternative="two-sided")
-    return {"U": float(u_stat), "p_value": float(p_val), "n_a": len(a), "n_b": len(b)}
+    # Rank-biserial correlation as effect size: r = 1 - 2U/(n_a * n_b)
+    n_a, n_b = len(a), len(b)
+    r = 1.0 - (2.0 * u_stat) / (n_a * n_b)
+    return {
+        "U": float(u_stat), "p_value": float(p_val),
+        "rank_biserial_r": float(r),
+        "n_a": n_a, "n_b": n_b,
+    }
 
 
 def compute_topology_deltas(
     data: dict[str, dict[str, list[float]]],
 ) -> dict[str, dict[str, float]]:
     """Compute Δ% for each ablation condition relative to its topology's baseline.
+
+    Uses arithmetic mean for consistency with Phase 1/4 analysis scripts.
+    Mean-based Δ% is appropriate here as alive counts are approximately
+    symmetric across seeds; median-based would give similar results.
 
     Args:
         data: {topology: {condition: [alive_counts]}}
@@ -62,6 +79,9 @@ def compare_rank_ordering(
     """Compare rank ordering of ablation effects between two topologies.
 
     Uses Spearman rank correlation on the shared conditions.
+    NOTE: With only 3-4 conditions, the Spearman p-value has very low
+    statistical power. The ranks_match flag (rho >= 0.9) is used as the
+    primary criterion rather than the p-value.
 
     Returns:
         Dict with spearman_rho, p_value, ranks_match (rho >= 0.9), conditions.
@@ -120,21 +140,31 @@ def analyze_boundary_topology(
     alive_data: dict[str, dict[str, list[float]]] = {}
     conditions_seen: set[str] = set()
 
+    _FILE_RE = re.compile(r"boundary_(\w+?)_(.+)_seed(\d+)")
+
     for topo in topologies:
         topo_data: dict[str, list[float]] = {}
-        # Discover conditions from files
+        # Discover conditions from files via regex
         for f in sorted(data_dir.glob(f"boundary_{topo}_*_seed*.json")):
-            parts = f.stem.split("_")
-            # boundary_{topo}_{cond}_seed{N}
-            # Find 'seed' part index
-            seed_idx = next(i for i, p in enumerate(parts) if p.startswith("seed"))
-            cond = "_".join(parts[2:seed_idx])
+            m = _FILE_RE.match(f.stem)
+            if not m or m.group(1) != topo:
+                continue
+            cond = m.group(2)
             conditions_seen.add(cond)
 
             with open(f) as fh:
                 result = json.load(fh)
             alive = result.get("final_alive_count", 0)
             topo_data.setdefault(cond, []).append(float(alive))
+
+        # Validate seed counts
+        for cond, counts in topo_data.items():
+            if len(counts) < n_seeds:
+                print(
+                    f"  WARNING: {topo}/{cond} has {len(counts)}/{n_seeds} seeds",
+                    file=sys.stderr,
+                )
+
         alive_data[topo] = topo_data
 
     # Compute deltas
