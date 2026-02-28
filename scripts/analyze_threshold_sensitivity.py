@@ -140,6 +140,7 @@ def analyze_threshold_sensitivity(
     energy_thresholds: list[float] | None = None,
     conditions: list[str] | None = None,
     n_seeds: int = 15,
+    seed_start: int = 100,
 ) -> dict:
     """Run the threshold sensitivity analysis pipeline.
 
@@ -165,7 +166,7 @@ def analyze_threshold_sensitivity(
 
             # Load baseline (normal condition) for this threshold combo
             baseline_alive = []
-            for seed in range(n_seeds):
+            for seed in range(seed_start, seed_start + n_seeds):
                 fname = f"thresh_bt{bt}_et{et}_normal_seed{seed}.json"
                 path = data_dir / fname
                 if path.exists():
@@ -181,7 +182,7 @@ def analyze_threshold_sensitivity(
                 if cond == "normal":
                     continue
                 abl_alive = []
-                for seed in range(n_seeds):
+                for seed in range(seed_start, seed_start + n_seeds):
                     fname = f"thresh_bt{bt}_et{et}_{cond}_seed{seed}.json"
                     path = data_dir / fname
                     if path.exists():
@@ -226,6 +227,7 @@ def main() -> None:
         default=(Path(__file__).resolve().parent.parent / "experiments" / "threshold_sweep"),
     )
     parser.add_argument("--n-seeds", type=int, default=15)
+    parser.add_argument("--seed-start", type=int, default=100)
     parser.add_argument("--output", type=Path, default=None)
     args = parser.parse_args()
 
@@ -240,6 +242,7 @@ def main() -> None:
     result = analyze_threshold_sensitivity(
         data_dir=args.data_dir,
         n_seeds=args.n_seeds,
+        seed_start=args.seed_start,
     )
 
     output.parent.mkdir(parents=True, exist_ok=True)

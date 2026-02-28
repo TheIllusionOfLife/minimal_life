@@ -290,7 +290,7 @@ class TestEndToEnd:
                 json.dumps(control),
             )
 
-        result = analyze_fitness_landscape(data_dir=data_dir, n_seeds=5)
+        result = analyze_fitness_landscape(data_dir=data_dir, n_seeds=5, seed_start=0)
         assert "h1_trend_test" in result
         assert "h2_regression" in result
         assert "effect_size" in result

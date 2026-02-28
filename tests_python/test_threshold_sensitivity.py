@@ -182,6 +182,7 @@ class TestEndToEnd:
             energy_thresholds=[0.0, 0.05],
             conditions=["normal", "no_metabolism"],
             n_seeds=3,
+            seed_start=0,
         )
         assert "deltas_by_combo" in result
         assert "rank_stability" in result

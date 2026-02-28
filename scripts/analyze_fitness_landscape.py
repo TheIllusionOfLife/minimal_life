@@ -233,6 +233,7 @@ def cohens_d(group1: list[float], group2: list[float]) -> float:
 def analyze_fitness_landscape(
     data_dir: Path,
     n_seeds: int = 30,
+    seed_start: int = 100,
 ) -> dict:
     """Run the fitness landscape analysis pipeline.
 
@@ -241,7 +242,7 @@ def analyze_fitness_landscape(
     evolved_runs = []
     clonal_runs = []
 
-    for i in range(n_seeds):
+    for i in range(seed_start, seed_start + n_seeds):
         epath = data_dir / f"fitness_normal_seed{i}.json"
         if epath.exists():
             with open(epath) as f:
@@ -348,6 +349,7 @@ def main() -> None:
         help="Directory containing niche result JSON files",
     )
     parser.add_argument("--n-seeds", type=int, default=30)
+    parser.add_argument("--seed-start", type=int, default=100)
     parser.add_argument("--output", type=Path, default=None)
     args = parser.parse_args()
 
@@ -362,6 +364,7 @@ def main() -> None:
     result = analyze_fitness_landscape(
         data_dir=args.data_dir,
         n_seeds=args.n_seeds,
+        seed_start=args.seed_start,
     )
 
     output.parent.mkdir(parents=True, exist_ok=True)
