@@ -54,7 +54,7 @@ def generate_threshold_sensitivity() -> None:
     fig, ax = plt.subplots(figsize=(5, 3))
     im = ax.imshow(
         matrix, aspect="auto", cmap="RdYlBu",
-        vmin=-100, vmax=0,
+        vmin=-100, vmax=max(0, float(np.nanmax(matrix))) if not np.all(np.isnan(matrix)) else 0,
     )
 
     ax.set_xticks(range(len(conditions)))

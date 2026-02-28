@@ -33,22 +33,22 @@ def generate_fitness_landscape() -> None:
     evolved = h1.get("evolved", {})
     clonal = h1.get("clonal_control", {})
 
-    e_sizes = evolved.get("cohort_sizes", [])
-    c_sizes = clonal.get("cohort_sizes", [])
+    e_means = evolved.get("cohort_means", [])
+    c_means = clonal.get("cohort_means", [])
 
-    if e_sizes:
-        cohort_labels = [f"{i * 5}–{i * 5 + 4}" for i in range(len(e_sizes) - 1)]
-        cohort_labels.append(f"{(len(e_sizes) - 1) * 5}+")
-        x = np.arange(len(e_sizes))
-        ax.bar(x - 0.15, e_sizes, 0.3, label="Evolved",
+    if e_means:
+        cohort_labels = [f"{i * 5}–{i * 5 + 4}" for i in range(len(e_means) - 1)]
+        cohort_labels.append(f"{(len(e_means) - 1) * 5}+")
+        x = np.arange(len(e_means))
+        ax.bar(x - 0.15, e_means, 0.3, label="Evolved",
                color=COLORS["normal"], alpha=0.8)
-        if c_sizes:
-            ax.bar(x + 0.15, c_sizes[:len(x)], 0.3, label="Clonal",
+        if c_means:
+            ax.bar(x + 0.15, c_means[:len(x)], 0.3, label="Clonal",
                    color=COLORS["no_evolution"], alpha=0.8)
         ax.set_xticks(x)
         ax.set_xticklabels(cohort_labels, fontsize=7)
         ax.set_xlabel("Generation Cohort")
-        ax.set_ylabel("N Organisms")
+        ax.set_ylabel("Mean Energy")
         p_val = evolved.get("p_value", float("nan"))
         ax.set_title(f"H1: Directional Selection (p={p_val:.3g})", fontsize=9)
         ax.legend(fontsize=7)

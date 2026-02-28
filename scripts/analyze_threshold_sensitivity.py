@@ -37,12 +37,14 @@ def spearman_rank_correlation(x: list[float], y: list[float]) -> float:
 
     Returns nan for fewer than 2 data points.
     """
-    n = min(len(x), len(y))
+    if len(x) != len(y):
+        raise ValueError(f"x and y must have same length, got {len(x)} and {len(y)}")
+    n = len(x)
     if n < 2:
         return float("nan")
 
-    rx = _rank(x[:n])
-    ry = _rank(y[:n])
+    rx = _rank(x)
+    ry = _rank(y)
 
     mean_rx = sum(rx) / n
     mean_ry = sum(ry) / n
@@ -71,7 +73,7 @@ def compute_delta_percent(
     mean_base = sum(baseline_alive) / len(baseline_alive)
     mean_abl = sum(ablation_alive) / len(ablation_alive)
     if mean_base == 0:
-        return 0.0
+        return float("nan")
     return (mean_abl - mean_base) / mean_base * 100.0
 
 
@@ -99,17 +101,21 @@ def assess_rank_stability(
     conditions = sorted(ref_deltas.keys())
 
     if len(conditions) < 2:
-        return {"spearman_correlations": {}, "all_stable": True}
-
-    ref_values = [ref_deltas.get(c, 0.0) for c in conditions]
+        return {"spearman_correlations": {}, "all_stable": False}
 
     correlations = {}
     for key in keys:
         if key == reference_key:
             continue
         other_deltas = deltas_by_combo[key]
-        other_values = [other_deltas.get(c, 0.0) for c in conditions]
-        correlations[key] = spearman_rank_correlation(ref_values, other_values)
+        # Only compare conditions present in both; skip combos missing conditions
+        shared = [c for c in conditions if c in other_deltas]
+        if len(shared) < 2:
+            correlations[key] = float("nan")
+            continue
+        other_values = [other_deltas[c] for c in shared]
+        ref_shared = [ref_deltas[c] for c in shared]
+        correlations[key] = spearman_rank_correlation(ref_shared, other_values)
 
     all_stable = all(
         not math.isnan(r) and r >= 0.8 for r in correlations.values()

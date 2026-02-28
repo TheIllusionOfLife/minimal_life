@@ -13,6 +13,7 @@ import argparse
 import json
 import math
 import random
+from collections import Counter
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -50,10 +51,18 @@ def jonckheere_terpstra_test(
 
     e_j = (n_total * n_total - sum(ni * ni for ni in ns)) / 4.0
 
-    # Variance formula (accounting for no ties in the simple case)
+    # Variance formula with tie correction.
+    # Ties within groups are counted and subtracted from the variance.
     a = n_total * (n_total - 1) * (2 * n_total + 5)
     b = sum(ni * (ni - 1) * (2 * ni + 5) for ni in ns)
-    var_j = (a - b) / 72.0
+    # Tie correction: count runs of identical values within each group
+    tie_term = 0.0
+    for g in groups:
+        counts = Counter(g)
+        for t in counts.values():
+            if t > 1:
+                tie_term += t * (t - 1) * (2 * t + 5)
+    var_j = (a - b - tie_term) / 72.0
 
     if var_j <= 0:
         return (j_stat, float("nan"))
@@ -89,11 +98,11 @@ def parent_offspring_regression(
         }
 
     def _slope(x: list[float], y: list[float]) -> float:
-        n = len(x)
-        mean_x = sum(x) / n
-        mean_y = sum(y) / n
-        ss_xy = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))
-        ss_xx = sum((x[i] - mean_x) ** 2 for i in range(n))
+        m = len(x)
+        mean_x = sum(x) / m
+        mean_y = sum(y) / m
+        ss_xy = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(m))
+        ss_xx = sum((x[i] - mean_x) ** 2 for i in range(m))
         if ss_xx < 1e-12:
             return 0.0
         return ss_xy / ss_xx
@@ -112,8 +121,8 @@ def parent_offspring_regression(
         boot_slopes.append(_slope(bx, by))
 
     boot_slopes.sort()
-    lo_idx = max(0, int(0.025 * n_bootstrap))
-    hi_idx = min(n_bootstrap - 1, int(0.975 * n_bootstrap))
+    lo_idx = max(0, math.floor(0.025 * n_bootstrap))
+    hi_idx = min(n_bootstrap - 1, math.ceil(0.975 * n_bootstrap) - 1)
 
     return {
         "slope": observed_slope,
@@ -143,14 +152,12 @@ def segment_by_generation_cohort(
     for org in organisms:
         gen = org.get("generation", 0)
         energy = org.get("energy", 0.0)
-        placed = False
+        # Reverse search finds the highest bin where gen >= bins[i].
+        # With bins starting at 0, gen >= 0 always matches at minimum.
         for i in range(len(bins) - 1, -1, -1):
             if gen >= bins[i]:
                 cohorts[i].append(energy)
-                placed = True
                 break
-        if not placed:
-            cohorts[0].append(energy)
 
     return cohorts
 
@@ -170,7 +177,10 @@ def link_parent_offspring_energies(
 
     Returns (parent_energies, offspring_energies).
     """
-    # Build stable_id → energy map from all snapshot frames
+    # Build stable_id → energy map from all snapshot frames.
+    # NOTE: Uses last-seen energy for each organism (latest snapshot).
+    # Birth-time energy is not available in snapshot data; this introduces
+    # measurement noise that may attenuate the slope estimate (conservative).
     id_to_energy: dict[int, float] = {}
     for frame in snapshot_frames:
         for org in frame.get("organisms", []):
@@ -288,19 +298,32 @@ def analyze_fitness_landscape(
 
     d = cohens_d(evolved_final, clonal_final)
 
+    alpha = 0.05
     return {
+        "alpha": alpha,
+        "h1_reject": not math.isnan(jt_p) and jt_p < alpha,
+        "h2_reject": (
+            not math.isnan(regression["ci_lower"])
+            and regression["ci_lower"] > 0
+        ),
         "h1_trend_test": {
             "evolved": {
                 "jt_statistic": jt_stat,
                 "p_value": jt_p,
                 "n_cohorts": len(non_empty_cohorts),
                 "cohort_sizes": [len(c) for c in non_empty_cohorts],
+                "cohort_means": [
+                    sum(c) / len(c) if c else 0.0 for c in non_empty_cohorts
+                ],
             },
             "clonal_control": {
                 "jt_statistic": clonal_jt_stat,
                 "p_value": clonal_jt_p,
                 "n_cohorts": len(non_empty_clonal),
                 "cohort_sizes": [len(c) for c in non_empty_clonal],
+                "cohort_means": [
+                    sum(c) / len(c) if c else 0.0 for c in non_empty_clonal
+                ],
             },
         },
         "h2_regression": regression,

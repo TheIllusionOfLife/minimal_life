@@ -113,7 +113,7 @@ class TestDeltaComputation:
         from analyze_threshold_sensitivity import compute_delta_percent
 
         delta = compute_delta_percent([0, 0, 0], [0, 0, 0])
-        assert delta == 0.0 or math.isnan(delta)
+        assert math.isnan(delta)
 
 
 # ---------------------------------------------------------------------------
