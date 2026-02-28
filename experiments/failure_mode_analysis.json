@@ -1,0 +1,3639 @@
+{
+  "metabolism": {
+    "cascade_order": [
+      "energy_mean",
+      "waste_mean",
+      "internal_state_mean_0"
+    ],
+    "median_break_steps": {
+      "energy_mean": 20,
+      "boundary_mean": null,
+      "internal_state_mean_0": 20,
+      "waste_mean": 20
+    },
+    "per_seed": [
+      {
+        "seed": 0,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 1,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 2,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 3,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 4,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 5,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 6,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 7,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 8,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 9,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 10,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 11,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 12,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 13,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 14,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 440,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            440
+          ]
+        ]
+      },
+      {
+        "seed": 15,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 16,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 17,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 18,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 19,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      }
+    ]
+  },
+  "boundary": {
+    "cascade_order": [
+      "energy_mean",
+      "waste_mean",
+      "internal_state_mean_0",
+      "boundary_mean"
+    ],
+    "median_break_steps": {
+      "energy_mean": 20,
+      "boundary_mean": 100,
+      "internal_state_mean_0": 20,
+      "waste_mean": 20
+    },
+    "per_seed": [
+      {
+        "seed": 0,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 1,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 2,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 3,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 4,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 5,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 6,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 7,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 8,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 9,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 10,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 11,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 12,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 13,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 14,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 15,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 16,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 17,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 18,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 40,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            40
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 19,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      }
+    ]
+  },
+  "homeostasis": {
+    "cascade_order": [
+      "energy_mean",
+      "internal_state_mean_0",
+      "waste_mean",
+      "boundary_mean"
+    ],
+    "median_break_steps": {
+      "energy_mean": 20,
+      "boundary_mean": 100,
+      "internal_state_mean_0": 20,
+      "waste_mean": 20
+    },
+    "per_seed": [
+      {
+        "seed": 0,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 1,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 2,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 3,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 4,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 5,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 6,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 7,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 8,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 9,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 10,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 11,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 12,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 13,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 14,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 15,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 16,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 17,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 18,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 19,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      }
+    ]
+  },
+  "response": {
+    "cascade_order": [
+      "energy_mean",
+      "waste_mean",
+      "internal_state_mean_0",
+      "boundary_mean"
+    ],
+    "median_break_steps": {
+      "energy_mean": 20,
+      "boundary_mean": 100,
+      "internal_state_mean_0": 20,
+      "waste_mean": 20
+    },
+    "per_seed": [
+      {
+        "seed": 0,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 1,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 2,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 3,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 4,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 5,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 6,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 7,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 8,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 9,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 10,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 11,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 12,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 13,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 14,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 15,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 16,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 17,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 18,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": null,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 19,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      }
+    ]
+  },
+  "reproduction": {
+    "cascade_order": [
+      "waste_mean",
+      "internal_state_mean_0"
+    ],
+    "median_break_steps": {
+      "energy_mean": null,
+      "boundary_mean": null,
+      "internal_state_mean_0": 20,
+      "waste_mean": 20
+    },
+    "per_seed": [
+      {
+        "seed": 0,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 1,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 2,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 3,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 4,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 5,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 6,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 7,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 8,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 9,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 10,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 11,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 12,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 13,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 14,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 380,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            380
+          ]
+        ]
+      },
+      {
+        "seed": 15,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 16,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 17,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 18,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      },
+      {
+        "seed": 19,
+        "break_points": {
+          "energy_mean": null,
+          "boundary_mean": null,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ]
+        ]
+      }
+    ]
+  },
+  "evolution": {
+    "cascade_order": [
+      "energy_mean",
+      "waste_mean",
+      "internal_state_mean_0",
+      "boundary_mean"
+    ],
+    "median_break_steps": {
+      "energy_mean": 20,
+      "boundary_mean": 100,
+      "internal_state_mean_0": 20,
+      "waste_mean": 20
+    },
+    "per_seed": [
+      {
+        "seed": 0,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 1,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 2,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 3,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 4,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 5,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 6,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 7,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 8,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 9,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 10,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 11,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 12,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 13,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 14,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 15,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 16,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 17,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 18,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": null,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      },
+      {
+        "seed": 19,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 100,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            100
+          ]
+        ]
+      }
+    ]
+  },
+  "growth": {
+    "cascade_order": [
+      "energy_mean",
+      "waste_mean",
+      "internal_state_mean_0",
+      "boundary_mean"
+    ],
+    "median_break_steps": {
+      "energy_mean": 20,
+      "boundary_mean": 80,
+      "internal_state_mean_0": 20,
+      "waste_mean": 20
+    },
+    "per_seed": [
+      {
+        "seed": 0,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 1,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 2,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 3,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 4,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 5,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 6,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 7,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 8,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 9,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 10,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 11,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 12,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 13,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 14,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 15,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 16,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 17,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 18,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": null,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      },
+      {
+        "seed": 19,
+        "break_points": {
+          "energy_mean": 20,
+          "boundary_mean": 80,
+          "internal_state_mean_0": 20,
+          "waste_mean": 20
+        },
+        "cascade": [
+          [
+            "energy_mean",
+            20
+          ],
+          [
+            "internal_state_mean_0",
+            20
+          ],
+          [
+            "waste_mean",
+            20
+          ],
+          [
+            "boundary_mean",
+            80
+          ]
+        ]
+      }
+    ]
+  }
+}
