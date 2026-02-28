@@ -17,11 +17,14 @@ _FIG_DIR.mkdir(parents=True, exist_ok=True)
 
 from figures.fig_ablation import generate_ablation_distributions
 from figures.fig_architecture import generate_architecture
+from figures.fig_boundary_topology import generate_boundary_topology
 from figures.fig_coupling import generate_coupling
 from figures.fig_cyclic import generate_cyclic, generate_cyclic_sweep
 from figures.fig_ecology_stress import generate_ecology_stress
 from figures.fig_evolution import generate_evolution
 from figures.fig_evolution_evidence import generate_evolution_evidence
+from figures.fig_failure_modes import generate_failure_modes
+from figures.fig_fitness_landscape import generate_fitness_landscape
 from figures.fig_graded import generate_graded
 from figures.fig_homeostasis import generate_homeostasis
 from figures.fig_invariance import generate_invariance
@@ -31,6 +34,7 @@ from figures.fig_orthogonal import generate_orthogonal
 from figures.fig_phenotype import generate_persistent_clusters, generate_phenotype
 from figures.fig_proxy import generate_proxy
 from figures.fig_spatial import generate_spatial
+from figures.fig_threshold_sensitivity import generate_threshold_sensitivity
 from figures.fig_timeseries import generate_timeseries
 from figures.fig_trait_evolution import generate_trait_evolution
 
@@ -55,4 +59,8 @@ __all__ = [
     "generate_invariance",
     "generate_ecology_stress",
     "generate_trait_evolution",
+    "generate_failure_modes",
+    "generate_fitness_landscape",
+    "generate_threshold_sensitivity",
+    "generate_boundary_topology",
 ]

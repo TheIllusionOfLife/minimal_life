@@ -13,12 +13,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from figures import (
     generate_ablation_distributions,
     generate_architecture,
+    generate_boundary_topology,
     generate_coupling,
     generate_cyclic,
     generate_cyclic_sweep,
     generate_ecology_stress,
     generate_evolution,
     generate_evolution_evidence,
+    generate_failure_modes,
+    generate_fitness_landscape,
     generate_graded,
     generate_homeostasis,
     generate_invariance,
@@ -29,6 +32,7 @@ from figures import (
     generate_phenotype,
     generate_proxy,
     generate_spatial,
+    generate_threshold_sensitivity,
     generate_timeseries,
     generate_trait_evolution,
 )
@@ -106,6 +110,18 @@ def main() -> None:
 
     print("Figure 20: Trait evolution / selection differential")
     generate_trait_evolution()
+
+    print("Figure 21: Failure mode analysis")
+    generate_failure_modes()
+
+    print("Figure 22: Fitness landscape")
+    generate_fitness_landscape()
+
+    print("Figure 23: Threshold sensitivity")
+    generate_threshold_sensitivity()
+
+    print("Figure 24: Boundary topology comparison")
+    generate_boundary_topology()
 
     print("Done.")
 
