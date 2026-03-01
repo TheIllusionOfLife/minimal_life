@@ -86,17 +86,16 @@ def holm_bonferroni(p_values: list[float]) -> list[float]:
     n = len(p_values)
     if n == 0:
         return []
-    # Sort NaN to the end so they don't corrupt the cumulative max
-    indexed = sorted(enumerate(p_values), key=lambda x: (np.isnan(x[1]), x[1]))
-    corrected = [0.0] * n
+    # Separate finite and NaN p-values; correct only finite ones
+    finite_indexed = [(i, p) for i, p in enumerate(p_values) if not np.isnan(p)]
+    finite_indexed.sort(key=lambda x: x[1])
+    m = len(finite_indexed)  # multiplier uses only finite count
+    corrected = [float("nan")] * n  # NaN by default; overwrite finite
     cumulative_max = 0.0
-    for rank, (orig_idx, p) in enumerate(indexed):
-        if np.isnan(p):
-            corrected[orig_idx] = float("nan")
-        else:
-            adjusted = p * (n - rank)
-            cumulative_max = max(cumulative_max, adjusted)
-            corrected[orig_idx] = min(cumulative_max, 1.0)
+    for rank, (orig_idx, p) in enumerate(finite_indexed):
+        adjusted = p * (m - rank)
+        cumulative_max = max(cumulative_max, adjusted)
+        corrected[orig_idx] = min(cumulative_max, 1.0)
     return corrected
 
 

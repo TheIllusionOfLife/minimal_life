@@ -78,6 +78,10 @@ class TestHolmBonferroni:
         assert corrected[0] < corrected[2]
         assert corrected[0] <= 1.0
         assert corrected[2] <= 1.0
+        # Multiplier should use m=2 (finite count), not n=3 (total)
+        # Smallest finite: 0.01 * 2 = 0.02; next: max(0.02, 0.05 * 1) = 0.05
+        assert corrected[0] == pytest.approx(0.02)
+        assert corrected[2] == pytest.approx(0.05)
 
 
 class TestCohensD:

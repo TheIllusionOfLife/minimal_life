@@ -164,7 +164,8 @@ def _extract_metric_series(
         series = []
         for sample in run.get("samples", []):
             if metric == "internal_state_mean_0":
-                val = sample.get("internal_state_mean", [0.0])[0]
+                arr = sample.get("internal_state_mean", [0.0])
+                val = arr[0] if arr else 0.0
             else:
                 val = sample.get(metric, 0.0)
             series.append(float(val))
