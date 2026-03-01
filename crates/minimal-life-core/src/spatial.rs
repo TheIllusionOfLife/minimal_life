@@ -1,4 +1,5 @@
 use crate::agent::Agent;
+use crate::config::WorldTopology;
 use rstar::{RTree, RTreeObject, AABB};
 use std::collections::HashSet;
 
@@ -63,6 +64,27 @@ pub fn count_neighbors(
     count
 }
 
+/// Topology-aware neighbor count.
+pub fn count_neighbors_topo(
+    tree: &RTree<AgentLocation>,
+    center: [f64; 2],
+    radius: f64,
+    self_id: u32,
+    world_size: f64,
+    topology: WorldTopology,
+) -> usize {
+    match topology {
+        WorldTopology::Toroidal => count_neighbors(tree, center, radius, self_id, world_size),
+        WorldTopology::Bounded => {
+            let mut count = 0usize;
+            for_each_bounded_neighbor(tree, center, radius, self_id, |_| {
+                count += 1;
+            });
+            count
+        }
+    }
+}
+
 /// Query neighbors within `radius` of `center`, returning their agent IDs.
 /// Uses AABB envelope query then filters by Euclidean distance.
 /// Excludes the agent with `self_id`.
@@ -79,6 +101,28 @@ pub fn query_neighbors(
     });
     result.sort_unstable();
     result
+}
+
+/// Topology-aware neighbor query.
+pub fn query_neighbors_topo(
+    tree: &RTree<AgentLocation>,
+    center: [f64; 2],
+    radius: f64,
+    self_id: u32,
+    world_size: f64,
+    topology: WorldTopology,
+) -> Vec<u32> {
+    match topology {
+        WorldTopology::Toroidal => query_neighbors(tree, center, radius, self_id, world_size),
+        WorldTopology::Bounded => {
+            let mut result = Vec::new();
+            for_each_bounded_neighbor(tree, center, radius, self_id, |id| {
+                result.push(id);
+            });
+            result.sort_unstable();
+            result
+        }
+    }
 }
 
 fn for_each_unique_neighbor(
@@ -169,6 +213,31 @@ fn for_each_unique_neighbor(
                     visitor(loc.id);
                 }
             }
+        }
+    }
+}
+
+/// Bounded-world neighbor iteration: single AABB, no wraparound.
+fn for_each_bounded_neighbor(
+    tree: &RTree<AgentLocation>,
+    center: [f64; 2],
+    radius: f64,
+    self_id: u32,
+    mut visitor: impl FnMut(u32),
+) {
+    let r_sq = radius * radius;
+    let envelope = AABB::from_corners(
+        [center[0] - radius, center[1] - radius],
+        [center[0] + radius, center[1] + radius],
+    );
+    for loc in tree.locate_in_envelope(&envelope) {
+        if loc.id == self_id {
+            continue;
+        }
+        let dx = loc.position[0] - center[0];
+        let dy = loc.position[1] - center[1];
+        if dx * dx + dy * dy <= r_sq {
+            visitor(loc.id);
         }
     }
 }
@@ -280,6 +349,54 @@ mod tests {
         let tree = build_index_active(&agents, &[true, false]);
         let result = query_neighbors(&tree, [1.0, 1.0], 1.0, u32::MAX, 100.0);
         assert_eq!(result, vec![0]);
+    }
+
+    #[test]
+    fn bounded_query_no_wraparound() {
+        // In bounded mode, agents near opposite edges should NOT be neighbors.
+        let agents = vec![make_agent(0, 0.5, 50.0), make_agent(1, 99.8, 50.0)];
+        let tree = build_index(&agents);
+        let result =
+            query_neighbors_topo(&tree, [0.5, 50.0], 1.0, 0, 100.0, WorldTopology::Bounded);
+        // agent 1 is 99.3 units away in bounded mode, not a neighbor
+        assert!(
+            result.is_empty(),
+            "bounded should not wrap: got {:?}",
+            result
+        );
+    }
+
+    #[test]
+    fn bounded_query_finds_nearby_agents() {
+        let agents = vec![
+            make_agent(0, 50.0, 50.0),
+            make_agent(1, 50.5, 50.0), // 0.5 apart
+            make_agent(2, 55.0, 55.0), // ~7.07 apart
+        ];
+        let tree = build_index(&agents);
+        let result =
+            query_neighbors_topo(&tree, [50.0, 50.0], 2.0, 0, 100.0, WorldTopology::Bounded);
+        assert_eq!(result, vec![1]);
+    }
+
+    #[test]
+    fn bounded_count_neighbors_no_wraparound() {
+        let agents = vec![make_agent(0, 0.5, 50.0), make_agent(1, 99.8, 50.0)];
+        let tree = build_index(&agents);
+        assert_eq!(
+            count_neighbors_topo(&tree, [0.5, 50.0], 1.0, 0, 100.0, WorldTopology::Bounded),
+            0
+        );
+    }
+
+    #[test]
+    fn toroidal_topo_matches_original() {
+        // Verify that the _topo variants produce the same results as the originals for toroidal.
+        let agents = vec![make_agent(0, 0.2, 0.2), make_agent(1, 99.8, 99.8)];
+        let tree = build_index(&agents);
+        let orig = query_neighbors(&tree, [0.2, 0.2], 1.0, 0, 100.0);
+        let topo = query_neighbors_topo(&tree, [0.2, 0.2], 1.0, 0, 100.0, WorldTopology::Toroidal);
+        assert_eq!(orig, topo);
     }
 
     #[test]

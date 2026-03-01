@@ -1688,3 +1688,137 @@ fn setpoint_pid_mode_stabilizes_internal_state_toward_energy_scaled_setpoint() {
         "setpoint controller should lower high state toward target"
     );
 }
+
+// ── Bounded world topology tests ──
+
+fn make_bounded_world(num_agents: usize, world_size: f64) -> World {
+    use crate::config::WorldTopology;
+    let agents: Vec<Agent> = (0..num_agents)
+        .map(|i| Agent::new(i as u32, 0, [50.0, 50.0]))
+        .collect();
+    let nn = NeuralNet::from_weights(std::iter::repeat_n(0.1f32, NeuralNet::WEIGHT_COUNT));
+    let config = SimConfig {
+        world_size,
+        num_organisms: 1,
+        agents_per_organism: num_agents,
+        world_topology: WorldTopology::Bounded,
+        ..SimConfig::default()
+    };
+    World::new(agents, vec![nn], config).unwrap()
+}
+
+#[test]
+fn bounded_world_clamps_positions_at_edges() {
+    let mut world = make_bounded_world(1, 100.0);
+    world.agents[0].position = [99.0, 99.0];
+    world.agents[0].velocity = [100.0, 100.0]; // will overshoot
+    world.step();
+    let pos = world.agents[0].position;
+    assert!(
+        pos[0] >= 0.0 && pos[0] <= 100.0,
+        "bounded x should be clamped: got {}",
+        pos[0]
+    );
+    assert!(
+        pos[1] >= 0.0 && pos[1] <= 100.0,
+        "bounded y should be clamped: got {}",
+        pos[1]
+    );
+}
+
+#[test]
+fn bounded_world_clamps_at_zero_edge() {
+    let mut world = make_bounded_world(1, 100.0);
+    world.agents[0].position = [1.0, 1.0];
+    world.agents[0].velocity = [-100.0, -100.0]; // will undershoot
+    world.step();
+    let pos = world.agents[0].position;
+    assert!(
+        pos[0] >= 0.0,
+        "bounded x should not go below 0: got {}",
+        pos[0]
+    );
+    assert!(
+        pos[1] >= 0.0,
+        "bounded y should not go below 0: got {}",
+        pos[1]
+    );
+}
+
+#[test]
+fn bounded_world_run_completes_without_panic() {
+    let mut world = make_bounded_world(10, 100.0);
+    world.config.enable_boundary_maintenance = false;
+    world.config.death_boundary_threshold = 0.0;
+    world.config.boundary_collapse_threshold = 0.0;
+    let summary = world.run_experiment(100, 10);
+    assert!(
+        !summary.samples.is_empty(),
+        "bounded world run should produce samples"
+    );
+}
+
+#[test]
+fn bounded_world_organisms_stay_within_bounds() {
+    let mut world = make_bounded_world(10, 100.0);
+    world.config.enable_boundary_maintenance = false;
+    world.config.death_boundary_threshold = 0.0;
+    world.config.boundary_collapse_threshold = 0.0;
+    for _ in 0..200 {
+        world.step();
+    }
+    for agent in world.agents() {
+        assert!(
+            agent.position[0] >= 0.0 && agent.position[0] <= 100.0,
+            "agent x out of bounds: {}",
+            agent.position[0]
+        );
+        assert!(
+            agent.position[1] >= 0.0 && agent.position[1] <= 100.0,
+            "agent y out of bounds: {}",
+            agent.position[1]
+        );
+    }
+}
+
+#[test]
+fn bounded_world_child_spawn_within_bounds() {
+    let mut world = make_bounded_world(10, 100.0);
+    // Place organism near edge
+    for agent in world.agents.iter_mut() {
+        agent.position = [99.5, 99.5];
+    }
+    world.config.death_energy_threshold = 0.0;
+    world.config.death_boundary_threshold = 0.0;
+    world.config.boundary_collapse_threshold = 0.0;
+    world.organisms[0].metabolic_state.energy = 1.0;
+    world.organisms[0].boundary_integrity = 1.0;
+    for _ in 0..10 {
+        world.step();
+    }
+    for agent in world.agents() {
+        assert!(
+            agent.position[0] >= 0.0 && agent.position[0] <= 100.0,
+            "child agent x out of bounds: {}",
+            agent.position[0]
+        );
+        assert!(
+            agent.position[1] >= 0.0 && agent.position[1] <= 100.0,
+            "child agent y out of bounds: {}",
+            agent.position[1]
+        );
+    }
+}
+
+#[test]
+fn legacy_config_defaults_to_toroidal() {
+    use crate::config::WorldTopology;
+    let legacy_json = r#"{
+        "seed": 42,
+        "world_size": 100.0,
+        "num_organisms": 1,
+        "agents_per_organism": 1
+    }"#;
+    let cfg: SimConfig = serde_json::from_str(legacy_json).expect("should parse");
+    assert_eq!(cfg.world_topology, WorldTopology::Toroidal);
+}

@@ -30,14 +30,21 @@ build/
 /experiments/logs/
 /experiments/*_part_*.json
 /experiments/ablation_sweep/
+/experiments/threshold_sweep/
+/experiments/boundary_sweep/
+/experiments/fitness_*.json
 /zenodo_staging/
 # Keep manifest-bound source artifacts trackable.
 !/experiments/coupling_analysis.json
 !/experiments/final_graph_statistics.json
 !/experiments/final_statistics.json
-# Keep Phase 1 analysis outputs (synthesized, small, not raw sweep data).
+# Keep analysis outputs (synthesized, small, not raw sweep data).
 !/experiments/criterion_reduction_analysis.json
 !/experiments/surrogate_analysis.json
+!/experiments/failure_mode_analysis.json
+!/experiments/fitness_landscape_analysis.json
+!/experiments/threshold_sensitivity_analysis.json
+!/experiments/boundary_topology_analysis.json
 
 # Generated paper artifacts
 paper/main.pdf

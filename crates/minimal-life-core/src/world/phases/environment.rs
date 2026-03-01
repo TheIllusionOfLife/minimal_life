@@ -14,12 +14,13 @@ impl World {
                     continue;
                 }
                 let effective_radius = self.effective_sensing_radius(org_idx);
-                let neighbor_count = spatial::count_neighbors(
+                let neighbor_count = spatial::count_neighbors_topo(
                     tree,
                     agent.position,
                     effective_radius,
                     agent.id,
                     self.config.world_size,
+                    self.config.world_topology,
                 );
                 _sham_sum += neighbor_count as f64;
             }

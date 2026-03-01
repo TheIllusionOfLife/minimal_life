@@ -1,0 +1,81 @@
+{
+  "deltas_by_combo": {
+    "bt0.05_et0.0": {
+      "no_metabolism": -88.27838827838828,
+      "no_reproduction": -91.80819180819181,
+      "no_response": -87.14618714618713
+    },
+    "bt0.05_et0.05": {
+      "no_metabolism": -88.27838827838828,
+      "no_reproduction": -91.80819180819181,
+      "no_response": -88.31168831168831
+    },
+    "bt0.05_et0.1": {
+      "no_metabolism": -88.27838827838828,
+      "no_reproduction": -91.80819180819181,
+      "no_response": -88.87778887778889
+    },
+    "bt0.1_et0.0": {
+      "no_metabolism": -88.71670702179176,
+      "no_reproduction": -92.17110573042777,
+      "no_response": -86.92493946731234
+    },
+    "bt0.1_et0.05": {
+      "no_metabolism": -88.71670702179176,
+      "no_reproduction": -92.17110573042777,
+      "no_response": -87.81275221953189
+    },
+    "bt0.1_et0.1": {
+      "no_metabolism": -88.71670702179176,
+      "no_reproduction": -92.17110573042777,
+      "no_response": -88.39386602098467
+    },
+    "bt0.15_et0.0": {
+      "no_metabolism": -88.59060402684563,
+      "no_reproduction": -92.11000163692911,
+      "no_response": -86.0206253069242
+    },
+    "bt0.15_et0.05": {
+      "no_metabolism": -88.59060402684563,
+      "no_reproduction": -92.11000163692911,
+      "no_response": -86.80635128498936
+    },
+    "bt0.15_et0.1": {
+      "no_metabolism": -88.59060402684563,
+      "no_reproduction": -92.11000163692911,
+      "no_response": -87.4447536421673
+    },
+    "bt0.2_et0.0": {
+      "no_metabolism": -88.67769949205308,
+      "no_reproduction": -92.20055710306406,
+      "no_response": -85.10568572833033
+    },
+    "bt0.2_et0.05": {
+      "no_metabolism": -88.67769949205308,
+      "no_reproduction": -92.20055710306406,
+      "no_response": -85.72833032934622
+    },
+    "bt0.2_et0.1": {
+      "no_metabolism": -88.67769949205308,
+      "no_reproduction": -92.20055710306406,
+      "no_response": -86.17073570375226
+    }
+  },
+  "rank_stability": {
+    "reference_key": "bt0.1_et0.0",
+    "spearman_correlations": {
+      "bt0.05_et0.0": 1.0,
+      "bt0.05_et0.05": 0.5,
+      "bt0.05_et0.1": 0.5,
+      "bt0.1_et0.05": 1.0,
+      "bt0.1_et0.1": 1.0,
+      "bt0.15_et0.0": 1.0,
+      "bt0.15_et0.05": 1.0,
+      "bt0.15_et0.1": 1.0,
+      "bt0.2_et0.0": 1.0,
+      "bt0.2_et0.05": 1.0,
+      "bt0.2_et0.1": 1.0
+    },
+    "all_stable": false
+  }
+}

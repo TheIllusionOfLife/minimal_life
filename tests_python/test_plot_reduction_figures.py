@@ -30,7 +30,13 @@ from plot_reduction_figures import (  # noqa: E402
 # ---------------------------------------------------------------------------
 
 _CRITERIA = [
-    "metabolism", "boundary", "homeostasis", "response", "reproduction", "evolution", "growth"
+    "metabolism",
+    "boundary",
+    "homeostasis",
+    "response",
+    "reproduction",
+    "evolution",
+    "growth",
 ]
 _METRICS = [
     "alive_auc",
@@ -46,9 +52,9 @@ _METRICS = [
 def _png_width(path: Path) -> int:
     """Read PNG width from IHDR without external libraries."""
     with open(path, "rb") as f:
-        f.read(8)   # PNG magic
-        f.read(4)   # IHDR chunk length
-        f.read(4)   # "IHDR"
+        f.read(8)  # PNG magic
+        f.read(4)  # IHDR chunk length
+        f.read(4)  # "IHDR"
         return struct.unpack(">I", f.read(4))[0]
 
 
@@ -60,7 +66,11 @@ def _make_crit_data() -> dict:
         "criteria": _CRITERIA,
         "performance_metrics": _METRICS,
         "conditions_used": [
-            "all_off", "full", "drop_metabolism", "drop_boundary", "drop_homeostasis"
+            "all_off",
+            "full",
+            "drop_metabolism",
+            "drop_boundary",
+            "drop_homeostasis",
         ],
         "performance_matrix": rng.random((n_cond, 7)).tolist(),
         "mean_stability_lasso": {c: float(rng.uniform(0.2, 0.8)) for c in _CRITERIA},
@@ -194,9 +204,7 @@ class TestFig3SurrogatePareto:
         plot_surrogate_pareto(ax, surr_data)
         # Horizontal lines are axhline calls; each produces a Line2D with xdata = [0, 1].
         h_lines = [ln for ln in ax.get_lines() if len(ln.get_xdata()) == 2]
-        assert len(h_lines) >= 2, (
-            f"Expected ≥2 h-lines (R²=0 + regulation ref), got {len(h_lines)}"
-        )
+        assert len(h_lines) >= 2, f"Expected ≥2 h-lines (R²=0 + regulation ref), got {len(h_lines)}"
         # Verify one line sits at the regulation_score held-out R² value.
         reg_r2 = surr_data["held_out_r2"]["regulation_score"]
         y_values = [float(ln.get_ydata()[0]) for ln in h_lines]

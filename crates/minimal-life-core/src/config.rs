@@ -26,6 +26,14 @@ pub enum HomeostasisMode {
     SetpointPid,
 }
 
+#[derive(Clone, Copy, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum WorldTopology {
+    #[default]
+    Toroidal,
+    Bounded,
+}
+
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum AblationTarget {
@@ -169,6 +177,8 @@ pub struct SimConfig {
     pub environment_cycle_low_rate: f32,
     /// Toggle for sham (no-op) computational process control.
     pub enable_sham_process: bool,
+    /// World topology: toroidal (wrapping) or bounded (clamped edges).
+    pub world_topology: WorldTopology,
 }
 
 impl Default for SimConfig {
@@ -237,6 +247,7 @@ impl Default for SimConfig {
             environment_cycle_period: 0,
             environment_cycle_low_rate: 0.005,
             enable_sham_process: false,
+            world_topology: WorldTopology::Toroidal,
         }
     }
 }

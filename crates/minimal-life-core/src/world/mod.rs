@@ -790,10 +790,18 @@ impl World {
             let theta = self.rng.random::<f64>() * 2.0 * PI;
             let radius = self.rng.random::<f64>().sqrt() * self.config.reproduction_spawn_radius;
             let (sin_theta, cos_theta) = theta.sin_cos();
-            let pos = [
-                (center[0] + radius * cos_theta).rem_euclid(self.config.world_size),
-                (center[1] + radius * sin_theta).rem_euclid(self.config.world_size),
-            ];
+            let raw_x = center[0] + radius * cos_theta;
+            let raw_y = center[1] + radius * sin_theta;
+            let pos = match self.config.world_topology {
+                crate::config::WorldTopology::Toroidal => [
+                    raw_x.rem_euclid(self.config.world_size),
+                    raw_y.rem_euclid(self.config.world_size),
+                ],
+                crate::config::WorldTopology::Bounded => [
+                    raw_x.clamp(0.0, self.config.world_size),
+                    raw_y.clamp(0.0, self.config.world_size),
+                ],
+            };
             let Some(id) = self.next_agent_id_checked() else {
                 break;
             };

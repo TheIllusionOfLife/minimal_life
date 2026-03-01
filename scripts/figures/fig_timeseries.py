@@ -5,6 +5,10 @@ from collections import defaultdict
 import numpy as np
 from figures._shared import *
 
+# Markers and line styles for color accessibility (n8)
+_MARKERS = ["o", "s", "^", "D", "v", "P", "X", "*"]
+_LINESTYLES = ["-", "--", "-.", ":", "-", "--", "-.", ":"]
+
 
 def generate_timeseries(data: list[dict]) -> None:
     """Figure 2: Population dynamics time-series with confidence bands."""
@@ -16,7 +20,7 @@ def generate_timeseries(data: list[dict]) -> None:
 
     fig, ax = plt.subplots(figsize=(7, 3.2))
 
-    for condition in CONDITION_ORDER:
+    for idx, condition in enumerate(CONDITION_ORDER):
         steps = sorted({s for (c, s) in groups if c == condition})
         means = []
         sems = []
@@ -30,13 +34,19 @@ def generate_timeseries(data: list[dict]) -> None:
         sems = np.array(sems)
         color = COLORS[condition]
         lw = 2.0 if condition == "normal" else 1.2
-        ls = "-" if condition == "normal" else "--"
+        ls = "-" if condition == "normal" else _LINESTYLES[idx % len(_LINESTYLES)]
+        marker = None if condition == "normal" else _MARKERS[idx % len(_MARKERS)]
+        # Place markers every 10th data point for readability
+        markevery = max(1, len(steps) // 10) if marker else None
         ax.plot(
             steps,
             means,
             color=color,
             linewidth=lw,
             linestyle=ls,
+            marker=marker,
+            markevery=markevery,
+            markersize=4,
             label=LABELS[condition],
             zorder=10 if condition == "normal" else 5,
         )

@@ -125,10 +125,9 @@ def extract_run_features(run_data: dict, total_steps: int) -> dict[str, float]:
     death_arr = np.array([s["death_count"] for s in samples], dtype=float)
 
     # internal_state_std is [f32; 4] → mean across 4 dims per sample
-    ist_arr = np.array([
-        sum(s.get("internal_state_std", [0.0, 0.0, 0.0, 0.0])) / 4.0
-        for s in samples
-    ], dtype=float)
+    ist_arr = np.array(
+        [sum(s.get("internal_state_std", [0.0, 0.0, 0.0, 0.0])) / 4.0 for s in samples], dtype=float
+    )
 
     n_late = min(50, len(samples))
     n_total = max(total_steps, 1)
@@ -316,8 +315,7 @@ def run_analysis(
     all_runs = load_all_runs(sweep_dir, seeds)
     if not all_runs:
         raise FileNotFoundError(
-            f"No sweep data found in {sweep_dir}. "
-            "Run experiment_ablation_sweep.py first."
+            f"No sweep data found in {sweep_dir}. Run experiment_ablation_sweep.py first."
         )
     print(f"  {len(all_runs)} run files loaded.")
 
@@ -343,8 +341,7 @@ def run_analysis(
     Y = np.array(target_rows, dtype=float)
     is_train = np.array(train_mask, dtype=bool)
     print(
-        f"  Feature matrix: {X_raw.shape} | "
-        f"Train={is_train.sum()} | Held-out={(~is_train).sum()}"
+        f"  Feature matrix: {X_raw.shape} | Train={is_train.sum()} | Held-out={(~is_train).sum()}"
     )
 
     # ── Step B: VIF collinearity check ───────────────────────────────────
@@ -377,7 +374,8 @@ def run_analysis(
 
         # Build per-target alias exclusion mask
         aliased = {
-            feat for feat, t in _FEATURE_TARGET_ALIASES.items()
+            feat
+            for feat, t in _FEATURE_TARGET_ALIASES.items()
             if t == tgt and feat in retained_features
         }
         if aliased:
@@ -388,9 +386,7 @@ def run_analysis(
             X_masked = X_train_scaled
             feat_subset = retained_features
 
-        lf_sub = stability_selection(
-            X_masked, y_train, n_bootstraps=N_BOOTSTRAPS, model="lasso"
-        )
+        lf_sub = stability_selection(X_masked, y_train, n_bootstraps=N_BOOTSTRAPS, model="lasso")
         ef_sub = stability_selection(
             X_masked, y_train, n_bootstraps=N_BOOTSTRAPS, model="elasticnet"
         )
@@ -412,9 +408,7 @@ def run_analysis(
     mean_enet = np.mean(list(all_enet.values()), axis=0)
     # Agreement gate: feature must be stable under BOTH LASSO and Elastic Net
     # (indexed over retained_features, not CRITERIA — different vocabulary)
-    stable_idx = np.where(
-        (mean_lasso > STABILITY_THRESHOLD) & (mean_enet > STABILITY_THRESHOLD)
-    )[0]
+    stable_idx = np.where((mean_lasso > STABILITY_THRESHOLD) & (mean_enet > STABILITY_THRESHOLD))[0]
     minimal_feature_names = [retained_features[i] for i in stable_idx]
     print(f"  Minimal surrogate set: {minimal_feature_names}")
 
@@ -448,7 +442,8 @@ def run_analysis(
                 continue
             # Exclude aliased features for this target
             aliased_for_tgt = {
-                feat for feat, t in _FEATURE_TARGET_ALIASES.items()
+                feat
+                for feat, t in _FEATURE_TARGET_ALIASES.items()
                 if t == tgt and feat in minimal_feature_names
             }
             tgt_features = [f for f in minimal_feature_names if f not in aliased_for_tgt]
@@ -473,18 +468,10 @@ def run_analysis(
         "vif_scores": vif_scores,
         "target_names": TARGET_NAMES,
         "feature_matrix_shape": list(X_raw.shape),
-        "stability_scores_lasso": {
-            tgt: all_lasso[tgt].tolist() for tgt in TARGET_NAMES
-        },
-        "stability_scores_enet": {
-            tgt: all_enet[tgt].tolist() for tgt in TARGET_NAMES
-        },
-        "mean_stability_lasso": {
-            f: float(mean_lasso[i]) for i, f in enumerate(retained_features)
-        },
-        "mean_stability_enet": {
-            f: float(mean_enet[i]) for i, f in enumerate(retained_features)
-        },
+        "stability_scores_lasso": {tgt: all_lasso[tgt].tolist() for tgt in TARGET_NAMES},
+        "stability_scores_enet": {tgt: all_enet[tgt].tolist() for tgt in TARGET_NAMES},
+        "mean_stability_lasso": {f: float(mean_lasso[i]) for i, f in enumerate(retained_features)},
+        "mean_stability_enet": {f: float(mean_enet[i]) for i, f in enumerate(retained_features)},
         "minimal_surrogate_set": minimal_feature_names,
         "pareto_curve": pareto_curve,
         "held_out_r2": held_out_r2,
@@ -498,7 +485,9 @@ def run_analysis(
             "Both feature and target compute the same quantity per run. "
             "Mitigated: aliased features are excluded from stability selection and "
             "held-out R² for their matching targets (see Step D and Step F)."
-        ) if leakage_pairs else None,
+        )
+        if leakage_pairs
+        else None,
     }
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -565,9 +554,7 @@ def main(argv: list[str] | None = None) -> None:
     sweep_dir = (
         Path(args.sweep_dir) if args.sweep_dir else repo_root / "experiments" / "ablation_sweep"
     )
-    out_path = (
-        Path(args.out) if args.out else repo_root / "experiments" / "surrogate_analysis.json"
-    )
+    out_path = Path(args.out) if args.out else repo_root / "experiments" / "surrogate_analysis.json"
     run_analysis(sweep_dir, args.seeds, out_path, vif_threshold=args.vif_threshold)
 
 

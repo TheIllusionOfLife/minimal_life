@@ -1,5 +1,5 @@
 use super::super::World;
-use crate::config::HomeostasisMode;
+use crate::config::{HomeostasisMode, WorldTopology};
 use std::f64::consts::PI;
 
 impl World {
@@ -51,10 +51,18 @@ impl World {
                 agent.velocity[1] *= scale;
             }
 
-            agent.position[0] =
-                (agent.position[0] + agent.velocity[0] * config.dt).rem_euclid(config.world_size);
-            agent.position[1] =
-                (agent.position[1] + agent.velocity[1] * config.dt).rem_euclid(config.world_size);
+            let new_x = agent.position[0] + agent.velocity[0] * config.dt;
+            let new_y = agent.position[1] + agent.velocity[1] * config.dt;
+            match config.world_topology {
+                WorldTopology::Toroidal => {
+                    agent.position[0] = new_x.rem_euclid(config.world_size);
+                    agent.position[1] = new_y.rem_euclid(config.world_size);
+                }
+                WorldTopology::Bounded => {
+                    agent.position[0] = new_x.clamp(0.0, config.world_size);
+                    agent.position[1] = new_y.clamp(0.0, config.world_size);
+                }
+            }
 
             let h_decay = config.homeostasis_decay_rate * config.dt as f32;
             agent.internal_state[0] = (agent.internal_state[0] - h_decay).max(0.0);

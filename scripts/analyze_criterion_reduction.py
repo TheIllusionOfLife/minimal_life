@@ -79,16 +79,14 @@ PERFORMANCE_METRICS = [
 # Pairwise conditions involving 'evolution' — pre-registered held-out test set
 # (6 conditions, chosen a priori; see decision_rules.md §5)
 HELD_OUT_CONDITIONS: frozenset[str] = frozenset(
-    f"drop_{c1}_{c2}"
-    for c1, c2 in combinations(CRITERIA, 2)
-    if "evolution" in (c1, c2)
+    f"drop_{c1}_{c2}" for c1, c2 in combinations(CRITERIA, 2) if "evolution" in (c1, c2)
 )
 
-STABILITY_THRESHOLD = 0.60   # §1 of decision_rules.md
-SUFFICIENCY_R2 = 0.85         # §2a
-SUFFICIENCY_COHEN_D = 0.50    # §2b
-PARETO_THRESHOLD = 0.85       # §4
-N_BOOTSTRAPS = 500            # §1
+STABILITY_THRESHOLD = 0.60  # §1 of decision_rules.md
+SUFFICIENCY_R2 = 0.85  # §2a
+SUFFICIENCY_COHEN_D = 0.50  # §2b
+PARETO_THRESHOLD = 0.85  # §4
+N_BOOTSTRAPS = 500  # §1
 
 
 # ── data loading ──────────────────────────────────────────────────────────────
@@ -152,10 +150,7 @@ def build_performance_matrix(
 
     for i, cond_name in enumerate(condition_names):
         runs = condition_data[cond_name]
-        seed_metrics = [
-            compute_performance_metrics(r.get("samples", []), STEPS)
-            for r in runs
-        ]
+        seed_metrics = [compute_performance_metrics(r.get("samples", []), STEPS) for r in runs]
         for j, met in enumerate(PERFORMANCE_METRICS):
             vals = [m[met] for m in seed_metrics]
             matrix[i, j] = float(np.mean(vals)) if vals else 0.0
@@ -374,24 +369,18 @@ def _run_lme_check(
         try:
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
-                md = smf.mixedlm(
-                    f"target ~ {formula}", df, groups=df["seed_group"]
-                )
+                md = smf.mixedlm(f"target ~ {formula}", df, groups=df["seed_group"])
                 mdf = md.fit(reml=True, method="lbfgs")
             aic = float(mdf.aic)
             coefs = {c: float(mdf.params.get(f"c_{c}", 0.0)) for c in CRITERIA}
-            converged = math.isfinite(aic) and all(
-                math.isfinite(v) for v in coefs.values()
-            )
+            converged = math.isfinite(aic) and all(math.isfinite(v) for v in coefs.values())
             entry: dict = {
                 "converged": converged,
                 "AIC": aic if converged else None,
                 "criterion_coefs": coefs,
             }
             if not converged:
-                entry["warning"] = (
-                    "non-finite AIC or params; model may not have converged"
-                )
+                entry["warning"] = "non-finite AIC or params; model may not have converged"
             results[met] = entry
         except Exception as exc:
             results[met] = {"error": str(exc)}
@@ -433,18 +422,14 @@ def run_analysis(
     condition_data = load_all_conditions(sweep_dir, seeds)
     if not condition_data:
         raise FileNotFoundError(
-            f"No ablation sweep data found in {sweep_dir}. "
-            "Run experiment_ablation_sweep.py first."
+            f"No ablation sweep data found in {sweep_dir}. Run experiment_ablation_sweep.py first."
         )
     print(f"  Loaded {len(condition_data)} conditions.")
 
     # Split into train (discovery) and test (held-out)
     train_conds = {k: v for k, v in condition_data.items() if k not in HELD_OUT_CONDITIONS}
     test_conds = {k: v for k, v in condition_data.items() if k in HELD_OUT_CONDITIONS}
-    print(
-        f"  Train conditions: {len(train_conds)} | "
-        f"Held-out test: {len(test_conds)}"
-    )
+    print(f"  Train conditions: {len(train_conds)} | Held-out test: {len(test_conds)}")
 
     # ── Step A: performance matrix (averaged over seeds) ──────────────────
     print("Building performance matrices ...")
@@ -460,10 +445,7 @@ def run_analysis(
     pca.fit(perf_scaled)
     explained_variance = pca.explained_variance_ratio_.tolist()
     n_pcs_90 = int(np.searchsorted(np.cumsum(explained_variance), 0.90)) + 1
-    print(
-        f"  {n_pcs_90} PCs explain ≥90% of variance "
-        f"(top-3 ratios: {explained_variance[:3]})"
-    )
+    print(f"  {n_pcs_90} PCs explain ≥90% of variance (top-3 ratios: {explained_variance[:3]})")
 
     # ── Step C: Stability selection (per target metric) ──────────────────
     print(f"Running stability selection ({N_BOOTSTRAPS} bootstraps) ...")
@@ -493,9 +475,7 @@ def run_analysis(
     print("Computing Pareto curve ...")
     # Primary target: alive_auc (index 0)
     y_primary = perf_matrix[:, PERFORMANCE_METRICS.index("alive_auc")]
-    pareto_curve = compute_pareto_curve(
-        X_train, y_primary, CRITERIA, mean_lasso, n_boot=500
-    )
+    pareto_curve = compute_pareto_curve(X_train, y_primary, CRITERIA, mean_lasso, n_boot=500)
 
     # ── Step E: held-out R² ───────────────────────────────────────────────
     held_out_r2: float | None = None
@@ -517,14 +497,18 @@ def run_analysis(
     cohen_d_full_vs_alloff: float | None = None
     alloff_auc: np.ndarray | None = None
     if "all_off" in condition_data and "full" in condition_data:
-        alloff_auc = np.array([
-            compute_performance_metrics(r.get("samples", []), STEPS)["alive_auc"]
-            for r in condition_data["all_off"]
-        ])
-        full_auc = np.array([
-            compute_performance_metrics(r.get("samples", []), STEPS)["alive_auc"]
-            for r in condition_data["full"]
-        ])
+        alloff_auc = np.array(
+            [
+                compute_performance_metrics(r.get("samples", []), STEPS)["alive_auc"]
+                for r in condition_data["all_off"]
+            ]
+        )
+        full_auc = np.array(
+            [
+                compute_performance_metrics(r.get("samples", []), STEPS)["alive_auc"]
+                for r in condition_data["full"]
+            ]
+        )
         cohen_d_full_vs_alloff = cohens_d(full_auc, alloff_auc)
 
     # F2: Sufficiency gate (decision_rules.md §2b) — minimal set vs all-off.
@@ -533,9 +517,7 @@ def run_analysis(
     # this requires the confirmatory run (seeds 20–39, 5000 steps).
     cohen_d_minimal_vs_alloff: float | None = None
     if minimal_set and alloff_auc is not None:
-        non_minimal = sorted(
-            [c for c in CRITERIA if c not in minimal_set], key=CRITERIA.index
-        )
+        non_minimal = sorted([c for c in CRITERIA if c not in minimal_set], key=CRITERIA.index)
         if len(non_minimal) == 1:
             min_cond_key = f"drop_{non_minimal[0]}"
         elif len(non_minimal) == 2:
@@ -544,17 +526,23 @@ def run_analysis(
             min_cond_key = None  # not in the sweep; requires confirmatory run
 
         if min_cond_key and min_cond_key in condition_data:
-            min_auc = np.array([
-                compute_performance_metrics(r.get("samples", []), STEPS)["alive_auc"]
-                for r in condition_data[min_cond_key]
-            ])
+            min_auc = np.array(
+                [
+                    compute_performance_metrics(r.get("samples", []), STEPS)["alive_auc"]
+                    for r in condition_data[min_cond_key]
+                ]
+            )
             cohen_d_minimal_vs_alloff = cohens_d(min_auc, alloff_auc)
         elif min_cond_key:
-            print(f"  Note: condition '{min_cond_key}' not in sweep — "
-                  "minimal-set Cohen's d requires confirmatory run.")
+            print(
+                f"  Note: condition '{min_cond_key}' not in sweep — "
+                "minimal-set Cohen's d requires confirmatory run."
+            )
         else:
-            print(f"  Note: minimal set disables {len(non_minimal)} criteria — "
-                  "minimal-set Cohen's d requires confirmatory run.")
+            print(
+                f"  Note: minimal set disables {len(non_minimal)} criteria — "
+                "minimal-set Cohen's d requires confirmatory run."
+            )
 
     # ── Step G: LME robustness check ──────────────────────────────────────
     print("Running LME robustness check ...")
@@ -576,12 +564,8 @@ def run_analysis(
         "criteria": CRITERIA,
         "pca_explained_variance": explained_variance,
         "pca_n_components_90pct": n_pcs_90,
-        "stability_scores_lasso": {
-            met: all_lasso[met].tolist() for met in PERFORMANCE_METRICS
-        },
-        "stability_scores_enet": {
-            met: all_enet[met].tolist() for met in PERFORMANCE_METRICS
-        },
+        "stability_scores_lasso": {met: all_lasso[met].tolist() for met in PERFORMANCE_METRICS},
+        "stability_scores_enet": {met: all_enet[met].tolist() for met in PERFORMANCE_METRICS},
         "mean_stability_lasso": {c: float(mean_lasso[i]) for i, c in enumerate(CRITERIA)},
         "mean_stability_enet": {c: float(mean_enet[i]) for i, c in enumerate(CRITERIA)},
         "minimal_sufficient_set": minimal_set,
@@ -612,10 +596,7 @@ def run_analysis(
         k3 = next((p for p in pareto_curve if p["k"] == 3), None)
         k7 = pareto_curve[-1]
         if k3:
-            print(
-                f"Pareto: k=3 → R²={k3['r2_mean']:.3f} "
-                f"vs k={k7['k']} → R²={k7['r2_mean']:.3f}"
-            )
+            print(f"Pareto: k=3 → R²={k3['r2_mean']:.3f} vs k={k7['k']} → R²={k7['r2_mean']:.3f}")
     if held_out_r2 is not None:
         suffix = " ✓ SUFFICIENT" if held_out_r2 >= SUFFICIENCY_R2 else " ✗ INSUFFICIENT"
         print(f"Held-out R²={held_out_r2:.3f}{suffix}")

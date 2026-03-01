@@ -41,8 +41,8 @@ A proxy control comparison shows that metabolism implementations of
 differing complexity produce qualitatively distinct population dynamics,
 ruling out tautological criterion definitions.
 The strongest single-ablation effects arise from disabling reproduction
-($\Delta$=--91.1\%), response to stimuli ($\Delta$=--88.5\%), and metabolism
-($\Delta$=--86.8\%), confirming that these criteria function as necessary,
+($\Delta\%$=--91.1), response to stimuli ($\Delta\%$=--88.5), and metabolism
+($\Delta\%$=--86.8), confirming that these criteria function as necessary,
 interdependent components of organismal viability rather than decorative
 labels.
 A Phase~1 criterion-reduction analysis (30 ablation conditions, 600 simulation
@@ -109,15 +109,16 @@ We adopt a \emph{weak ALife} stance: our system is a functional model of life,
 not a claim that the organisms are alive.
 The contribution is methodological---a two-stage design: Stage~1 integrates
 all seven criteria and verifies functional necessity via controlled ablation;
-Stage~2 applies criterion-reduction and surrogate-selection analysis to the
-resulting 30-condition sweep to identify minimal observable predictors of
-life-likeness.
+Stage~2 applies \emph{criterion reduction} (identifying which criteria
+contribute most to life-likeness) and \emph{surrogate selection} (finding
+minimal observable measurements that predict life-likeness without running
+the full system) to the resulting 30-condition sweep.
 
 This paper contributes: (1)~a hybrid swarm-organism architecture integrating
 all seven criteria as functionally interdependent processes;
 (2)~an operational \emph{functional analogy} definition with three falsifiable
 conditions and a criterion-ablation methodology; (3)~pairwise ablation and
-proxy control experiments ruling out tautological definitions; and
+proxy control experiments providing evidence against tautological definitions; and
 (4)~Phase~1 criterion-reduction analysis identifying a 6-feature minimal
 predictor set ($R^2=0.257$ alive-AUC; $R^2=0.668$ regulation quality held-out).
 The key contribution is a falsifiable experimental framework for testing
@@ -126,11 +127,15 @@ functional necessity and interaction of life criteria in any ALife system.
 % ============================================================================
 \section{Related Work}
 
-Tierra \citep{ray_1991_approach}, Avida \citep{ofria_2004_avida}, Lenia
-\citep{chan_2019_lenia}, Flow-Lenia \citep{plantec_2023_flow}, ALIEN
+Tierra \citep{ray_1991_approach}, Avida \citep{ofria_2004_avida},
+Polyworld \citep{yaeger_1994_computational}, Geb \citep{channon_2001_passing},
+Lenia \citep{chan_2019_lenia}, Flow-Lenia \citep{plantec_2023_flow}, ALIEN
 \citep{heinemann_2008_alien}, and Coralai \citep{barbieux_2024_coralai}
 each cover subsets of the seven criteria; no existing system combines
 multi-step metabolism with active homeostatic regulation.
+Polyworld and Geb each integrate evolution with neural-network controllers
+and physical embodiment, but lack explicit metabolic or homeostatic
+subsystems amenable to individual-criterion ablation.
 Our framework operationalizes autopoiesis \citep{maturana_1980_autopoiesis,
 mcmullin_2004_thirty}, the chemoton model \citep{ganti_2003_principles},
 and NASA's two-criterion definition \citep{joyce_1994_foreword,
@@ -155,6 +160,12 @@ ALIEN \citep{heinemann_2008_alien} & \textbf{4} & 3 & 2 & 3 & \textbf{4} & \text
 \multicolumn{9}{@{}l@{}}{\scriptsize Gr=Growth, Re=Reprod, Rs=Response, Ev=Evol.}
 \end{tabular}
 \end{table}
+
+We acknowledge that Table~\ref{tab:comparison} relies on self-assessment;
+independent cross-validation by developers of other systems would
+strengthen these comparisons.
+The five-level rubric used for scoring is defined in~\S S4
+(Table~\ref{tab:rubric}).
 
 % ============================================================================
 \section{System Design}
@@ -203,7 +214,7 @@ Evolution & genome $\mathbf{g}$ & Copy w/o mutation & $\mathbf{g}$ variation $\t
 \end{tabular}
 \end{table*}
 
-\textit{Full architecture, genome encoding, and parameter specifications appear in~\S S4.}
+\textit{Full architecture, genome encoding (256-float vector organized into 7 segments; see~\S S4), neural-network specification (8$\to$16$\to$4 tanh; 212 weights), and parameter values appear in~\S S4.}
 
 % ============================================================================
 \section{Criterion-Ablation Experiment}
@@ -241,7 +252,10 @@ Each simulation runs for 2000 timesteps with population sampled every 50
 on a 100$\times$100
 toroidal grid with 30 initial organisms (25 swarm agents each); resources
 regenerate at 0.01/cell/step; ablation toggles skip disabled processes
-without altering event ordering. Run manifests (\texttt{*\_manifest.json})
+without altering event ordering.
+Importantly, skipping a process does \emph{not} redistribute saved energy
+or computation to other processes---the ablation simply removes the process's
+contribution, preserving the baseline resource budget. Run manifests (\texttt{*\_manifest.json})
 lock parameters to reported results (registry:
 \texttt{docs/research/result\_manifest\_bindings.json}).
 
@@ -288,6 +302,10 @@ No Evol.    & 321.8 & $-$7.8  & 0.39 [0.11, 0.64] & .0047 & $^{*}$ \\
 
 Three ablations cause near-total collapse ($>$86\%): reproduction, response,
 and metabolism---the core viability loop (Figure~\ref{fig:timeseries}).
+The key takeaway from Figure~\ref{fig:timeseries} is that the top three
+ablations converge to near-zero populations within 500 steps, while
+evolution ablation remains close to baseline, confirming a clear effect
+hierarchy.
 Metabolic ablation collapses within 200 steps; reproduction ablation declines
 progressively; evolution ablation ($\delta$=0.39) shows only modest impact,
 consistent with adaptation at longer timescales.
@@ -310,7 +328,7 @@ rather than short-term survival necessity.}
 
 \paragraph{Quantitative coupling evidence.}
 Granger-style lagged F-tests (lags 1--5, within-seed Holm correction) show
-significant directed predictability for all three hypothesized pathways
+temporal precedence consistent with all three hypothesized pathways
 ($p_{\mathrm{corr}}<0.001$); energy and boundary integrity are strongly
 anti-correlated at lag~0 ($r=-0.78$, $p<10^{-8}$). Intervention effects
 confirm non-modularity: metabolism ablation raises boundary by 41\% (no
@@ -326,8 +344,11 @@ Three metabolism implementations on the same seeds ($n$=30)---Counter
 network)---all satisfy ``dynamic resource consumption'' yet produce
 qualitatively different dynamics (Figure~\ref{fig:proxy}): population size
 differs by 27\% and genome diversity varies non-monotonically, confirming
-that the specific implementation shapes system behavior, ruling out
-tautological definitions.
+that the specific implementation shapes system behavior, providing evidence
+against tautological definitions.
+Importantly, the direction of ablation effects (metabolism removal causes
+population decline) is consistent across all three implementations,
+confirming that the qualitative conclusions are not implementation-specific.
 
 \begin{figure}[t]
 \centering
@@ -368,8 +389,11 @@ environment results appear in~\S S7.
 
 \textit{See Supplementary Material for mid-run extensions~(§S1),
 ecology stressor protocol~(§S2), phenotype clustering validation~(§S3),
-pairwise ablation analysis~(§S5), evolution timescale extension~(§S6), and
-graded/cyclic experiments~(§S7).}
+pairwise ablation analysis~(§S5), evolution timescale extension~(§S6),
+full statistical results~(\S\ref{sec:s7stats}), failure mode
+analysis~(\S\ref{sec:s8failure}), fitness landscape
+evidence~(\S\ref{sec:s9fitness}), threshold sensitivity and boundary
+topology robustness~(\S\ref{sec:s10robust}), and graded/cyclic experiments~(§S11).}
 
 % ============================================================================
 \section{Criterion Reduction Analysis}
@@ -466,8 +490,9 @@ validates the sweep design.
 \caption{Left: PCA biplot (PC1=38\%, PC2=31\%) shows full-criteria and all-off
 at opposite poles; pairwise ablations cluster near all-off, reflecting
 multiplicative criterion interdependence.
-Right: criterion Pareto curve (all $R^2<0$; underpowered); Enet stability
-rankings are primary evidence.}
+Right: criterion Pareto curve (note: all $R^2<0$, indicating insufficient
+statistical power for predictive modeling; underpowered); Enet stability
+rankings serve as the primary directional evidence.}
 \label{fig:pca_reduction}
 \end{figure}
 
@@ -478,15 +503,17 @@ rankings are primary evidence.}
 \subsection{Feature Engineering}
 
 From 14 scalar observables extracted from the 600-run sweep, VIF screening
-(threshold 10) removes 8 collinear features, retaining 6:
+(threshold 10, following \citealt{montgomery_2012_introduction}) removes
+8 collinear features, retaining 6:
 \emph{energy\_autocorr} (VIF=2.97), \emph{boundary\_stability} (1.32),
 \emph{homeostasis\_var} (1.64), \emph{spatial\_cohesion\_late} (3.57),
 \emph{genome\_diversity\_late} (9.59), and \emph{maturity\_late} (6.50).
 
 \subsection{Stability Selection}
 
-LASSO and Enet stability selection both select all 6 retained features above the
-0.60 threshold for all prediction targets
+LASSO and Enet stability selection (500 subsamples, selection threshold 0.60
+following \citealt{meinshausen_2010_stability}, subsample ratio 0.5) both
+select all 6 retained features above threshold for all prediction targets
 (energy\_autocorr: 0.998, boundary\_stability: 1.00, homeostasis\_var: 1.00,
 spatial\_cohesion\_late: 0.918--0.953, genome\_diversity\_late: 0.75,
 maturity\_late: 0.877--0.984).
@@ -498,6 +525,13 @@ Forward selection by Enet stability reveals a clear elbow at $k{=}3$: adding
 (Figure~\ref{fig:surr_pareto}).
 The full 6-feature set reaches $R^2=0.257$ (cross-validated, target: alive AUC).
 The best held-out prediction is regulation quality: $R^2=0.668$.
+The difference between alive-AUC ($R^2=0.257$) and regulation quality
+($R^2=0.668$) reflects their diagnostic purposes: alive-AUC is a
+multi-criterion composite (harder to predict from few surrogates), while
+regulation quality captures a single criterion dimension (homeostatic
+control) that is more directly observable.
+Both serve diagnostic roles: alive-AUC for overall viability screening,
+regulation quality for homeostatic health assessment.
 
 \begin{figure}[t]
 \centering
@@ -535,13 +569,27 @@ ablation effects would be additive.
 The proxy control comparison further demonstrates that the specific
 implementation of a criterion shapes ecological dynamics (more complex
 metabolism sustains fewer organisms with distinct diversity profiles),
-ruling out tautological definitions.
+providing evidence against tautological definitions.
 
 \paragraph{Evolution at longer timescales.}
 The modest 2,000-step evolution effect ($d$=0.78, $\delta$=0.39) grows to
 $d$=1.42 ($\delta$=0.66) at 10,000 steps (§S6), confirming that adaptation
 accumulates across generations; cyclic-environment recovery differences
 are mixed and treated as supplemental evidence (§S2).
+Fitness landscape analysis (\S\ref{sec:s9fitness}) provides additional
+evidence: a Jonckheere-Terpstra trend test for directional selection across
+generation cohorts and parent-offspring energy regression for heritability.
+
+\paragraph{Functional analogy across criterion types.}
+The three functional-analogy conditions apply differently to continuous
+criteria (metabolism, homeostasis) and event-driven criteria (reproduction,
+evolution). Continuous criteria satisfy ``sustained resource consumption''
+at every timestep, while reproduction and evolution consume resources only
+at discrete events (division, mutation). We interpret the dynamic-process
+condition broadly: these criteria maintain a standing readiness (energy
+reserves above the reproduction threshold; genetic variation in the
+population) that constitutes sustained functional engagement even between
+events.
 
 \paragraph{Are criteria merely engineered?}
 Four lines of evidence argue against this: (1)~proxy control shows
@@ -550,6 +598,16 @@ alternative implementations produce distinct dynamics
 interactions inconsistent with independent modules
 (Table~\ref{tab:pairwise}); (3)~sham ablation control produces no
 significant difference; (4)~graded ablation yields proportional dose-response (§S7).
+
+\paragraph{Growth as an independent criterion.}
+While the (reproduction, growth) pairwise ablation shows
+$\Delta_{AB} \approx \Delta_{\text{reproduction}}$, growth contributes
+independently through three channels: boundary repair efficiency (immature
+organisms repair at reduced rates), sensing range (reduced foraging), and
+metabolic efficiency (lower throughput during early development).
+Disabling growth with reproduction already disabled still produces
+measurably lower boundary integrity than the growth-enabled control (\S S5),
+confirming that growth's effects extend beyond the reproduction maturity gate.
 
 \paragraph{Criterion maturity.}
 Six criteria reach Level~4 (multi-process interaction); evolution is
@@ -575,8 +633,14 @@ effect hierarchy (Table~\ref{tab:ablation}), providing convergent evidence that
 these three criteria contribute most to system-level life-likeness.
 Expanding the sweep to $\geq$100 conditions would likely push LASSO stability
 above threshold for the top-ranked criteria.
+A planned Phase~2 expansion ($\geq$100 conditions including held-out
+environment regimes) will provide the statistical power necessary to
+confirm or refute these directional findings.
 
 \paragraph{Surrogate observables.}
+\emph{Regulation quality} is defined as the inverse coefficient of variation
+of internal state $s_0$ over the simulation: systems with tight homeostatic
+control score high, while those with large fluctuations or drift score low.
 The regulation quality $R^2=0.668$ on held-out runs is the strongest Phase~1
 finding, demonstrating that observable surrogates can predict a key dimension
 of life-likeness without running the full 7-criteria system.
@@ -601,8 +665,9 @@ spatial differentiation would further strengthen this criterion.
 \textbf{Evolution} reaches $d$=1.42 at 10,000 steps but demonstrating
 open-ended dynamics would require $10^5$+ steps with novelty metrics
 \citep{bedau_2000_open}.
-\textbf{Scale} is limited to $\sim$300 organisms on a single machine;
-larger populations might reveal emergent ecological phenomena.
+\textbf{Scale} is limited to $\sim$300 organisms on a single machine
+(Mac Mini M2 Pro); 10$\times$ scaling is feasible with spatial partitioning,
+and larger populations might reveal emergent ecological phenomena.
 We adopt a \textbf{weak ALife} stance: this is a functional model, not
 a claim that digital organisms are alive.
 
@@ -621,6 +686,10 @@ The framework and criterion-ablation methodology are \emph{portable}: any
 ALife system with observable state variables and ablation toggles can be
 subjected to the same three-condition test, making this a reusable
 evaluation protocol for the field.
+Minimum requirements for applying the framework are: (1)~per-criterion
+enable/disable toggles; (2)~at least one measurable population-level or
+individual-level outcome variable; and (3)~stochastic replication
+(multiple seeds) for statistical comparison.
 
 Our results demonstrate that no criterion is decorative: removing any one
 causes statistically significant population decline ($p \leq 0.004728$, Holm-Bonferroni
@@ -871,6 +940,56 @@ Growth & +3\% & +1\% & +17\% & $-$6\% \\
 
 \subsection*{S4: System Design Details}
 
+\paragraph{Rubric definition.}
+Table~\ref{tab:rubric} defines the five-level rubric used in
+Table~\ref{tab:comparison}.
+
+\begin{table}[htbp]
+\centering
+\caption{Five-level criterion implementation rubric.}
+\label{tab:rubric}
+\footnotesize
+\begin{tabular}{@{}cl@{}}
+\toprule
+Level & Definition \\
+\midrule
+0 & Criterion absent or purely cosmetic \\
+1 & Static parameter (no dynamics) \\
+2 & Single-process dynamics (no coupling) \\
+3 & Dynamic process with measurable degradation upon removal \\
+4 & Multi-process interaction with feedback coupling \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Cellular organization: scalar vs.\ spatial representation.}
+Boundary integrity $b \in [0,1]$ tracks the \emph{functional consequence}
+of swarm agent loss: as agents are lost, the organism's ability to maintain
+spatial coherence degrades, which is reflected in $b$ decreasing.
+The spatial validation uses \emph{spatial\_cohesion\_mean} (mean pairwise
+agent distance), which serves as an independent spatial metric confirming
+that changes in $b$ correspond to real spatial disaggregation
+(Figure~\ref{fig:phenotype}, center).
+The scalar representation is a deliberate simplification: it enables
+clean ablation experiments (a single variable to track) while the spatial
+cohesion metric validates that the scalar captures genuine spatial effects.
+
+\paragraph{Ablation implementation independence.}
+Each ablation toggle skips a specific computational step without side
+effects on other criteria's code paths. For example, disabling metabolism
+freezes $(e, r, w)$ values but does not alter the boundary decay equation,
+which still reads the current (frozen) energy value. This means
+criterion interactions emerge from shared state variables (energy, boundary)
+rather than implementation-level coupling. The sham control (\S S7)
+confirms that the toggle mechanism itself has no effect.
+
+\paragraph{Neural-network capacity.}
+The fixed NN architecture (8$\to$16 tanh$\to$4 tanh; 212 weights)
+was chosen for computational efficiency rather than optimality.
+Whether NN capacity is a bottleneck for homeostasis or response quality
+remains an unexplored limitation; architecture search or larger networks
+might reveal stronger criterion interactions.
+
 \paragraph{Architecture and runtime state.}
 Each organism maintains: boundary integrity ($b \in [0,1]$), metabolic state
 (energy $e$, resource $r$, waste $w$), internal state vector
@@ -1076,7 +1195,212 @@ differences are mixed and pooled significance is not reached
 \end{figure}
 
 % ----------------------------------------------------------------------------
-\subsection*{S7: Graded and Cyclic Experiments}
+\subsection*{S7: Full Statistical Results}
+\label{sec:s7stats}
+
+Table~\ref{tab:full_stats} reports uncorrected and Holm-Bonferroni corrected
+$p$-values, Cliff's $\delta$ with percentile bootstrap 95\% CIs (2,000
+resamples), and rank within the ablation effect hierarchy for all seven
+single-criterion ablations.
+
+\begin{table}[htbp]
+\centering
+\caption{Full statistical results for single-criterion ablations ($n$=30 per
+condition). $p_{\text{raw}}$: one-sided Mann-Whitney $U$;
+$p_{\text{corr}}$: Holm-Bonferroni corrected ($m$=7, $\alpha$=0.05);
+$\delta$: Cliff's delta [bootstrap 95\% CI, 2,000 resamples];
+Rank: by $|\Delta\%|$.}
+\label{tab:full_stats}
+\footnotesize
+\begin{tabular}{@{}l@{\hskip 3pt}r@{\hskip 3pt}l@{\hskip 3pt}l@{\hskip 3pt}l@{\hskip 3pt}r@{}}
+\toprule
+Condition & $\Delta$\% & $p_{\text{raw}}$ & $p_{\text{corr}}$ & $\delta$ [95\% CI] & Rank \\
+\midrule
+No Reprod.  & $-$91.1 & $<$1e-10 & $<$.001  & 1.00 [1.00, 1.00] & 1 \\
+No Response & $-$88.5 & $<$1e-10 & $<$.001  & 1.00 [1.00, 1.00] & 2 \\
+No Metab.   & $-$86.8 & $<$1e-10 & $<$.001  & 1.00 [1.00, 1.00] & 3 \\
+No Homeo.   & $-$51.5 & $<$1e-10 & $<$.001  & 1.00 [1.00, 1.00] & 4 \\
+No Growth   & $-$45.9 & $<$1e-10 & $<$.001  & 1.00 [1.00, 1.00] & 5 \\
+No Boundary & $-$35.0 & $<$1e-9  & $<$.001  & 0.99 [0.98, 1.00] & 6 \\
+No Evol.    & $-$7.8  & 6.8e-4   & .0047    & 0.39 [0.11, 0.64] & 7 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ----------------------------------------------------------------------------
+\subsection*{S8: Failure Mode Analysis}
+\label{sec:s8failure}
+
+To address the question of \emph{which internal variables collapse first}
+under each ablation (Reviewer A~Q3, C~Q3), we perform a systematic failure
+mode analysis on existing ablation data (20 seeds per condition).
+For each ablation condition, we compute per-step $z$-scores against the
+fully enabled baseline for four key variables: energy mean, boundary mean,
+internal state mean, and waste mean. A ``first break'' is defined as the
+first timestep where $z < -2$ is sustained for $\geq$3 consecutive samples
+(60 steps). The cascade ordering reports which variable breaks first,
+second, etc.
+
+For the essential triad:
+\textbf{Metabolism ablation} shows energy collapse as the first break
+(median break step~20), with waste and internal state collapsing simultaneously
+(step~20); boundary never reaches the $z < -2$ threshold, indicating that
+organisms die before boundary integrity degrades.
+\textbf{Response ablation} shows the same pattern: energy breaks first
+(step~20), followed by waste and internal state (step~20), then boundary
+decay (step~100).
+\textbf{Reproduction ablation} shows a distinct signature: only waste and
+internal state break (step~20), while energy and boundary remain above
+the $z < -2$ threshold---the un-replaced population maintains individual
+homeostasis but the system fails through demographic attrition.
+
+See Figure~\ref{fig:failure_modes} for normalized time-series with break
+markers.
+
+\begin{figure}[htbp]
+\centering
+\IfFileExists{figures/fig_failure_modes.pdf}%
+  {\includegraphics[width=\columnwidth]{figures/fig_failure_modes.pdf}}%
+  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
+    \centering\vspace{2em}[fig\_failure\_modes.pdf]\vspace{2em}}}}
+\caption{Failure mode analysis for the essential triad (metabolism, response,
+reproduction). Normalized time-series of energy (blue), boundary (orange),
+and internal state (green) under each ablation, with $\pm$1 SEM bands.
+Vertical dashed lines mark the median ``first break'' step per metric
+($z < -2$ sustained for $\geq$60 steps). Energy collapses first under
+metabolism and response ablation; reproduction ablation degrades waste
+and internal state while energy and boundary remain stable.}
+\label{fig:failure_modes}
+\end{figure}
+
+% ----------------------------------------------------------------------------
+\subsection*{S9: Fitness Landscape Evidence}
+\label{sec:s9fitness}
+
+To strengthen the evolution criterion beyond genome-drift divergence, we
+test two pre-specified hypotheses:
+
+\textbf{H1 (Directional selection):} Mean energy of surviving organisms
+increases across generation cohorts in evolved populations but not in clonal
+(no-evolution) controls. We test this using the Jonckheere-Terpstra trend
+test (one-sided) on generation cohorts (0--4, 5--9, 10--14, 15+).
+
+\textbf{H2 (Heritability):} Parent-offspring energy correlation is positive
+and significantly greater than zero. We compute the parent-offspring
+regression slope with bootstrap 95\% CI (2,000 resamples) using lineage
+event linkage.
+
+Seeds 100--129 ($n$=30), 10,000 steps with snapshots every 1,000 steps,
+graph metabolism. Two conditions: evolved (normal) vs.\ clonal control
+(evolution disabled).
+
+\textbf{Results.}
+H1 (directional selection): The Jonckheere-Terpstra test does \emph{not}
+reject the null ($J = 1.62 \times 10^{9}$, $p = 0.944$); cohort mean
+energies are flat across generations (0.81 for all four cohorts).
+The clonal control is similarly flat ($p > 0.99$).
+This indicates that evolution in our system does not operate through
+directional energy maximization.
+H2 (heritability): The parent-offspring regression slope is $\hat{b} = 0.747$,
+95\% bootstrap CI $[0.730, 0.763]$ ($n = 68{,}497$ pairs), excluding zero
+and confirming strong heritability of the energy phenotype.
+Cohen's $d = 0.058$ (evolved $n = 11{,}340$ vs.\ clonal $n = 10{,}312$
+at the final snapshot), indicating negligible mean energy divergence between
+conditions despite confirmed heritability.
+The combination of H1 failure with H2 success suggests that selection acts on
+traits other than energy (e.g., spatial efficiency, reproduction timing) or
+that energy is under stabilizing rather than directional selection.
+
+See Figure~\ref{fig:fitness_landscape} for the 2-panel summary.
+
+\begin{figure}[htbp]
+\centering
+\IfFileExists{figures/fig_fitness_landscape.pdf}%
+  {\includegraphics[width=\columnwidth]{figures/fig_fitness_landscape.pdf}}%
+  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
+    \centering\vspace{2em}[fig\_fitness\_landscape.pdf]\vspace{2em}}}}
+\caption{Fitness landscape evidence. Left: mean energy by generation cohort
+(evolved vs.\ clonal control). Right: parent-offspring regression slope
+with 95\% bootstrap CI.}
+\label{fig:fitness_landscape}
+\end{figure}
+
+% ----------------------------------------------------------------------------
+\subsection*{S10: Sensitivity and Robustness}
+\label{sec:s10robust}
+
+\paragraph{Threshold sensitivity.}
+To test whether the ablation effect hierarchy is robust to death threshold
+choices (Reviewer A~Q3), we vary \texttt{death\_boundary\_threshold} over
+$\{0.05, 0.1, 0.15, 0.2\}$ and \texttt{death\_energy\_threshold} over
+$\{0.0, 0.05, 0.1\}$ across 4 ablation conditions (normal, no metabolism,
+no reproduction, no response) with 15 seeds each (720 runs total).
+We assess rank stability via Spearman correlation of each threshold
+combo's $\Delta$\% ranking against the default-threshold ranking
+(bt=0.1, et=0.0).
+
+\textbf{Results.}
+9 of 11 non-reference threshold combinations yield Spearman $\rho = 1.0$
+with the default ranking, confirming perfect rank preservation.
+Two combinations (bt=0.05 with et=0.05 and et=0.1) yield $\rho = 0.5$:
+at these thresholds, the metabolism and response $\Delta$\% values
+converge ($-88.3$\% vs.\ $-88.3$\% and $-88.9$\%, respectively),
+producing a near-tie that swaps their ranks.
+Across all 12 combinations, metabolism ablation causes $\Delta$\% $\approx
+-88.3$ to $-88.7$\%, reproduction ablation $\approx -91.8$ to $-92.2$\%,
+and response ablation $\approx -85.1$ to $-88.9$\%.
+Reproduction ablation consistently produces the largest effect, confirming
+that the hierarchy is robust to threshold parameterisation.
+See Figure~\ref{fig:threshold_sensitivity}.
+
+\begin{figure}[htbp]
+\centering
+\IfFileExists{figures/fig_threshold_sensitivity.pdf}%
+  {\includegraphics[width=\columnwidth]{figures/fig_threshold_sensitivity.pdf}}%
+  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
+    \centering\vspace{2em}[fig\_threshold\_sensitivity.pdf]\vspace{2em}}}}
+\caption{Threshold sensitivity heatmap: $\Delta$\% ablation effect for each
+threshold combination $\times$ ablation condition. Rank ordering of effects
+is assessed via Spearman correlation with the default-threshold ranking.}
+\label{fig:threshold_sensitivity}
+\end{figure}
+
+\paragraph{Boundary topology.}
+To test whether findings generalize beyond the toroidal environment
+(Reviewer C~Q4), we compare the ablation effect hierarchy under toroidal
+(wrap-around) and bounded (wall) topologies across 4 conditions with 30
+seeds each (240 runs total).
+
+\textbf{Results.}
+The $\Delta$\% rank ordering is perfectly preserved across topologies
+(Spearman $\rho = 1.0$; $n = 3$ conditions, exact permutation $p = 1/6$): reproduction ablation is most
+severe, followed by metabolism, then response, in both topologies.
+Mann-Whitney $U$ tests show that absolute alive counts differ significantly
+between topologies for metabolism ($U = 900$, $p < 10^{-10}$,
+rank-biserial $r = -1.0$) and reproduction ($U = 900$, $p < 10^{-10}$,
+$r = -1.0$), but not for response ($U = 358$, $p = 0.175$, $r = 0.20$)
+or the normal baseline ($U = 533$, $p = 0.223$, $r = -0.18$).
+Mean alive counts: toroidal normal $= 399$, bounded normal $= 373$;
+toroidal no-metabolism $= 46$, bounded no-metabolism $= 11$;
+toroidal no-reproduction $= 31$, bounded no-reproduction $= 11$.
+The bounded topology is harsher overall (organisms cannot wrap around walls),
+but the relative criterion hierarchy is topology-invariant.
+See Figure~\ref{fig:boundary_topology}.
+
+\begin{figure}[htbp]
+\centering
+\IfFileExists{figures/fig_boundary_topology.pdf}%
+  {\includegraphics[width=\columnwidth]{figures/fig_boundary_topology.pdf}}%
+  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
+    \centering\vspace{2em}[fig\_boundary\_topology.pdf]\vspace{2em}}}}
+\caption{Boundary topology comparison. Left: mean final alive count under
+toroidal vs.\ bounded topologies for each ablation condition. Right:
+$\Delta$\% effect hierarchy comparison with Spearman rank correlation.}
+\label{fig:boundary_topology}
+\end{figure}
+
+% ----------------------------------------------------------------------------
+\subsection*{S11: Graded and Cyclic Experiments}
 
 \paragraph{Graded metabolic ablation.}
 We sweep the metabolism efficiency multiplier over $\{1.0, 0.75, 0.5, 0.25,
