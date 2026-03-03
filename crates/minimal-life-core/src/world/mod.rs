@@ -1,9 +1,9 @@
 use crate::agent::Agent;
-use crate::config::{AblationTarget, MetabolismMode, SimConfig, SimConfigError};
+use crate::config::{AblationTarget, CrossoverMode, MetabolismMode, SimConfig, SimConfigError};
 use crate::genome::{Genome, MutationRates};
 use crate::metabolism::{MetabolicState, MetabolismEngine};
 use crate::nn::NeuralNet;
-use crate::organism::{DevelopmentalProgram, OrganismRuntime};
+use crate::organism::{DeathCause, DevelopmentalProgram, OrganismRuntime};
 use crate::resource::ResourceField;
 use crate::spatial;
 use rand::Rng;
@@ -63,6 +63,10 @@ pub struct World {
     /// Runtime resource regeneration rate, separate from config to avoid mutating
     /// config at runtime during environment shifts.
     current_resource_rate: f32,
+    /// Per-step death cause counters, reset each step.
+    deaths_boundary_last_step: usize,
+    deaths_energy_last_step: usize,
+    deaths_age_last_step: usize,
 
     // Buffers for avoiding allocation in simulation steps
     deltas_buffer: Vec<[f32; 4]>,
@@ -216,6 +220,7 @@ impl World {
                     metabolism_engine: None,
                     developmental_program,
                     parent_stable_id: None,
+                    death_cause: None,
                 }
             })
             .collect();
@@ -280,6 +285,9 @@ impl World {
             lifespans: Vec::new(),
             lineage_events: Vec::new(),
             current_resource_rate: config.resource_regeneration_rate,
+            deaths_boundary_last_step: 0,
+            deaths_energy_last_step: 0,
+            deaths_age_last_step: 0,
             deltas_buffer: Vec::with_capacity(agent_count),
             neighbor_sums_buffer: Vec::with_capacity(org_count),
             neighbor_counts_buffer: Vec::with_capacity(org_count),
@@ -570,6 +578,9 @@ impl World {
                     self.agent_id_exhaustions_last_step,
                     &self.organisms,
                     &self.agents,
+                    self.deaths_boundary_last_step,
+                    self.deaths_energy_last_step,
+                    self.deaths_age_last_step,
                 ));
             }
         }
@@ -671,6 +682,9 @@ impl World {
                     self.agent_id_exhaustions_last_step,
                     &self.organisms,
                     &self.agents,
+                    self.deaths_boundary_last_step,
+                    self.deaths_energy_last_step,
+                    self.deaths_age_last_step,
                 ));
             }
             if snapshot_steps_set.contains(&step) {
@@ -690,14 +704,20 @@ impl World {
         })
     }
 
-    fn mark_dead(&mut self, org_idx: usize) {
+    fn mark_dead(&mut self, org_idx: usize, cause: DeathCause) {
         if let Some(org) = self.organisms.get_mut(org_idx) {
             if org.alive {
                 self.lifespans.push(org.age_steps);
                 org.alive = false;
                 org.boundary_integrity = 0.0;
+                org.death_cause = Some(cause);
                 self.deaths_last_step += 1;
                 self.total_deaths += 1;
+                match cause {
+                    DeathCause::BoundaryCollapse => self.deaths_boundary_last_step += 1,
+                    DeathCause::EnergyDepletion => self.deaths_energy_last_step += 1,
+                    DeathCause::AgeLimit => self.deaths_age_last_step += 1,
+                }
             }
         }
     }
@@ -705,14 +725,21 @@ impl World {
     fn maybe_reproduce(&mut self) {
         let child_agents =
             (self.config.agents_per_organism / 2).max(self.config.reproduction_child_min_agents);
-        let parent_indices: Vec<usize> = self
+        let mut parent_indices: Vec<usize> = self
             .organisms
             .iter()
             .enumerate()
             .filter_map(|(idx, org)| {
-                let mature_enough = org.maturity >= 1.0;
-                (org.alive
-                    && org.metabolic_state.energy >= self.config.reproduction_min_energy
+                if !org.alive {
+                    return None;
+                }
+                if self.config.random_parent_selection {
+                    // Neutral-drift control: any alive organism can reproduce
+                    return Some(idx);
+                }
+                let mature_enough =
+                    self.config.reproduction_bypass_maturity || org.maturity >= 1.0;
+                (org.metabolic_state.energy >= self.config.reproduction_min_energy
                     && org.boundary_integrity >= self.config.reproduction_min_boundary
                     && mature_enough)
                     .then_some(idx)
@@ -723,35 +750,86 @@ impl World {
         }
         let centers = self.compute_organism_centers();
 
-        for parent_idx in parent_indices {
-            if self
-                .agents
-                .len()
-                .checked_add(child_agents)
-                .map(|n| n > SimConfig::MAX_TOTAL_AGENTS)
-                .unwrap_or(true)
-            {
-                break;
-            }
-            let remaining_ids = u32::MAX as u64 - self.next_agent_id as u64;
-            if remaining_ids + 1 < child_agents as u64 {
-                self.agent_id_exhaustions_last_step += 1;
-                self.total_agent_id_exhaustions += 1;
-                break;
-            }
-
-            let child_id = match u16::try_from(self.organisms.len()) {
-                Ok(id) => id,
-                Err(_) => break,
+        if self.config.enable_crossover && parent_indices.len() >= 2 {
+            // Shuffle parents and pair them for two-parent crossover reproduction.
+            use rand::seq::SliceRandom;
+            parent_indices.shuffle(&mut self.rng);
+            let pairs: Vec<(usize, usize)> = parent_indices
+                .chunks(2)
+                .filter(|c| c.len() == 2)
+                .map(|c| (c[0], c[1]))
+                .collect();
+            // Unpaired parent (odd one out) uses single-parent path below
+            let unpaired: Option<usize> = if parent_indices.len() % 2 == 1 {
+                Some(*parent_indices.last().unwrap())
+            } else {
+                None
             };
-
-            let center = centers
-                .get(parent_idx)
-                .and_then(|c| *c)
-                .unwrap_or([0.0, 0.0]);
-
-            self.spawn_child(parent_idx, child_id, center, child_agents);
+            for (pa, pb) in pairs {
+                if !self.can_spawn_child(child_agents) {
+                    return;
+                }
+                let child_id = match u16::try_from(self.organisms.len()) {
+                    Ok(id) => id,
+                    Err(_) => return,
+                };
+                let center = centers
+                    .get(pa)
+                    .and_then(|c| *c)
+                    .unwrap_or([0.0, 0.0]);
+                self.spawn_child_crossover(pa, pb, child_id, center, child_agents);
+            }
+            // Spawn from unpaired parent via single-parent path
+            if let Some(parent_idx) = unpaired {
+                if self.can_spawn_child(child_agents) {
+                    let child_id = match u16::try_from(self.organisms.len()) {
+                        Ok(id) => id,
+                        Err(_) => return,
+                    };
+                    let center = centers
+                        .get(parent_idx)
+                        .and_then(|c| *c)
+                        .unwrap_or([0.0, 0.0]);
+                    self.spawn_child(parent_idx, child_id, center, child_agents);
+                }
+            }
+        } else {
+            // Single-parent reproduction (original path)
+            for parent_idx in parent_indices {
+                if !self.can_spawn_child(child_agents) {
+                    break;
+                }
+                let child_id = match u16::try_from(self.organisms.len()) {
+                    Ok(id) => id,
+                    Err(_) => break,
+                };
+                let center = centers
+                    .get(parent_idx)
+                    .and_then(|c| *c)
+                    .unwrap_or([0.0, 0.0]);
+                self.spawn_child(parent_idx, child_id, center, child_agents);
+            }
         }
+    }
+
+    /// Check if we have capacity to spawn a child with the given number of agents.
+    fn can_spawn_child(&mut self, child_agents: usize) -> bool {
+        if self
+            .agents
+            .len()
+            .checked_add(child_agents)
+            .map(|n| n > SimConfig::MAX_TOTAL_AGENTS)
+            .unwrap_or(true)
+        {
+            return false;
+        }
+        let remaining_ids = u32::MAX as u64 - self.next_agent_id as u64;
+        if remaining_ids + 1 < child_agents as u64 {
+            self.agent_id_exhaustions_last_step += 1;
+            self.total_agent_id_exhaustions += 1;
+            return false;
+        }
+        true
     }
 
     fn spawn_child(
@@ -778,12 +856,16 @@ impl World {
         if self.config.enable_evolution {
             child_genome.mutate(&mut self.rng, &self.mutation_rates);
         }
-        let child_weights = if child_genome.nn_weights().len() == NeuralNet::WEIGHT_COUNT {
+        let expected_nn_len = NeuralNet::weight_count(self.config.nn_hidden_size);
+        let child_weights = if child_genome.nn_weights().len() == expected_nn_len {
             child_genome.nn_weights().to_vec()
         } else {
             self.organisms[parent_idx].nn.to_weight_vec()
         };
-        let child_nn = NeuralNet::from_weights(child_weights.into_iter());
+        let child_nn = NeuralNet::from_weights_with_hidden(
+            self.config.nn_hidden_size,
+            child_weights.into_iter(),
+        );
         let mut child_agent_ids = Vec::with_capacity(child_agents);
 
         for _ in 0..child_agents {
@@ -841,11 +923,135 @@ impl World {
             metabolism_engine: child_metabolism_engine,
             developmental_program,
             parent_stable_id: Some(parent_stable_id),
+            death_cause: None,
         };
         self.next_organism_stable_id = self.next_organism_stable_id.saturating_add(1);
         self.lineage_events.push(LineageEvent {
             step: self.step_index,
             parent_stable_id,
+            child_stable_id,
+            generation: child_generation,
+        });
+        self.organisms.push(child);
+        self.org_toroidal_sums.push([0.0, 0.0, 0.0, 0.0]);
+        self.org_counts.push(0);
+        self.births_last_step += 1;
+        self.total_births += 1;
+    }
+
+    /// Two-parent reproduction: crossover genomes from parent_a and parent_b,
+    /// then mutate. Energy cost is deducted from parent_a only.
+    fn spawn_child_crossover(
+        &mut self,
+        parent_a_idx: usize,
+        parent_b_idx: usize,
+        child_id: u16,
+        center: [f64; 2],
+        child_agents: usize,
+    ) {
+        let (gen_a, stable_a, ancestor_a, genome_a) = {
+            let pa = &self.organisms[parent_a_idx];
+            if !pa.alive || pa.metabolic_state.energy < self.config.reproduction_energy_cost {
+                return;
+            }
+            (pa.generation, pa.stable_id, pa.ancestor_genome.clone(), pa.genome.clone())
+        };
+        let genome_b = {
+            let pb = &self.organisms[parent_b_idx];
+            if !pb.alive {
+                return;
+            }
+            pb.genome.clone()
+        };
+
+        // Crossover
+        let mut child_genome = match self.config.crossover_mode {
+            CrossoverMode::SegmentWise => {
+                Genome::segment_crossover(&genome_a, &genome_b, &mut self.rng)
+            }
+            CrossoverMode::Uniform => {
+                Genome::uniform_crossover(&genome_a, &genome_b, &mut self.rng)
+            }
+        };
+
+        // Mutate after crossover (if evolution is enabled)
+        if self.config.enable_evolution {
+            child_genome.mutate(&mut self.rng, &self.mutation_rates);
+        }
+
+        let expected_nn_len = NeuralNet::weight_count(self.config.nn_hidden_size);
+        let child_weights = if child_genome.nn_weights().len() == expected_nn_len {
+            child_genome.nn_weights().to_vec()
+        } else {
+            self.organisms[parent_a_idx].nn.to_weight_vec()
+        };
+        let child_nn = NeuralNet::from_weights_with_hidden(
+            self.config.nn_hidden_size,
+            child_weights.into_iter(),
+        );
+        let mut child_agent_ids = Vec::with_capacity(child_agents);
+
+        for _ in 0..child_agents {
+            let theta = self.rng.random::<f64>() * 2.0 * PI;
+            let radius = self.rng.random::<f64>().sqrt() * self.config.reproduction_spawn_radius;
+            let (sin_theta, cos_theta) = theta.sin_cos();
+            let raw_x = center[0] + radius * cos_theta;
+            let raw_y = center[1] + radius * sin_theta;
+            let pos = match self.config.world_topology {
+                crate::config::WorldTopology::Toroidal => [
+                    raw_x.rem_euclid(self.config.world_size),
+                    raw_y.rem_euclid(self.config.world_size),
+                ],
+                crate::config::WorldTopology::Bounded => [
+                    raw_x.clamp(0.0, self.config.world_size),
+                    raw_y.clamp(0.0, self.config.world_size),
+                ],
+            };
+            let Some(id) = self.next_agent_id_checked() else {
+                break;
+            };
+            let mut agent = Agent::new(id, child_id, pos);
+            agent.internal_state[2] = 1.0;
+            child_agent_ids.push(id);
+            self.agents.push(agent);
+        }
+        if child_agent_ids.is_empty() {
+            return;
+        }
+
+        self.organisms[parent_a_idx].metabolic_state.energy -= self.config.reproduction_energy_cost;
+
+        let metabolic_state = MetabolicState {
+            energy: self.config.reproduction_energy_cost,
+            ..MetabolicState::default()
+        };
+        let child_metabolism_engine =
+            decode_organism_metabolism(&child_genome, self.config.metabolism_mode);
+        let developmental_program = DevelopmentalProgram::decode(child_genome.segment_data(3));
+        let child_stable_id = self.next_organism_stable_id;
+        let child_generation = gen_a + 1;
+        let child = OrganismRuntime {
+            id: child_id,
+            stable_id: child_stable_id,
+            generation: child_generation,
+            age_steps: 0,
+            alive: true,
+            boundary_integrity: 1.0,
+            metabolic_state,
+            genome: child_genome,
+            ancestor_genome: ancestor_a,
+            nn: child_nn,
+            agent_ids: child_agent_ids,
+            maturity: 0.0,
+            metabolism_engine: child_metabolism_engine,
+            developmental_program,
+            parent_stable_id: Some(stable_a),
+            death_cause: None,
+        };
+        self.next_organism_stable_id = self.next_organism_stable_id.saturating_add(1);
+        self.lineage_events.push(LineageEvent {
+            step: self.step_index,
+            parent_stable_id: stable_a,
             child_stable_id,
             generation: child_generation,
         });
@@ -886,6 +1092,9 @@ impl World {
         self.apply_scheduled_ablation_if_due();
         self.births_last_step = 0;
         self.deaths_last_step = 0;
+        self.deaths_boundary_last_step = 0;
+        self.deaths_energy_last_step = 0;
+        self.deaths_age_last_step = 0;
         self.agent_id_exhaustions_last_step = 0;
         let boundary_terminal_threshold = self.terminal_boundary_threshold();
 

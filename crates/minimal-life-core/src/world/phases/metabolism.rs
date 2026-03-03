@@ -8,7 +8,7 @@ impl World {
         }
         let world_size = self.config.world_size;
 
-        let mut to_kill = Vec::new();
+        let mut to_kill: Vec<(usize, crate::organism::DeathCause)> = Vec::new();
         for (org_idx, org) in self.organisms.iter_mut().enumerate() {
             if !org.alive {
                 continue;
@@ -50,14 +50,14 @@ impl World {
                     .take(center[0], center[1], flux.consumed_external);
             }
 
-            if org.metabolic_state.energy <= self.config.death_energy_threshold
-                || org.boundary_integrity <= boundary_terminal_threshold
-            {
-                to_kill.push(org_idx);
+            if org.metabolic_state.energy <= self.config.death_energy_threshold {
+                to_kill.push((org_idx, crate::organism::DeathCause::EnergyDepletion));
+            } else if org.boundary_integrity <= boundary_terminal_threshold {
+                to_kill.push((org_idx, crate::organism::DeathCause::BoundaryCollapse));
             }
         }
-        for org_idx in to_kill {
-            self.mark_dead(org_idx);
+        for (org_idx, cause) in to_kill {
+            self.mark_dead(org_idx, cause);
         }
     }
 }

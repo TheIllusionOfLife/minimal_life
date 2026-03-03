@@ -34,6 +34,16 @@ pub enum WorldTopology {
     Bounded,
 }
 
+#[derive(Clone, Copy, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum CrossoverMode {
+    /// Swap entire genome segments (preserves functional linkage within segments).
+    #[default]
+    SegmentWise,
+    /// Swap individual genes uniformly at random (breaks segment coherence).
+    Uniform,
+}
+
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum AblationTarget {
@@ -179,6 +189,21 @@ pub struct SimConfig {
     pub enable_sham_process: bool,
     /// World topology: toroidal (wrapping) or bounded (clamped edges).
     pub world_topology: WorldTopology,
+    /// Hidden layer size for the neural network controller.
+    /// Determines weight count: 8*H + H + H*4 + 4.
+    pub nn_hidden_size: usize,
+    /// Enable two-parent crossover during reproduction.
+    pub enable_crossover: bool,
+    /// Crossover operator mode (segment-wise or uniform).
+    pub crossover_mode: CrossoverMode,
+    /// Enable parallel NN forward pass via Rayon (default true).
+    pub parallel_nn: bool,
+    /// When true, immature organisms (maturity < 1.0) can reproduce.
+    /// Used for growth/reproduction separability experiments.
+    pub reproduction_bypass_maturity: bool,
+    /// When true, any alive organism can reproduce regardless of energy/boundary
+    /// thresholds. Used as a neutral-drift control in evolution experiments.
+    pub random_parent_selection: bool,
 }
 
 impl Default for SimConfig {
@@ -248,6 +273,12 @@ impl Default for SimConfig {
             environment_cycle_low_rate: 0.005,
             enable_sham_process: false,
             world_topology: WorldTopology::Toroidal,
+            nn_hidden_size: 16,
+            enable_crossover: false,
+            crossover_mode: CrossoverMode::SegmentWise,
+            parallel_nn: true,
+            reproduction_bypass_maturity: false,
+            random_parent_selection: false,
         }
     }
 }
@@ -329,6 +360,7 @@ define_sim_config_error! {
     InvalidMetabolismEfficiencyMultiplier => "metabolism_efficiency_multiplier must be finite and within [0,1]";
     InvalidEnvironmentCycleLowRate => "environment_cycle_low_rate must be finite and non-negative";
     ConflictingEnvironmentFeatures => "environment_shift_step and environment_cycle_period are mutually exclusive";
+    InvalidNnHiddenSize => "nn_hidden_size must be between 1 and 128";
     WorldSizeTooLarge { max: f64, actual: f64 } => "world_size ({actual}) exceeds supported maximum ({max})";
 }
 
@@ -352,6 +384,7 @@ impl SimConfig {
         self.validate_homeostasis()?;
         self.validate_growth()?;
         self.validate_environment()?;
+        self.validate_nn()?;
         Ok(())
     }
 
@@ -581,6 +614,13 @@ impl SimConfig {
             && (0.0..=1.0).contains(&self.growth_immature_metabolic_efficiency))
         {
             return Err(SimConfigError::InvalidGrowthImmatureMetabolicEfficiency);
+        }
+        Ok(())
+    }
+
+    fn validate_nn(&self) -> Result<(), SimConfigError> {
+        if self.nn_hidden_size == 0 || self.nn_hidden_size > 128 {
+            return Err(SimConfigError::InvalidNnHiddenSize);
         }
         Ok(())
     }

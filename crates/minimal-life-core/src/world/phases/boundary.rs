@@ -81,7 +81,7 @@ impl World {
         }
 
         for org_idx in to_kill {
-            self.mark_dead(org_idx);
+            self.mark_dead(org_idx, crate::organism::DeathCause::BoundaryCollapse);
         }
     }
 }

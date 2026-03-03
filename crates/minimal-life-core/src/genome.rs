@@ -85,6 +85,55 @@ impl Genome {
         &self.segments
     }
 
+    /// Segment-wise crossover: for each of the 7 segments, flip a coin to pick
+    /// parent_a's or parent_b's entire segment. Preserves functional linkage within
+    /// segments while recombining between them.
+    ///
+    /// Panics if the two parents have different segment layouts.
+    pub fn segment_crossover<R: Rng + ?Sized>(
+        parent_a: &Genome,
+        parent_b: &Genome,
+        rng: &mut R,
+    ) -> Genome {
+        assert_eq!(
+            parent_a.segments, parent_b.segments,
+            "segment layouts must match for crossover"
+        );
+        let mut child = parent_a.clone();
+        for seg_idx in 0..7 {
+            if rng.random::<bool>() {
+                let (start, len) = parent_b.segments[seg_idx];
+                child.data[start..start + len]
+                    .copy_from_slice(&parent_b.data[start..start + len]);
+            }
+        }
+        child
+    }
+
+    /// Uniform crossover: for each gene independently, flip a coin to pick
+    /// from parent_a or parent_b. This breaks segment coherence and is used
+    /// as a sensitivity analysis control.
+    ///
+    /// Panics if the two parents have different data lengths.
+    pub fn uniform_crossover<R: Rng + ?Sized>(
+        parent_a: &Genome,
+        parent_b: &Genome,
+        rng: &mut R,
+    ) -> Genome {
+        assert_eq!(
+            parent_a.data.len(),
+            parent_b.data.len(),
+            "genome lengths must match for uniform crossover"
+        );
+        let mut child = parent_a.clone();
+        for i in 0..child.data.len() {
+            if rng.random::<bool>() {
+                child.data[i] = parent_b.data[i];
+            }
+        }
+        child
+    }
+
     pub fn mutate<R: Rng + ?Sized>(&mut self, rng: &mut R, rates: &MutationRates) {
         debug_assert!(
             rates.point_rate + rates.reset_rate + rates.scale_rate <= 1.0,
@@ -226,6 +275,83 @@ mod tests {
         g.mutate(&mut rng, &rates);
         let non_nn_changed = g.data()[212..].iter().any(|&v| v != 0.0);
         assert!(non_nn_changed, "mutation should affect non-NN segments too");
+    }
+
+    #[test]
+    fn segment_crossover_produces_mix_of_parents() {
+        let mut rng = ChaCha12Rng::seed_from_u64(42);
+        let parent_a = Genome::with_nn_weights(vec![1.0; 212]);
+        let mut parent_b = Genome::with_nn_weights(vec![2.0; 212]);
+        // Set non-NN segments differently too
+        parent_b.set_segment_data(1, &[3.0; Genome::METABOLIC_SIZE]);
+
+        let child = Genome::segment_crossover(&parent_a, &parent_b, &mut rng);
+        // Child should have segments from either parent, not be identical to either
+        let all_a = child.data() == parent_a.data();
+        let all_b = child.data() == parent_b.data();
+        // With 7 segments and fair coin, probability of all-same is (1/2)^7 ≈ 0.8%
+        // Use multiple seeds to make test robust
+        let mut saw_mixed = false;
+        for seed in 0..10 {
+            let mut r = ChaCha12Rng::seed_from_u64(seed);
+            let c = Genome::segment_crossover(&parent_a, &parent_b, &mut r);
+            if c.data() != parent_a.data() && c.data() != parent_b.data() {
+                saw_mixed = true;
+                break;
+            }
+        }
+        assert!(saw_mixed || !all_a || !all_b, "crossover should mix parent segments");
+    }
+
+    #[test]
+    fn segment_crossover_preserves_segment_coherence() {
+        let mut rng = ChaCha12Rng::seed_from_u64(99);
+        let parent_a = Genome::with_nn_weights(vec![1.0; 212]);
+        let mut parent_b = Genome::with_nn_weights(vec![2.0; 212]);
+        parent_b.set_segment_data(1, &[3.0; Genome::METABOLIC_SIZE]);
+
+        let child = Genome::segment_crossover(&parent_a, &parent_b, &mut rng);
+        // Each segment in child must come entirely from one parent
+        for seg_idx in 0..7 {
+            let (start, len) = child.segments()[seg_idx];
+            let seg = &child.data()[start..start + len];
+            let seg_a = parent_a.segment_data(seg_idx);
+            let seg_b = parent_b.segment_data(seg_idx);
+            assert!(
+                seg == seg_a || seg == seg_b,
+                "segment {seg_idx} must be entirely from one parent"
+            );
+        }
+    }
+
+    #[test]
+    fn segment_crossover_is_deterministic() {
+        let parent_a = Genome::with_nn_weights(vec![1.0; 212]);
+        let parent_b = Genome::with_nn_weights(vec![2.0; 212]);
+        let c1 = Genome::segment_crossover(&parent_a, &parent_b, &mut ChaCha12Rng::seed_from_u64(7));
+        let c2 = Genome::segment_crossover(&parent_a, &parent_b, &mut ChaCha12Rng::seed_from_u64(7));
+        assert_eq!(c1.data(), c2.data(), "same seed should produce identical offspring");
+    }
+
+    #[test]
+    fn uniform_crossover_mixes_individual_genes() {
+        let parent_a = Genome::with_nn_weights(vec![1.0; 212]);
+        let parent_b = Genome::with_nn_weights(vec![2.0; 212]);
+        let mut rng = ChaCha12Rng::seed_from_u64(42);
+        let child = Genome::uniform_crossover(&parent_a, &parent_b, &mut rng);
+        // Child should contain both 1.0 and 2.0 values
+        let has_a = child.data().iter().any(|&v| v == 1.0);
+        let has_b = child.data().iter().any(|&v| v == 2.0);
+        assert!(has_a && has_b, "uniform crossover should mix individual genes");
+    }
+
+    #[test]
+    #[should_panic(expected = "segment layouts must match")]
+    fn segment_crossover_panics_on_mismatched_layouts() {
+        let parent_a = Genome::with_nn_weights(vec![1.0; 212]);
+        let parent_b = Genome::with_nn_weights(vec![2.0; 100]); // different NN size
+        let mut rng = ChaCha12Rng::seed_from_u64(0);
+        Genome::segment_crossover(&parent_a, &parent_b, &mut rng);
     }
 
     proptest! {

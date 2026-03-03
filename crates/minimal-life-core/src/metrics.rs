@@ -31,6 +31,12 @@ pub struct StepMetrics {
     pub max_generation: usize,
     pub maturity_mean: f32,
     pub spatial_cohesion_mean: f32,
+    /// Deaths this step caused by boundary integrity collapse.
+    pub deaths_boundary: usize,
+    /// Deaths this step caused by energy depletion.
+    pub deaths_energy: usize,
+    /// Deaths this step caused by exceeding maximum age.
+    pub deaths_age: usize,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -211,6 +217,9 @@ pub fn collect_step_metrics(
     exhaustion_events: usize,
     organisms: &[OrganismRuntime],
     agents: &[Agent],
+    deaths_boundary: usize,
+    deaths_energy: usize,
+    deaths_age: usize,
 ) -> StepMetrics {
     let alive = organisms.iter().filter(|o| o.alive).count();
     let denom = alive.max(1) as f32;
@@ -324,5 +333,8 @@ pub fn collect_step_metrics(
         max_generation: max_gen,
         maturity_mean: maturity_sum / denom,
         spatial_cohesion_mean,
+        deaths_boundary,
+        deaths_energy,
+        deaths_age,
     }
 }

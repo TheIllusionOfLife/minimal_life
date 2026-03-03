@@ -6,8 +6,10 @@ experiment_pairwise.py, and experiment_evolution.py.
 """
 
 import json
+import os
 import sys
 import time
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 import minimal_life
@@ -246,4 +248,82 @@ def run_condition_suite(
         run_condition_common(
             cond_name, combined, out_dir, filename_prefix, seeds, steps, sample_every
         )
+    log(f"Total time: {time.perf_counter() - total_start:.1f}s")
+
+
+def _run_single_task(
+    args: tuple[str, dict, int, int, int],
+) -> tuple[str, int, dict]:
+    """Worker function for parallel execution. Imports minimal_life in subprocess."""
+    cond_name, overrides, seed, steps, sample_every = args
+    result = run_single(seed, overrides, steps=steps, sample_every=sample_every)
+    return (cond_name, seed, result)
+
+
+def run_condition_suite_parallel(
+    filename_prefix: str,
+    conditions: dict,
+    steps: int,
+    seeds: list[int],
+    sample_every: int,
+    out_dir: Path | None = None,
+    extra_overrides: dict | None = None,
+    max_workers: int | None = None,
+) -> None:
+    """Run all conditions in parallel using ProcessPoolExecutor.
+
+    Each (condition, seed) pair runs as an independent subprocess.
+    The Rust ``run_experiment_json()`` releases the GIL, so multiprocessing
+    is safe and efficient.
+
+    Args:
+        filename_prefix: Output JSON files are named ``{prefix}{cond_name}.json``.
+        conditions: Mapping of condition name → override dict.
+        steps: Number of simulation steps per seed.
+        seeds: Seed list.
+        sample_every: Sampling interval.
+        out_dir: Directory for JSON output. Defaults to ``experiments/``.
+        extra_overrides: Config overrides applied to *every* condition.
+        max_workers: Max parallel workers. Defaults to ``os.cpu_count()``.
+    """
+    if out_dir is None:
+        out_dir = experiment_output_dir()
+    if max_workers is None:
+        max_workers = os.cpu_count() or 4
+
+    # Build all tasks
+    tasks = []
+    for cond_name, overrides in conditions.items():
+        combined = {**(extra_overrides or {}), **overrides}
+        for seed in seeds:
+            tasks.append((cond_name, combined, seed, steps, sample_every))
+
+    total = len(tasks)
+    log(f"Running {total} tasks with {max_workers} workers...")
+    total_start = time.perf_counter()
+
+    # Collect results grouped by condition
+    results_by_cond: dict[str, list[dict]] = {c: [] for c in conditions}
+    completed = 0
+
+    print_header()
+    with ProcessPoolExecutor(max_workers=max_workers) as pool:
+        futures = {pool.submit(_run_single_task, t): t for t in tasks}
+        for future in as_completed(futures):
+            cond_name, seed, result = future.result()
+            results_by_cond[cond_name].append(result)
+            completed += 1
+
+            for sample in result["samples"]:
+                print_sample(cond_name, seed, sample)
+
+            if completed % 50 == 0 or completed == total:
+                elapsed = time.perf_counter() - total_start
+                log(f"  [{completed}/{total}] {elapsed:.1f}s elapsed")
+
+    # Write per-condition JSON files
+    for cond_name, results in results_by_cond.items():
+        with open(out_dir / f"{filename_prefix}{cond_name}.json", "w") as f:
+            json.dump(results, f, indent=2)
+
     log(f"Total time: {time.perf_counter() - total_start:.1f}s")
