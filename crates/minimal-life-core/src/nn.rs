@@ -26,7 +26,10 @@ impl NeuralNet {
 
     /// Create a NN with the given hidden size from an iterator of f32 values.
     /// Panics if fewer than `weight_count(hidden_size)` values are provided.
-    pub fn from_weights_with_hidden(hidden_size: usize, weights: impl Iterator<Item = f32>) -> Self {
+    pub fn from_weights_with_hidden(
+        hidden_size: usize,
+        weights: impl Iterator<Item = f32>,
+    ) -> Self {
         let expected = Self::weight_count(hidden_size);
         let weights: Vec<f32> = weights.take(expected).collect();
         assert_eq!(

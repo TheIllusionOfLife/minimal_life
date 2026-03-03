@@ -71,7 +71,10 @@ def main():
             log(f"  {h1} vs {h2}: U={stat:.0f}, p={p:.4f}")
 
     # Save
-    output = {str(k): {kk: vv for kk, vv in v.items() if kk != "alive_counts"} for k, v in results.items()}
+    output = {
+        str(k): {kk: vv for kk, vv in v.items() if kk != "alive_counts"}
+        for k, v in results.items()
+    }
     output_path = out_dir / "nn_sensitivity_analysis.json"
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2)

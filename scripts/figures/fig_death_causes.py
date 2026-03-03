@@ -55,9 +55,12 @@ def generate_death_causes() -> None:
     width = 0.6
 
     bottoms = np.zeros(len(conditions))
-    for cause, color, label in zip(cause_names, cause_colors, cause_labels):
+    for cause, color, label in zip(cause_names, cause_colors, cause_labels, strict=True):
         values = [props[cond][cause] for cond in conditions]
-        ax.bar(x, values, width, bottom=bottoms, color=color, label=label, edgecolor="white", linewidth=0.5)
+        ax.bar(
+            x, values, width, bottom=bottoms,
+            color=color, label=label, edgecolor="white", linewidth=0.5,
+        )
         bottoms += values
 
     ax.set_xticks(x)

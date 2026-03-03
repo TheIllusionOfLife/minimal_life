@@ -22,9 +22,7 @@ Partial (quick validation):
 from __future__ import annotations
 
 import sys
-import time
 from itertools import combinations
-from pathlib import Path
 
 import minimal_life
 from experiment_common import (

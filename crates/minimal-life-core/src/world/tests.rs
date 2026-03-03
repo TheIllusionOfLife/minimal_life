@@ -1945,7 +1945,10 @@ fn alive_organism_has_no_death_cause() {
     world.step();
     let org = &world.organisms[0];
     assert!(org.alive, "organism should still be alive");
-    assert_eq!(org.death_cause, None, "alive organism should have no death cause");
+    assert_eq!(
+        org.death_cause, None,
+        "alive organism should have no death cause"
+    );
 }
 
 #[test]

@@ -737,8 +737,7 @@ impl World {
                     // Neutral-drift control: any alive organism can reproduce
                     return Some(idx);
                 }
-                let mature_enough =
-                    self.config.reproduction_bypass_maturity || org.maturity >= 1.0;
+                let mature_enough = self.config.reproduction_bypass_maturity || org.maturity >= 1.0;
                 (org.metabolic_state.energy >= self.config.reproduction_min_energy
                     && org.boundary_integrity >= self.config.reproduction_min_boundary
                     && mature_enough)
@@ -773,10 +772,7 @@ impl World {
                     Ok(id) => id,
                     Err(_) => return,
                 };
-                let center = centers
-                    .get(pa)
-                    .and_then(|c| *c)
-                    .unwrap_or([0.0, 0.0]);
+                let center = centers.get(pa).and_then(|c| *c).unwrap_or([0.0, 0.0]);
                 self.spawn_child_crossover(pa, pb, child_id, center, child_agents);
             }
             // Spawn from unpaired parent via single-parent path
@@ -954,8 +950,15 @@ impl World {
             if !pa.alive || pa.metabolic_state.energy < self.config.reproduction_energy_cost {
                 return;
             }
-            (pa.generation, pa.stable_id, pa.ancestor_genome.clone(), pa.genome.clone())
+            (
+                pa.generation,
+                pa.stable_id,
+                pa.ancestor_genome.clone(),
+                pa.genome.clone(),
+            )
         };
+        // Only parent_a pays the energy cost. Parent_b contributes genetic material
+        // without energy deduction — asymmetric by design (analogous to gamete donation).
         let genome_b = {
             let pb = &self.organisms[parent_b_idx];
             if !pb.alive {

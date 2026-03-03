@@ -100,11 +100,10 @@ impl Genome {
             "segment layouts must match for crossover"
         );
         let mut child = parent_a.clone();
-        for seg_idx in 0..7 {
+        for seg_idx in 0..parent_a.segments.len() {
             if rng.random::<bool>() {
                 let (start, len) = parent_b.segments[seg_idx];
-                child.data[start..start + len]
-                    .copy_from_slice(&parent_b.data[start..start + len]);
+                child.data[start..start + len].copy_from_slice(&parent_b.data[start..start + len]);
             }
         }
         child
@@ -300,7 +299,7 @@ mod tests {
                 break;
             }
         }
-        assert!(saw_mixed || !all_a || !all_b, "crossover should mix parent segments");
+        assert!(saw_mixed, "crossover should mix parent segments");
     }
 
     #[test]
@@ -312,7 +311,7 @@ mod tests {
 
         let child = Genome::segment_crossover(&parent_a, &parent_b, &mut rng);
         // Each segment in child must come entirely from one parent
-        for seg_idx in 0..7 {
+        for seg_idx in 0..child.segments().len() {
             let (start, len) = child.segments()[seg_idx];
             let seg = &child.data()[start..start + len];
             let seg_a = parent_a.segment_data(seg_idx);
@@ -328,9 +327,15 @@ mod tests {
     fn segment_crossover_is_deterministic() {
         let parent_a = Genome::with_nn_weights(vec![1.0; 212]);
         let parent_b = Genome::with_nn_weights(vec![2.0; 212]);
-        let c1 = Genome::segment_crossover(&parent_a, &parent_b, &mut ChaCha12Rng::seed_from_u64(7));
-        let c2 = Genome::segment_crossover(&parent_a, &parent_b, &mut ChaCha12Rng::seed_from_u64(7));
-        assert_eq!(c1.data(), c2.data(), "same seed should produce identical offspring");
+        let c1 =
+            Genome::segment_crossover(&parent_a, &parent_b, &mut ChaCha12Rng::seed_from_u64(7));
+        let c2 =
+            Genome::segment_crossover(&parent_a, &parent_b, &mut ChaCha12Rng::seed_from_u64(7));
+        assert_eq!(
+            c1.data(),
+            c2.data(),
+            "same seed should produce identical offspring"
+        );
     }
 
     #[test]
@@ -342,7 +347,10 @@ mod tests {
         // Child should contain both 1.0 and 2.0 values
         let has_a = child.data().iter().any(|&v| v == 1.0);
         let has_b = child.data().iter().any(|&v| v == 2.0);
-        assert!(has_a && has_b, "uniform crossover should mix individual genes");
+        assert!(
+            has_a && has_b,
+            "uniform crossover should mix individual genes"
+        );
     }
 
     #[test]

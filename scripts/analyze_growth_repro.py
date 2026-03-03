@@ -74,7 +74,10 @@ def main():
             log(f"  {desc:35s}: diff={diff:+.1f}, U={stat:.0f}, p={p:.4f} {sig}")
 
     # Save
-    output = {k: {kk: vv for kk, vv in v.items() if kk != "alive_counts"} for k, v in results.items()}
+    output = {
+        k: {kk: vv for kk, vv in v.items() if kk != "alive_counts"}
+        for k, v in results.items()
+    }
     output_path = out_dir / "growth_repro_analysis.json"
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2)

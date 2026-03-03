@@ -80,10 +80,8 @@ impl World {
         self.deltas_buffer.reserve(results.len());
         for (delta, org_idx, nc) in results {
             self.deltas_buffer.push(delta);
-            if nc > 0 {
-                neighbor_sums[org_idx] += nc as f32;
-                neighbor_counts[org_idx] += 1;
-            }
+            neighbor_sums[org_idx] += nc as f32;
+            neighbor_counts[org_idx] += 1;
         }
     }
 }

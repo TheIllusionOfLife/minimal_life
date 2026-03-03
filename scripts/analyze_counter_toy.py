@@ -92,7 +92,10 @@ def analyze_engine(engine_name: str, prefix: str) -> dict:
             results[criterion]["p_adjusted"] = adjusted[i]
 
     # Report
-    for criterion, r in sorted(results.items(), key=lambda x: abs(x[1]["cliffs_delta"]), reverse=True):
+    sorted_results = sorted(
+        results.items(), key=lambda x: abs(x[1]["cliffs_delta"]), reverse=True
+    )
+    for criterion, r in sorted_results:
         sig = "*" if r.get("p_adjusted", 1) < 0.05 else " "
         log(
             f"  {criterion:15s}: alive={r['mean_alive']:6.1f}  "
