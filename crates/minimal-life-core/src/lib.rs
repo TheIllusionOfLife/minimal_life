@@ -15,3 +15,4 @@ pub use constants::MAX_WORLD_SIZE;
 pub use metrics::{
     LineageEvent, OrganismSnapshot, PopulationStats, RunSummary, SnapshotFrame, StepMetrics,
 };
+pub use organism::DeathCause;

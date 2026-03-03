@@ -1,21 +1,25 @@
 use crate::spatial;
 use crate::spatial::AgentLocation;
+use rayon::prelude::*;
 use rstar::RTree;
 
 use super::super::World;
 
+/// Per-agent result computed in parallel: (delta, organism_index, neighbor_count).
+type AgentResult = ([f32; 4], usize, usize);
+
 impl World {
     /// Compute neighbor-informed neural deltas for all agents.
+    ///
+    /// When `config.parallel_nn` is true, spatial queries and NN forward passes
+    /// run in parallel via Rayon. The organism-level neighbor accumulation is
+    /// merged sequentially afterwards (cheap O(agents) pass).
     pub(in crate::world) fn step_nn_query_phase(&mut self, tree: &RTree<AgentLocation>) {
-        let deltas = &mut self.deltas_buffer;
         let neighbor_sums = &mut self.neighbor_sums_buffer;
         let neighbor_counts = &mut self.neighbor_counts_buffer;
         let agents = &self.agents;
         let organisms = &self.organisms;
         let config = &self.config;
-
-        deltas.clear();
-        deltas.reserve(agents.len());
 
         let org_count = organisms.len();
         if neighbor_sums.len() != org_count {
@@ -25,15 +29,12 @@ impl World {
         neighbor_sums.fill(0.0);
         neighbor_counts.fill(0);
 
-        for agent in agents {
+        let compute_agent = |agent: &super::super::Agent| -> AgentResult {
             let org_idx = agent.organism_id as usize;
-            // Manual lookup to avoid borrowing self methods
             if !organisms.get(org_idx).map(|o| o.alive).unwrap_or(false) {
-                deltas.push([0.0; 4]);
-                continue;
+                return ([0.0; 4], org_idx, 0);
             }
 
-            // Inline effective_sensing_radius logic to avoid borrow conflicts
             let dev_sensing = if config.enable_growth {
                 organisms[org_idx]
                     .developmental_program
@@ -53,9 +54,6 @@ impl World {
                 config.world_topology,
             );
 
-            neighbor_sums[org_idx] += neighbor_count as f32;
-            neighbor_counts[org_idx] += 1;
-
             let input: [f32; 8] = [
                 (agent.position[0] / config.world_size) as f32,
                 (agent.position[1] / config.world_size) as f32,
@@ -67,7 +65,23 @@ impl World {
                 neighbor_count as f32 / config.neighbor_norm as f32,
             ];
             let nn = &organisms[org_idx].nn;
-            deltas.push(nn.forward(&input));
+            (nn.forward(&input), org_idx, neighbor_count)
+        };
+
+        // Compute all agent results (parallel or sequential based on config)
+        let results: Vec<AgentResult> = if config.parallel_nn {
+            agents.par_iter().map(compute_agent).collect()
+        } else {
+            agents.iter().map(compute_agent).collect()
+        };
+
+        // Sequential merge: fill deltas buffer and accumulate neighbor stats
+        self.deltas_buffer.clear();
+        self.deltas_buffer.reserve(results.len());
+        for (delta, org_idx, nc) in results {
+            self.deltas_buffer.push(delta);
+            neighbor_sums[org_idx] += nc as f32;
+            neighbor_counts[org_idx] += 1;
         }
     }
 }

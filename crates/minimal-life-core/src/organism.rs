@@ -1,6 +1,19 @@
 use crate::genome::Genome;
 use crate::metabolism::{MetabolicState, MetabolismEngine};
 use crate::nn::NeuralNet;
+use serde::{Deserialize, Serialize};
+
+/// Cause of death for an organism, used for cause-of-death analysis.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum DeathCause {
+    /// Boundary integrity fell below terminal threshold.
+    BoundaryCollapse,
+    /// Energy depleted below death threshold.
+    EnergyDepletion,
+    /// Exceeded maximum organism age.
+    AgeLimit,
+}
 
 #[derive(Clone, Debug)]
 pub struct Organism {
@@ -166,6 +179,8 @@ pub struct OrganismRuntime {
     pub developmental_program: DevelopmentalProgram,
     /// Stable ID of the parent organism (None for bootstrap organisms).
     pub parent_stable_id: Option<u64>,
+    /// Cause of death (None while alive, set when mark_dead is called).
+    pub death_cause: Option<DeathCause>,
 }
 
 #[cfg(test)]

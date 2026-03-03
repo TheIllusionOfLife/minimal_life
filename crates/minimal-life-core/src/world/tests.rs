@@ -1822,3 +1822,236 @@ fn legacy_config_defaults_to_toroidal() {
     let cfg: SimConfig = serde_json::from_str(legacy_json).expect("should parse");
     assert_eq!(cfg.world_topology, WorldTopology::Toroidal);
 }
+
+// ── DeathCause tracking tests ──────────────────────────────────────────
+
+#[test]
+fn death_cause_age_limit_is_recorded() {
+    // Verify age-limit deaths appear in StepMetrics.deaths_age.
+    // Use very low max_organism_age_steps so organisms die from age quickly.
+    let agents: Vec<Agent> = (0..5)
+        .map(|i| Agent::new(i as u32, i as u16, [50.0, 50.0]))
+        .collect();
+    let nns: Vec<NeuralNet> = (0..5)
+        .map(|_| NeuralNet::from_weights(std::iter::repeat_n(0.0f32, NeuralNet::WEIGHT_COUNT)))
+        .collect();
+    let config = SimConfig {
+        num_organisms: 5,
+        agents_per_organism: 1,
+        max_organism_age_steps: 2,
+        enable_reproduction: false,
+        // Disable boundary/energy death paths to isolate age deaths
+        boundary_decay_base_rate: 0.0,
+        death_energy_threshold: 0.0,
+        ..SimConfig::default()
+    };
+    let mut world = World::new(agents, nns, config).unwrap();
+    let summary = world.run_experiment(10, 1);
+    let total_age: usize = summary.samples.iter().map(|s| s.deaths_age).sum();
+    let total_boundary: usize = summary.samples.iter().map(|s| s.deaths_boundary).sum();
+    let total_energy: usize = summary.samples.iter().map(|s| s.deaths_energy).sum();
+    assert!(total_age > 0, "expected age-limit deaths, got 0");
+    assert_eq!(total_boundary, 0, "no boundary deaths expected");
+    assert_eq!(total_energy, 0, "no energy deaths expected");
+}
+
+#[test]
+fn death_cause_boundary_collapse_is_recorded() {
+    // Verify boundary-collapse deaths appear in StepMetrics.deaths_boundary.
+    // Disable metabolism so no energy maintenance, aggressive boundary decay, no repair.
+    let agents = vec![Agent::new(0, 0, [50.0, 50.0])];
+    let nn = NeuralNet::from_weights(std::iter::repeat_n(0.0f32, NeuralNet::WEIGHT_COUNT));
+    let config = SimConfig {
+        num_organisms: 1,
+        agents_per_organism: 1,
+        enable_metabolism: false,
+        enable_reproduction: false,
+        boundary_decay_base_rate: 0.5,
+        boundary_repair_rate: 0.0,
+        death_energy_threshold: 0.0,
+        ..SimConfig::default()
+    };
+    let mut world = World::new(agents, vec![nn], config).unwrap();
+    let summary = world.run_experiment(100, 1);
+    let total_boundary: usize = summary.samples.iter().map(|s| s.deaths_boundary).sum();
+    let total_energy: usize = summary.samples.iter().map(|s| s.deaths_energy).sum();
+    assert!(total_boundary > 0, "expected boundary deaths, got 0");
+    assert_eq!(total_energy, 0, "no energy deaths expected");
+}
+
+#[test]
+fn death_cause_energy_depletion_is_recorded() {
+    // Verify energy-depletion deaths appear in StepMetrics.deaths_energy.
+    // Set death_energy_threshold impossibly high so organism fails the energy check.
+    let agents = vec![Agent::new(0, 0, [50.0, 50.0])];
+    let nn = NeuralNet::from_weights(std::iter::repeat_n(0.0f32, NeuralNet::WEIGHT_COUNT));
+    let config = SimConfig {
+        num_organisms: 1,
+        agents_per_organism: 1,
+        enable_reproduction: false,
+        death_energy_threshold: 10.0,
+        // Disable boundary death path to isolate energy deaths
+        boundary_decay_base_rate: 0.0,
+        ..SimConfig::default()
+    };
+    let mut world = World::new(agents, vec![nn], config).unwrap();
+    let summary = world.run_experiment(10, 1);
+    let total_energy: usize = summary.samples.iter().map(|s| s.deaths_energy).sum();
+    let total_boundary: usize = summary.samples.iter().map(|s| s.deaths_boundary).sum();
+    assert!(total_energy > 0, "expected energy-depletion deaths, got 0");
+    assert_eq!(total_boundary, 0, "no boundary deaths expected");
+}
+
+#[test]
+fn death_cause_counts_appear_in_step_metrics() {
+    // Run a short simulation where organisms die and verify metrics track death causes
+    let agents = vec![Agent::new(0, 0, [50.0, 50.0])];
+    let nn = NeuralNet::from_weights(std::iter::repeat_n(0.0f32, NeuralNet::WEIGHT_COUNT));
+    let config = SimConfig {
+        num_organisms: 1,
+        agents_per_organism: 1,
+        max_organism_age_steps: 3,
+        enable_reproduction: false,
+        ..SimConfig::default()
+    };
+    let mut world = World::new(agents, vec![nn], config).unwrap();
+    let summary = world.run_experiment(10, 1);
+    // Sum death causes across all samples
+    let total_boundary: usize = summary.samples.iter().map(|s| s.deaths_boundary).sum();
+    let total_energy: usize = summary.samples.iter().map(|s| s.deaths_energy).sum();
+    let total_age: usize = summary.samples.iter().map(|s| s.deaths_age).sum();
+    let total_deaths: usize = summary.samples.iter().map(|s| s.death_count).sum();
+    // Total cause-specific deaths should equal total deaths
+    assert_eq!(
+        total_boundary + total_energy + total_age,
+        total_deaths,
+        "cause-specific deaths should sum to total deaths"
+    );
+    // At least one death should have occurred (age limit = 3 steps)
+    assert!(total_deaths > 0, "at least one death expected");
+}
+
+#[test]
+fn alive_organism_has_no_death_cause() {
+    let agents = vec![Agent::new(0, 0, [50.0, 50.0])];
+    let nn = NeuralNet::from_weights(std::iter::repeat_n(0.0f32, NeuralNet::WEIGHT_COUNT));
+    let config = SimConfig {
+        num_organisms: 1,
+        agents_per_organism: 1,
+        enable_reproduction: false,
+        ..SimConfig::default()
+    };
+    let mut world = World::new(agents, vec![nn], config).unwrap();
+    world.step();
+    let org = &world.organisms[0];
+    assert!(org.alive, "organism should still be alive");
+    assert_eq!(
+        org.death_cause, None,
+        "alive organism should have no death cause"
+    );
+}
+
+#[test]
+fn reproduction_bypass_maturity_allows_immature_to_reproduce() {
+    let mut world = make_world(10, 100.0);
+    world.config.enable_metabolism = false;
+    world.config.enable_boundary_maintenance = false;
+    world.config.death_boundary_threshold = 0.0;
+    world.config.boundary_collapse_threshold = 0.0;
+    world.config.death_energy_threshold = 0.0;
+    world.config.reproduction_bypass_maturity = true;
+    world.organisms[0].maturity = 0.1; // far from mature
+    world.organisms[0].metabolic_state.energy = 1.0;
+    world.organisms[0].boundary_integrity = 1.0;
+    let before = world.organism_count();
+    world.step();
+    assert!(
+        world.organism_count() > before,
+        "immature organism should reproduce when bypass_maturity is true"
+    );
+}
+
+#[test]
+fn reproduction_bypass_maturity_default_false_blocks_immature() {
+    // Sanity check: default (false) should block immature reproduction
+    let mut world = make_world(10, 100.0);
+    world.config.enable_metabolism = false;
+    world.config.enable_boundary_maintenance = false;
+    world.config.death_boundary_threshold = 0.0;
+    world.config.boundary_collapse_threshold = 0.0;
+    world.config.death_energy_threshold = 0.0;
+    assert!(!world.config.reproduction_bypass_maturity);
+    world.organisms[0].maturity = 0.1;
+    world.organisms[0].metabolic_state.energy = 1.0;
+    world.organisms[0].boundary_integrity = 1.0;
+    let before = world.organism_count();
+    world.step();
+    assert_eq!(
+        world.organism_count(),
+        before,
+        "immature organism should NOT reproduce when bypass_maturity is false"
+    );
+}
+
+#[test]
+fn random_parent_selection_allows_low_energy_reproduction() {
+    let mut world = make_world(10, 100.0);
+    world.config.enable_metabolism = false;
+    world.config.enable_boundary_maintenance = false;
+    world.config.death_boundary_threshold = 0.0;
+    world.config.boundary_collapse_threshold = 0.0;
+    world.config.death_energy_threshold = 0.0;
+    world.config.random_parent_selection = true;
+    world.config.reproduction_min_energy = 0.85;
+    world.organisms[0].maturity = 1.0;
+    world.organisms[0].metabolic_state.energy = 0.3; // below min_energy
+    world.organisms[0].boundary_integrity = 0.3; // below min_boundary
+    let before = world.organism_count();
+    world.step();
+    assert!(
+        world.organism_count() > before,
+        "random_parent_selection should allow reproduction regardless of energy/boundary thresholds"
+    );
+}
+
+#[test]
+fn random_parent_selection_still_requires_alive() {
+    // Verify that the alive filter still works: dead organisms are excluded.
+    // We just check the filter logic — a dead organism with random_parent_selection
+    // should still be filtered out.
+    let agents: Vec<Agent> = (0..20)
+        .map(|i| {
+            let org_id = if i < 10 { 0u16 } else { 1u16 };
+            Agent::new(i as u32, org_id, [25.0, 25.0])
+        })
+        .collect();
+    let nn = NeuralNet::from_weights(std::iter::repeat_n(0.1f32, NeuralNet::WEIGHT_COUNT));
+    let config = SimConfig {
+        world_size: 50.0,
+        num_organisms: 2,
+        agents_per_organism: 10,
+        enable_metabolism: false,
+        enable_boundary_maintenance: false,
+        death_boundary_threshold: 0.0,
+        boundary_collapse_threshold: 0.0,
+        death_energy_threshold: 0.0,
+        random_parent_selection: true,
+        enable_reproduction: false, // disable reproduction initially
+        compaction_interval_steps: 100_000, // prevent pruning
+        ..SimConfig::default()
+    };
+    let mut world = World::new(agents, vec![nn.clone(), nn], config).unwrap();
+    // Mark both organisms as dead
+    world.organisms[0].alive = false;
+    world.organisms[1].alive = false;
+    world.organisms[1].metabolic_state.energy = 1.0;
+    // Enable reproduction and step
+    world.config.enable_reproduction = true;
+    let births_before = world.total_births;
+    world.step();
+    // Both organisms are dead — no births should happen
+    assert_eq!(
+        world.total_births, births_before,
+        "dead organisms should not reproduce even with random_parent_selection"
+    );
+}

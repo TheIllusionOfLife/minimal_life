@@ -127,15 +127,24 @@ functional necessity and interaction of life criteria in any ALife system.
 % ============================================================================
 \section{Related Work}
 
-Tierra \citep{ray_1991_approach}, Avida \citep{ofria_2004_avida},
-Polyworld \citep{yaeger_1994_computational}, Geb \citep{channon_2001_passing},
+Table~\ref{tab:comparison} surveys eight representative ALife systems across
+the seven criteria.
+Tierra \citep{ray_1991_approach} and Avida \citep{ofria_2004_avida} achieve
+strong evolution but lack spatial organization, metabolism, and homeostasis.
+Polyworld \citep{yaeger_1994_computational} and Geb \citep{channon_2001_passing}
+integrate evolution with neural-network controllers and physical embodiment,
+but lack explicit metabolic or homeostatic subsystems.
+Stringmol \citep{hickinbotham_2011_stringmol} implements chemistry-based
+metabolism but omits homeostasis and spatial organization.
+Beer's Game-of-Life autopoiesis model \citep{beer_2004_autopoiesis} provides
+rigorous cellular organization but lacks evolution and reproduction.
 Lenia \citep{chan_2019_lenia}, Flow-Lenia \citep{plantec_2023_flow}, ALIEN
 \citep{heinemann_2008_alien}, and Coralai \citep{barbieux_2024_coralai}
-each cover subsets of the seven criteria; no existing system combines
-multi-step metabolism with active homeostatic regulation.
-Polyworld and Geb each integrate evolution with neural-network controllers
-and physical embodiment, but lack explicit metabolic or homeostatic
-subsystems amenable to individual-criterion ablation.
+each cover additional subsets.
+Critically, none of these systems provides per-criterion ablation toggles
+enabling controlled removal experiments (Table~\ref{tab:comparison}, Abl.\
+column); no existing system combines multi-step metabolism with active
+homeostatic regulation in an ablation-testable framework.
 Our framework operationalizes autopoiesis \citep{maturana_1980_autopoiesis,
 mcmullin_2004_thirty}, the chemoton model \citep{ganti_2003_principles},
 and NASA's two-criterion definition \citep{joyce_1994_foreword,
@@ -146,26 +155,32 @@ our criterion-ablation approach.
 \begin{table}[t]
 \centering
 \caption{Criterion comparison (five-level rubric; bold $\geq$4).
-Full scores for remaining four surveyed systems in the project repository.}
+Abl.=ablation-testable (per-criterion toggle enabling controlled removal).
+Rubric definitions in \S S4 (Table~\ref{tab:rubric}).}
 \label{tab:comparison}
 \footnotesize
-\begin{tabular}{@{}l@{\hskip 4pt}c@{\hskip 4pt}c@{\hskip 4pt}c@{\hskip 4pt}c@{\hskip 4pt}c@{\hskip 4pt}c@{\hskip 4pt}c@{\hskip 4pt}c@{}}
+\begin{tabular}{@{}l@{\hskip 3pt}c@{\hskip 3pt}c@{\hskip 3pt}c@{\hskip 3pt}c@{\hskip 3pt}c@{\hskip 3pt}c@{\hskip 3pt}c@{\hskip 3pt}c@{\hskip 3pt}c@{}}
 \toprule
-System & CO & Me & Ho & Gr & Re & Rs & Ev & $\Sigma$ \\
+System & CO & Me & Ho & Gr & Re & Rs & Ev & $\Sigma$ & Abl. \\
 \midrule
-ALIEN \citep{heinemann_2008_alien} & \textbf{4} & 3 & 2 & 3 & \textbf{4} & \textbf{4} & \textbf{4} & 24 \\
-\textbf{Ours}$^\dagger$ & \textbf{4} & \textbf{4} & \textbf{4} & \textbf{4} & \textbf{4} & \textbf{4} & 3 & \textbf{27} \\
+Tierra \citep{ray_1991_approach}        & 1 & 1 & 1 & 1 & 3 & 2 & \textbf{4} & 13 & -- \\
+Avida \citep{ofria_2004_avida}          & 1 & 1 & 1 & 1 & 3 & 3 & \textbf{4} & 14 & -- \\
+Polyworld \citep{yaeger_1994_computational} & 3 & 2 & 1 & 2 & \textbf{4} & \textbf{4} & \textbf{4} & 20 & -- \\
+Geb \citep{channon_2001_passing}        & 2 & 1 & 1 & 2 & 3 & 3 & \textbf{4} & 16 & -- \\
+Stringmol \citep{hickinbotham_2011_stringmol} & 2 & 3 & 1 & 1 & 3 & 1 & 3 & 14 & -- \\
+Beer~'04 \citep{beer_2004_autopoiesis}  & \textbf{4} & 2 & 2 & 1 & 1 & 2 & 1 & 13 & -- \\
+ALIEN \citep{heinemann_2008_alien}      & \textbf{4} & 3 & 2 & 3 & \textbf{4} & \textbf{4} & \textbf{4} & 24 & -- \\
+\textbf{Ours}$^\dagger$ & \textbf{4} & \textbf{4} & \textbf{4} & \textbf{4} & \textbf{4} & \textbf{4} & 3 & \textbf{27} & \checkmark \\
 \bottomrule
-\multicolumn{9}{@{}l@{}}{\scriptsize $^\dagger$Self-assessed. CO=Cell.Org, Me=Metab, Ho=Homeo,}\\
-\multicolumn{9}{@{}l@{}}{\scriptsize Gr=Growth, Re=Reprod, Rs=Response, Ev=Evol.}
+\multicolumn{10}{@{}l@{}}{\scriptsize $^\dagger$Self-assessed. CO=Cell.Org, Me=Metab, Ho=Homeo,}\\
+\multicolumn{10}{@{}l@{}}{\scriptsize Gr=Growth, Re=Reprod, Rs=Response, Ev=Evol.}
 \end{tabular}
 \end{table}
 
-We acknowledge that Table~\ref{tab:comparison} relies on self-assessment;
-independent cross-validation by developers of other systems would
+We acknowledge that Table~\ref{tab:comparison} relies on self-assessment
+for our system; scores for other systems are our best reading of published
+descriptions. Independent cross-validation by system developers would
 strengthen these comparisons.
-The five-level rubric used for scoring is defined in~\S S4
-(Table~\ref{tab:rubric}).
 
 % ============================================================================
 \section{System Design}
@@ -573,12 +588,21 @@ providing evidence against tautological definitions.
 
 \paragraph{Evolution at longer timescales.}
 The modest 2,000-step evolution effect ($d$=0.78, $\delta$=0.39) grows to
-$d$=1.42 ($\delta$=0.66) at 10,000 steps (§S6), confirming that adaptation
+$d$=1.42 ($\delta$=0.66) at 10,000 steps (\S S6), confirming that adaptation
 accumulates across generations; cyclic-environment recovery differences
-are mixed and treated as supplemental evidence (§S2).
-Fitness landscape analysis (\S\ref{sec:s9fitness}) provides additional
-evidence: a Jonckheere-Terpstra trend test for directional selection across
-generation cohorts and parent-offspring energy regression for heritability.
+are mixed and treated as supplemental evidence (\S S2).
+We explicitly acknowledge that our pre-registered H1 (directional energy
+selection) was not supported: generation-stratified energy trajectories are
+indistinguishable between evolved and non-evolved conditions (\S S6).
+Primary evidence for adaptation is genome-drift divergence
+($\delta$=1.00, $p < 0.001$) and population-level viability differences.
+A neutral-drift control (randomized parent selection with mutation active)
+and two-parent crossover experiment (segment-wise and uniform operators)
+provide additional evidence distinguishing genuine adaptation from drift
+(\S S6).
+This places evolution at Level~3 (heritable variation, differential survival)
+rather than Level~4, and we acknowledge this limitation's impact on the
+seven-criteria integration claim.
 
 \paragraph{Functional analogy across criterion types.}
 The three functional-analogy conditions apply differently to continuous
@@ -590,6 +614,21 @@ condition broadly: these criteria maintain a standing readiness (energy
 reserves above the reproduction threshold; genetic variation in the
 population) that constitutes sustained functional engagement even between
 events.
+
+\paragraph{Ablation side effects.}
+Each criterion ablation disables a single process but may induce secondary
+effects on non-target criteria through shared state variables (e.g.,
+disabling metabolism affects energy, which in turn affects boundary repair
+and reproduction thresholds). We adopt \emph{knockout semantics}: an
+ablation measures the total system-level consequence of removing a
+criterion, inclusive of downstream cascades, analogous to gene knockouts
+in molecular biology where pleiotropic effects are part of the phenotype.
+A quantitative off-target effect table measuring the shift in non-target
+variables for each single ablation is provided in the supplementary
+materials.
+Cause-of-death tracking (boundary collapse, energy depletion, age limit)
+provides additional mechanistic insight into how each ablation disrupts
+organismal viability.
 
 \paragraph{Are criteria merely engineered?}
 Four lines of evidence argue against this: (1)~proxy control shows
@@ -610,8 +649,13 @@ measurably lower boundary integrity than the growth-enabled control (\S S5),
 confirming that growth's effects extend beyond the reproduction maturity gate.
 
 \paragraph{Criterion maturity.}
-Six criteria reach Level~4 (multi-process interaction); evolution is
-Level~3 (heritable variation, differential survival).
+Six criteria reach Level~4 (multi-process interaction); evolution remains at
+Level~3 (heritable variation, differential survival) despite crossover
+and neutral-drift controls showing statistically significant population-level
+differences from neutral baselines.
+Achieving Level~4 for evolution would require demonstrating
+open-ended dynamics or sustained directional trait change, which
+our current scale does not support.
 Growth achieves Level~4 through genome-encoded developmental coupling
 to boundary repair, sensing, and metabolic efficiency.
 
@@ -623,7 +667,7 @@ functional-analogy framework and a reproducible ablation methodology within
 a weak-ALife scope.
 
 \paragraph{Criterion reduction.}
-The Phase~1 reduction analysis (§\ref{sec:reduction}) provides directional but
+The Phase~1 reduction analysis (\S\ref{sec:reduction}) provides directional but
 not definitive evidence: no criterion clears the pre-registered LASSO threshold
 of 0.60 (maximum mean stability: metabolism=0.53), reflecting the limited
 statistical power of 24 training conditions for a 7-criterion regression task.
@@ -631,11 +675,10 @@ The Enet stability ranking---metabolism$>$response$>$homeostasis as strongest,
 growth$>$evolution as weakest---is directionally consistent with the single-ablation
 effect hierarchy (Table~\ref{tab:ablation}), providing convergent evidence that
 these three criteria contribute most to system-level life-likeness.
-Expanding the sweep to $\geq$100 conditions would likely push LASSO stability
-above threshold for the top-ranked criteria.
-A planned Phase~2 expansion ($\geq$100 conditions including held-out
-environment regimes) will provide the statistical power necessary to
-confirm or refute these directional findings.
+A Phase~2 expansion ($\sim$200 conditions across 5 environment regimes,
+with out-of-regime validation) is implemented to provide the statistical
+power necessary to confirm or refute these directional findings;
+results are reported when available.
 
 \paragraph{Surrogate observables.}
 \emph{Regulation quality} is defined as the inverse coefficient of variation
@@ -705,14 +748,16 @@ The $k{=}3$ surrogate elbow---energy autocorrelation, boundary stability, and
 homeostasis variance---aligns with the three strongest single-criterion ablation
 effects, providing convergent evidence for a minimal diagnostic principle of life.
 
-Future work will pursue three directions:
+Future work will pursue four directions:
 (1)~scaling to larger populations to investigate emergent ecological phenomena
 and open-ended evolution metrics \citep{bedau_2000_open,
 taylor_2016_openended};
 (2)~spatial morphogenesis extending the current developmental program with
-position-dependent cell differentiation; and
+position-dependent cell differentiation;
 (3)~systematic environmental perturbation studies to characterize adaptive
-capacity across evolutionary timescales.
+capacity across evolutionary timescales; and
+(4)~strengthening the evolution criterion toward Level~4 via extended runs
+with crossover operators and neutral-drift controls.
 
 Code, manifests, and compact summary artifacts are available in the project
 repository; heavy raw experiment outputs are archived on Zenodo
@@ -1171,6 +1216,55 @@ step~10,000: high-generation (recently born) organisms have lower energy
 in both conditions, reflecting reproduction cost rather than selective
 advantage.}
 \label{fig:trait_evolution}
+\end{figure}
+
+\paragraph{Crossover and neutral-drift control.}
+To distinguish genuine adaptation from neutral drift, we compare five
+conditions over 10,000 steps: (1)~segment-wise crossover (two-parent
+reproduction preserving genome segment coherence); (2)~no crossover
+(single-parent, baseline); (3)~neutral drift (randomized parent selection,
+mutation active, removing fitness-based selection); (4)~no evolution
+(clonal reproduction); (5)~uniform crossover (sensitivity check).
+Segment-wise crossover is preferred over uniform because the 256-float
+genome contains 7 heterogeneous functional segments (NN weights, metabolic
+network, developmental program, etc.); uniform crossover breaks functional
+linkage within segments, potentially confounding results.
+The neutral-drift control is critical: unlike the hard ``no-evolution''
+ablation (which removes mutation entirely), neutral drift preserves
+mutation but randomizes selection, isolating the contribution of
+fitness-based parent selection to population dynamics.
+
+\begin{figure}[htbp]
+\centering
+\IfFileExists{figures/fig_fitness_trajectory.pdf}%
+  {\includegraphics[width=\columnwidth]{figures/fig_fitness_trajectory.pdf}}%
+  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
+    \centering\vspace{2em}[fig\_fitness\_trajectory.pdf --- to be generated]\vspace{2em}}}}
+\caption{Fitness trajectory comparison across evolution conditions
+(10,000 steps, $n$=30 seeds).
+(A)~Population dynamics (mean alive count $\pm$1~SEM).
+(B)~Energy trajectory.}
+\label{fig:fitness_trajectory}
+\end{figure}
+
+\paragraph{Death cause analysis.}
+Per-step death cause tracking classifies organism deaths into three
+categories: boundary collapse, energy depletion, and age limit.
+The distribution of death causes across ablation conditions
+(Figure~\ref{fig:death_causes}) reveals that metabolism and boundary
+ablations shift the dominant failure mode, providing mechanistic
+insight into how criterion removal disrupts organismal viability.
+
+\begin{figure}[htbp]
+\centering
+\IfFileExists{figures/fig_death_causes.pdf}%
+  {\includegraphics[width=\columnwidth]{figures/fig_death_causes.pdf}}%
+  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
+    \centering\vspace{2em}[fig\_death\_causes.pdf --- to be generated]\vspace{2em}}}}
+\caption{Death cause distribution across ablation conditions.
+Stacked bars show the proportion of deaths by cause
+(boundary collapse, energy depletion, age limit).}
+\label{fig:death_causes}
 \end{figure}
 
 \paragraph{Homeostatic regulation.}

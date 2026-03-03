@@ -53,6 +53,7 @@ fn step_once(
         world_size,
         config.seed,
         config.sensing_radius,
+        config.nn_hidden_size,
     )
     .map_err(PyValueError::new_err)?;
     let mut world = World::new(agents, nns, config)
@@ -188,6 +189,7 @@ fn world_from_config_json(config_json: &str) -> Result<World, String> {
         config.world_size,
         config.seed,
         config.sensing_radius,
+        config.nn_hidden_size,
     )
     .map_err(|e| format!("invalid world configuration: {e}"))?;
     World::new(agents, nns, config).map_err(|e| format!("invalid world configuration: {e}"))
@@ -199,6 +201,7 @@ fn bootstrap_entities(
     world_size: f64,
     seed: u64,
     sensing_radius: f64,
+    nn_hidden_size: usize,
 ) -> Result<(Vec<Agent>, Vec<NeuralNet>), String> {
     let total_agents = checked_total_agents(num_organisms, agents_per_organism)?;
     let mut rng = ChaCha12Rng::seed_from_u64(seed);
@@ -224,10 +227,12 @@ fn bootstrap_entities(
         }
     }
 
+    let nn_weight_count = NeuralNet::weight_count(nn_hidden_size);
     let nns = (0..num_organisms)
         .map(|_| {
-            NeuralNet::from_weights(
-                (0..NeuralNet::WEIGHT_COUNT).map(|_| rng.random_range(-1.0f32..1.0)),
+            NeuralNet::from_weights_with_hidden(
+                nn_hidden_size,
+                (0..nn_weight_count).map(|_| rng.random_range(-1.0f32..1.0)),
             )
         })
         .collect();
@@ -376,8 +381,8 @@ mod tests {
 
     #[test]
     fn bootstrap_is_deterministic_for_same_seed() {
-        let (agents_a, nns_a) = bootstrap_entities(2, 3, 50.0, 42, 5.0).unwrap();
-        let (agents_b, nns_b) = bootstrap_entities(2, 3, 50.0, 42, 5.0).unwrap();
+        let (agents_a, nns_a) = bootstrap_entities(2, 3, 50.0, 42, 5.0, 16).unwrap();
+        let (agents_b, nns_b) = bootstrap_entities(2, 3, 50.0, 42, 5.0, 16).unwrap();
         for (a, b) in agents_a.iter().zip(&agents_b) {
             assert_eq!(a.position, b.position);
             assert_eq!(a.organism_id, b.organism_id);
@@ -390,7 +395,7 @@ mod tests {
     #[test]
     fn bootstrap_positions_within_world_bounds() {
         let world_size = 80.0;
-        let (agents, _) = bootstrap_entities(5, 10, world_size, 7, 5.0).unwrap();
+        let (agents, _) = bootstrap_entities(5, 10, world_size, 7, 5.0, 16).unwrap();
         for agent in &agents {
             assert!(
                 (0.0..world_size).contains(&agent.position[0]),
@@ -407,7 +412,7 @@ mod tests {
 
     #[test]
     fn bootstrap_nn_weights_within_range() {
-        let (_, nns) = bootstrap_entities(3, 2, 50.0, 99, 5.0).unwrap();
+        let (_, nns) = bootstrap_entities(3, 2, 50.0, 99, 5.0, 16).unwrap();
         for nn in &nns {
             for &w in &nn.to_weight_vec() {
                 assert!((-1.0..1.0).contains(&w), "weight {w} outside [-1, 1)");
@@ -417,8 +422,8 @@ mod tests {
 
     #[test]
     fn bootstrap_different_seeds_produce_different_positions() {
-        let (agents_a, _) = bootstrap_entities(2, 5, 50.0, 0, 5.0).unwrap();
-        let (agents_b, _) = bootstrap_entities(2, 5, 50.0, 1, 5.0).unwrap();
+        let (agents_a, _) = bootstrap_entities(2, 5, 50.0, 0, 5.0, 16).unwrap();
+        let (agents_b, _) = bootstrap_entities(2, 5, 50.0, 1, 5.0, 16).unwrap();
         let differs = agents_a
             .iter()
             .zip(&agents_b)

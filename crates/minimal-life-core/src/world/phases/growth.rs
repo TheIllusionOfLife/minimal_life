@@ -6,7 +6,7 @@ impl World {
         &mut self,
         boundary_terminal_threshold: f32,
     ) {
-        let mut to_kill = Vec::new();
+        let mut to_kill: Vec<(usize, crate::organism::DeathCause)> = Vec::new();
         {
             let config = &self.config;
             let neighbor_sums = &self.neighbor_sums_buffer;
@@ -18,7 +18,7 @@ impl World {
                 }
                 org.age_steps = org.age_steps.saturating_add(1);
                 if org.age_steps > config.max_organism_age_steps {
-                    to_kill.push(org_idx);
+                    to_kill.push((org_idx, crate::organism::DeathCause::AgeLimit));
                     continue;
                 }
 
@@ -40,13 +40,13 @@ impl World {
                         .clamp(0.0, 1.0);
                 }
                 if org.boundary_integrity <= boundary_terminal_threshold {
-                    to_kill.push(org_idx);
+                    to_kill.push((org_idx, crate::organism::DeathCause::BoundaryCollapse));
                 }
             }
         }
 
-        for org_idx in to_kill {
-            self.mark_dead(org_idx);
+        for (org_idx, cause) in to_kill {
+            self.mark_dead(org_idx, cause);
         }
     }
 }
