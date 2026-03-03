@@ -284,10 +284,7 @@ mod tests {
         // Set non-NN segments differently too
         parent_b.set_segment_data(1, &[3.0; Genome::METABOLIC_SIZE]);
 
-        let child = Genome::segment_crossover(&parent_a, &parent_b, &mut rng);
-        // Child should have segments from either parent, not be identical to either
-        let all_a = child.data() == parent_a.data();
-        let all_b = child.data() == parent_b.data();
+        let _child = Genome::segment_crossover(&parent_a, &parent_b, &mut rng);
         // With 7 segments and fair coin, probability of all-same is (1/2)^7 ≈ 0.8%
         // Use multiple seeds to make test robust
         let mut saw_mixed = false;
@@ -345,8 +342,8 @@ mod tests {
         let mut rng = ChaCha12Rng::seed_from_u64(42);
         let child = Genome::uniform_crossover(&parent_a, &parent_b, &mut rng);
         // Child should contain both 1.0 and 2.0 values
-        let has_a = child.data().iter().any(|&v| v == 1.0);
-        let has_b = child.data().iter().any(|&v| v == 2.0);
+        let has_a = child.data().contains(&1.0);
+        let has_b = child.data().contains(&2.0);
         assert!(
             has_a && has_b,
             "uniform crossover should mix individual genes"
