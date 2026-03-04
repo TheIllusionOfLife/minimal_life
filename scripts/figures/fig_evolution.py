@@ -48,7 +48,9 @@ def generate_evolution() -> None:
         def _from_aggregate(series: dict[str, dict]) -> dict[int, list[float]]:
             out: dict[int, list[float]] = defaultdict(list)
             for step_str, payload in series.items():
-                out[int(step_str)].append(float(payload.get("alive_count_mean", 0.0)))
+                if "alive_count_mean" not in payload or payload["alive_count_mean"] is None:
+                    continue
+                out[int(step_str)].append(float(payload["alive_count_mean"]))
             return out
 
         def _from_raw_runs(path: Path) -> dict[int, list[float]]:
@@ -64,6 +66,9 @@ def generate_evolution() -> None:
             "shift_normal": _from_raw_runs(stress_on_path),
             "shift_no_evolution": _from_raw_runs(stress_off_path),
         }
+        if not cond_data["long_normal"] or not cond_data["long_no_evolution"]:
+            print("  SKIP: fallback aggregate trajectories are missing")
+            return
         panel_titles = ("Long run proxy (fitness trajectories)", "Cyclic stress comparison")
         shift_line = 1000
 

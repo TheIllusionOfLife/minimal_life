@@ -45,12 +45,18 @@ def generate_cyclic() -> None:
             for r in results:
                 for s in r.get("samples", []):
                     step_vals[int(s["step"])].append(float(s["alive_count"]))
+            if not step_vals:
+                print(f"  SKIP: fallback data has no samples for {cond}")
+                return
             cond_data[cond] = step_vals
 
     fig, ax = plt.subplots(figsize=(3.4, 2.8))
 
     for cond, (label, color, ls) in conditions.items():
         steps = sorted(cond_data[cond].keys())
+        if not steps:
+            print(f"  SKIP: no time-series data for {cond}")
+            return
         means = [np.mean(cond_data[cond][s]) for s in steps]
         sems = [
             np.std(cond_data[cond][s], ddof=1) / np.sqrt(len(cond_data[cond][s]))

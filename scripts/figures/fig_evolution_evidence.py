@@ -30,7 +30,12 @@ def generate_evolution_evidence() -> None:
             traj = json.load(f)
         normal = traj.get("normal_no_crossover", {})
         no_evo = traj.get("no_evolution", {})
-        steps = sorted(int(k) for k in normal.keys())
+        normal_steps = {int(k) for k in normal.keys()}
+        no_evo_steps = {int(k) for k in no_evo.keys()}
+        steps = sorted(normal_steps & no_evo_steps)
+        if not steps:
+            print("  SKIP: fallback trajectories missing overlapping steps")
+            return
         trajectory_steps = steps
         trajectory_normal = [float(normal[str(s)]["alive_count_mean"]) for s in steps]
         trajectory_no_evo = [float(no_evo[str(s)]["alive_count_mean"]) for s in steps]
@@ -39,6 +44,9 @@ def generate_evolution_evidence() -> None:
         off_results = load_json(off_path)
         on_final = [float(r.get("final_alive_count", 0)) for r in on_results]
         off_final = [float(r.get("final_alive_count", 0)) for r in off_results]
+        if not on_final or not off_final:
+            print("  SKIP: fallback cyclic stress results are empty")
+            return
         per_cycle = [
             {
                 "high_start": 0,
