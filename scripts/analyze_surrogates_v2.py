@@ -151,8 +151,11 @@ def load_phase2_data(out_dir: Path) -> tuple[list[dict], list[dict], list[dict]]
         with open(path) as f:
             results = json.load(f)
 
-        for result in results:
-            seed = result.get("seed", -1)
+        for idx, result in enumerate(results):
+            # Use explicit seed if available, otherwise use index as proxy.
+            # When seeds are missing (pre-fix data), index order provides
+            # a consistent random partition since as_completed shuffles results.
+            seed = result.get("seed", idx)
             features = extract_features(result.get("samples", []), 2000)
             target = compute_target(result)
             entry = {
