@@ -50,10 +50,11 @@ runs; full vs.\ all-off Cohen's $d$=10.68) identifies six stable non-collinear
 surrogates via VIF screening and stability selection
 \citep{meinshausen_2010_stability}; directional Elastic Net evidence ranks
 metabolism, response, and homeostasis as the strongest criterion contributors.
-A practical elbow at $k{=}3$ (energy autocorrelation, boundary stability,
-homeostasis variance) captures the primary predictive structure
-(alive-AUC cross-validated $R^2=0.257$); the best single-target held-out
-result is regulation quality ($R^2=0.668$).
+A powered Phase~2 expansion (200 conditions across 5 environment regimes,
+14{,}000 runs) with LASSO/Elastic Net stability selection
+confirms 11 of 12 candidate surrogates (all stability frequencies $\geq 0.98$),
+achieving validation $R^2=0.955$ and out-of-regime test $R^2=0.950$
+(permutation $p<0.001$), exceeding a single-predictor baseline ($R^2=0.921$).
 \end{abstract}
 
 Submission type: \textbf{Full Paper}\\
@@ -119,8 +120,8 @@ all seven criteria as functionally interdependent processes;
 (2)~an operational \emph{functional analogy} definition with three falsifiable
 conditions and a criterion-ablation methodology; (3)~pairwise ablation and
 proxy control experiments providing evidence against tautological definitions; and
-(4)~Phase~1 criterion-reduction analysis identifying a 6-feature minimal
-predictor set ($R^2=0.257$ alive-AUC; $R^2=0.668$ regulation quality held-out).
+(4)~Phase~2 powered surrogate analysis (200 conditions, 5 regimes, 14{,}000 runs)
+achieving validation $R^2=0.955$ and out-of-regime generalization $R^2=0.950$.
 The key contribution is a falsifiable experimental framework for testing
 functional necessity and interaction of life criteria in any ALife system.
 
@@ -408,30 +409,35 @@ pairwise ablation analysis~(§S5), evolution timescale extension~(§S6),
 full statistical results~(\S\ref{sec:s7stats}), failure mode
 analysis~(\S\ref{sec:s8failure}), fitness landscape
 evidence~(\S\ref{sec:s9fitness}), threshold sensitivity and boundary
-topology robustness~(\S\ref{sec:s10robust}), and graded/cyclic experiments~(§S11).}
+topology robustness~(\S\ref{sec:s10robust}), graded/cyclic experiments~(§S11),
+NN controller sensitivity~(§S12), counter/toy engine comparison~(§S13),
+and growth/reproduction separability~(§S14).}
 
 % ============================================================================
 \section{Criterion Reduction Analysis}
 \label{sec:reduction}
 
 \begin{table}[t]
-\caption{Phase~1 Analysis Summary}
+\caption{Surrogate Analysis Summary (Phase~1 and Phase~2)}
 \label{tab:phase1}
 \small
 \begin{tabular}{@{}llr@{}}
 \toprule
 Analysis & Finding & Value \\
 \midrule
+\multicolumn{3}{@{}l}{\textit{Phase~1 (30 conditions, 600 runs)}} \\
 PCA & Comp.\ $\geq$90\% var. & 4 (93\%) \\
 Stability (Enet) & Top criterion & Met.\ 0.678 \\
 Stability (Enet) & Bottom criterion & Evo.\ 0.374 \\
 Crit.\ Pareto & $R^2$ direction & All neg. \\
 Cohen's $d$ & full vs.\ all-off & 10.68 \\
 \midrule
-Surr.\ VIF & Retained / total & 6/14 \\
-Surr.\ Pareto & Elbow at $k$ & $k$=3 \\
-Alive-AUC $R^2$ & Cross-validated & 0.257 \\
-Regulation $R^2$ & Held-out (best) & 0.668 \\
+\multicolumn{3}{@{}l}{\textit{Phase~2 (200 conditions, 14{,}000 runs)}} \\
+Stability sel.\ & Stable features & 11/12 \\
+Train $R^2$ & Permutation $p{<}0.001$ & 0.954 \\
+Validation $R^2$ & Seen regimes, new seeds & 0.955 \\
+Test $R^2$ & Unseen regimes & 0.950 \\
+Baseline $R^2$ & alive\_auc only & 0.921 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -567,6 +573,33 @@ Aliased features (\emph{genome\_diversity\_late} $\leftrightarrow$
 \emph{adaptation\_score}) are masked from their matching targets in all
 held-out evaluations.
 
+\subsection{Phase~2 Powered Analysis}
+
+The Phase~1 surrogate analysis is limited by 24 training conditions (600 runs).
+Phase~2 expands to 200 conditions across 5 environment regimes (14{,}000 runs
+total), with a 3-layer regime-based split:
+train (regimes A--C, seeds 0--39; $n$=4{,}800),
+validate (regimes A--C, seeds 40--69; $n$=3{,}600),
+and test (regimes D--E, seeds 0--69; $n$=5{,}600).
+The generalization axis is the environment regime: the test set evaluates
+whether surrogates transfer to entirely unseen regimes (D--E), while seeds
+40--69 appear in both validation and test partitions to maximise
+statistical power within each regime.
+Decision thresholds are pre-registered before analysis
+(\texttt{docs/decision\_rules.md}).
+
+From 12 candidate features (alive\_auc, energy\_mean\_late, energy\_autocorr,
+waste\_slope, boundary\_stability, birth\_rate, death\_rate, genome\_diversity\_late,
+maturity\_late, population\_variance, mean\_generation\_late, turnover\_ratio),
+LASSO/Elastic Net stability selection (500 bootstraps, threshold$\geq$0.60)
+retains 11 features (all stability frequencies$\geq$0.984).
+The resulting model achieves train $R^2=0.954$, validation $R^2=0.955$,
+and out-of-regime test $R^2=0.950$ (permutation $p{<}0.001$, null 95th
+percentile $R^2=0.004$).
+The surrogate set exceeds the alive-AUC-only baseline
+(validation $R^2=0.921$), confirming multi-surrogate benefit
+(Table~\ref{tab:phase1}).
+
 % ============================================================================
 \section{Discussion}
 
@@ -671,28 +704,36 @@ The Phase~1 reduction analysis (\S\ref{sec:reduction}) provides directional but
 not definitive evidence: no criterion clears the pre-registered LASSO threshold
 of 0.60 (maximum mean stability: metabolism=0.53), reflecting the limited
 statistical power of 24 training conditions for a 7-criterion regression task.
-The Enet stability ranking---metabolism$>$response$>$homeostasis as strongest,
-growth$>$evolution as weakest---is directionally consistent with the single-ablation
-effect hierarchy (Table~\ref{tab:ablation}), providing convergent evidence that
-these three criteria contribute most to system-level life-likeness.
-A Phase~2 expansion ($\sim$200 conditions across 5 environment regimes,
-with out-of-regime validation) is implemented to provide the statistical
-power necessary to confirm or refute these directional findings;
-results are reported when available.
+The Phase~2 powered expansion (200 conditions across 5 environment regimes,
+14{,}000 runs; Table~\ref{tab:phase1}) resolves this limitation:
+LASSO/Elastic Net stability selection (500 bootstraps, threshold$\geq$0.60)
+retains 11 of 12 candidate surrogates (all frequencies$\geq$0.98),
+achieving train $R^2=0.954$, validation $R^2=0.955$ (seen regimes,
+held-out seeds), and out-of-regime test $R^2=0.950$ (unseen regimes D--E;
+permutation $p{<}0.001$, null 95th percentile $R^2=0.004$).
+The surrogate set exceeds a single-predictor baseline
+(alive-AUC-only $R^2=0.921$), confirming multi-surrogate benefit,
+though the modest improvement suggests population viability alone
+captures most predictive variance.
+Decision thresholds were pre-registered before Phase~2 analysis
+(\texttt{docs/decision\_rules.md}).
 
 \paragraph{Surrogate observables.}
-\emph{Regulation quality} is defined as the inverse coefficient of variation
-of internal state $s_0$ over the simulation: systems with tight homeostatic
-control score high, while those with large fluctuations or drift score low.
-The regulation quality $R^2=0.668$ on held-out runs is the strongest Phase~1
-finding, demonstrating that observable surrogates can predict a key dimension
-of life-likeness without running the full 7-criteria system.
-The $k{=}3$ elbow (energy autocorrelation, boundary stability, homeostasis
-variance) maps directly to the three highest-effect single-ablation results
-(metabolism, response, homeostasis), providing convergent evidence for a minimal
-diagnostic principle: these three observables together capture most of the
-predictable variance in life-likeness, with diminishing returns from adding
-the remaining three surrogates.
+The Phase~2 analysis confirms that observable surrogates can predict
+life-likeness without running the full 7-criteria system:
+validation $R^2=0.955$ generalizes across held-out seeds, and
+out-of-regime test $R^2=0.950$ generalizes to entirely unseen
+parameter regimes, demonstrating robust predictive power.
+Among 12 candidate features, 11 survive stability selection
+(all frequencies$\geq$0.98), with \emph{alive\_auc},
+\emph{energy\_mean\_late}, \emph{energy\_autocorr},
+\emph{boundary\_stability}, and \emph{birth\_rate}
+achieving perfect selection frequency (1.000).
+The alive-AUC-only baseline ($R^2=0.921$) already explains most variance,
+consistent with population viability being the dominant axis of life-likeness;
+the multi-surrogate model provides an additional 3.4 percentage points
+by capturing metabolic, boundary, and demographic dimensions
+that population count alone misses.
 
 \subsection{Limitations}
 
@@ -741,12 +782,13 @@ Pairwise ablations further reveal shared failure pathways---sub-additive
 interactions consistent with criteria converging on overlapping viability
 subsystems rather than operating independently.
 
-Phase~1 criterion reduction and surrogate selection identify a 6-observable
-minimal set (alive-AUC cross-validated $R^2=0.257$; regulation quality
-held-out $R^2=0.668$).
-The $k{=}3$ surrogate elbow---energy autocorrelation, boundary stability, and
-homeostasis variance---aligns with the three strongest single-criterion ablation
-effects, providing convergent evidence for a minimal diagnostic principle of life.
+Phase~2 powered surrogate analysis (200 conditions, 5 regimes, 14{,}000 runs)
+achieves validation $R^2=0.955$ and out-of-regime test $R^2=0.950$
+(permutation $p{<}0.001$), with 11 of 12 candidate features surviving
+stability selection.
+The strong generalization to unseen parameter regimes provides evidence
+that observable surrogates can robustly predict life-likeness,
+supporting a minimal diagnostic principle of life.
 
 Future work will pursue four directions:
 (1)~scaling to larger populations to investigate emergent ecological phenomena
@@ -1531,5 +1573,51 @@ Right: cyclic environment test (period=2,000 steps); shaded bands mark
 low-resource phases; recovery-rate differences are mixed in the refreshed run.}
 \label{fig:graded_cyclic}
 \end{figure}
+
+% ----------------------------------------------------------------------------
+\subsection*{S12: NN Controller Sensitivity}
+
+To rule out that ablation results depend on a specific neural network
+architecture, we sweep the hidden layer size over $\{8, 16, 32\}$ neurons
+($n$=30 seeds per size, 2{,}000 steps).
+A Kruskal-Wallis test shows no significant effect of hidden size on
+final population count ($H=4.61$, $p=0.100$):
+hidden=8 ($\bar{x}=348.2\pm35.5$), hidden=16 ($\bar{x}=348.9\pm29.8$),
+hidden=32 ($\bar{x}=339.4\pm19.4$).
+Pairwise Mann-Whitney comparisons are also non-significant
+(8 vs.\ 16: $U=492$, $p=0.544$; 16 vs.\ 32: $U=554$, $p=0.128$).
+This confirms that the ablation effect hierarchy is robust to NN capacity.
+
+% ----------------------------------------------------------------------------
+\subsection*{S13: Counter/Toy Engine Comparison}
+
+To verify that criterion effects are not artifacts of the graph-based
+metabolic engine, we compare ablation effects across two alternative
+engines: a counter-based system (metabolism as a simple integer counter)
+and a toy engine (minimal state machine).
+Both engines reproduce the same effect hierarchy with all seven
+single-criterion ablations significant (Holm-Bonferroni corrected,
+all $p_{\text{adj}} < 0.001$; Cliff's $\delta = 1.00$ for 6 of 7 criteria).
+Evolution ablation shows the weakest effect in both engines
+(Counter: $\delta=0.55$, $p_{\text{adj}}=0.0003$;
+Toy: $\delta=0.61$, $p_{\text{adj}}<0.001$),
+consistent with the graph engine results.
+This cross-engine replication strengthens the claim that criterion necessity
+is a system-level property, not an artifact of the metabolic implementation.
+
+% ----------------------------------------------------------------------------
+\subsection*{S14: Growth/Reproduction Separability}
+
+To address the concern that growth functions primarily through reproduction
+gating (the maturity requirement), we compare four conditions ($n$=30):
+normal ($\bar{x}=348.9$), no growth ($\bar{x}=188.8$),
+bypass maturity gate ($\bar{x}=419.6$), and no growth with bypassed gate
+($\bar{x}=271.4$).
+All pairwise comparisons are significant (Mann-Whitney $U$, all $p < 0.001$).
+The growth effect persists even when the maturity gate is bypassed
+(bypass vs.\ no-growth-bypass: $\Delta=+148.2$, $U=900$, $p < 0.001$),
+confirming that growth contributes independently through boundary repair
+efficiency, sensing range, and metabolic throughput---not solely through
+the reproduction maturity gate.
 
 \end{document}

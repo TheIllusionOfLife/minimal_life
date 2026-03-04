@@ -151,8 +151,14 @@ def load_phase2_data(out_dir: Path) -> tuple[list[dict], list[dict], list[dict]]
         with open(path) as f:
             results = json.load(f)
 
-        for result in results:
-            seed = result.get("seed", -1)
+        for idx, result in enumerate(results):
+            # Use explicit seed if available, otherwise use index as proxy.
+            # WARNING: The index fallback is non-deterministic for pre-fix data
+            # because as_completed() returns futures by completion time, not seed
+            # order. This produces a valid random split but is not reproducible.
+            # Re-generate data with the fixed experiment_common.py (which injects
+            # result["seed"]) for exact reproducibility.
+            seed = result.get("seed", idx)
             features = extract_features(result.get("samples", []), 2000)
             target = compute_target(result)
             entry = {

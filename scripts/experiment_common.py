@@ -311,6 +311,7 @@ def run_condition_suite_parallel(
         futures = {pool.submit(_run_single_task, t): t for t in tasks}
         for future in as_completed(futures):
             cond_name, seed, result = future.result()
+            result["seed"] = seed
             results_by_cond[cond_name].append(result)
             completed += 1
 
