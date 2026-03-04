@@ -16,17 +16,36 @@ def generate_cyclic() -> None:
     }
 
     cond_data: dict[str, dict[int, list[float]]] = {}
+    primary_available = True
     for cond in conditions:
         path = exp_dir / f"cyclic_{cond}.json"
         if not path.exists():
-            print(f"  SKIP: {path} not found")
-            return
+            primary_available = False
+            break
         results = load_json(path)
         step_vals: dict[int, list[float]] = defaultdict(list)
         for r in results:
             for s in r["samples"]:
                 step_vals[s["step"]].append(s["alive_count"])
         cond_data[cond] = step_vals
+
+    cycle_period = 2000
+    if not primary_available:
+        fallback = {
+            "cyclic_evo_on": exp_dir / "ecology_stress_cyclic_stress.json",
+            "cyclic_evo_off": exp_dir / "ecology_stress_cyclic_stress_no_evolution.json",
+        }
+        if not all(path.exists() for path in fallback.values()):
+            print("  SKIP: cyclic fallback inputs not found")
+            return
+        cycle_period = 200
+        for cond, path in fallback.items():
+            results = load_json(path)
+            step_vals: dict[int, list[float]] = defaultdict(list)
+            for r in results:
+                for s in r.get("samples", []):
+                    step_vals[int(s["step"])].append(float(s["alive_count"]))
+            cond_data[cond] = step_vals
 
     fig, ax = plt.subplots(figsize=(3.4, 2.8))
 
@@ -45,7 +64,6 @@ def generate_cyclic() -> None:
         ax.fill_between(steps, means - sems, means + sems, color=color, alpha=0.15)
 
     # Mark cycle boundaries
-    cycle_period = 2000
     for i in range(1, 6):
         ax.axvline(x=i * cycle_period, color="#888888", linestyle=":", linewidth=0.5)
 

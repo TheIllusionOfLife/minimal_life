@@ -301,6 +301,7 @@ version = "0.1.0"
 dependencies = [
  "minimal-life-core",
  "pyo3",
+ "pyo3-build-config",
  "rand",
  "rand_chacha",
  "serde_json",

@@ -2,6 +2,7 @@
 
 from collections import defaultdict
 
+import matplotlib.lines as mlines
 import numpy as np
 from figures._shared import *
 
