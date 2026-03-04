@@ -35,6 +35,18 @@ and honest reporting, specified *a priori* before examining Phase 2 results.
 
 ## 5. Data Separation Protocol
 
+### Phase 1 (Stage 1 ablation)
+
 - **Calibration set:** seeds 0–99 (threshold tuning, training)
 - **Final test set:** seeds 100–199 (evaluation with fixed thresholds)
 - **Statistics:** Mann-Whitney U, Holm-Bonferroni correction (7 simultaneous tests), Cohen's d
+
+### Phase 2 (Surrogate expansion — regime-based split)
+
+- **Train set:** Regimes A–C, seeds 0–39 (seen regimes, train seeds)
+- **Validation set:** Regimes A–C, seeds 40–69 (seen regimes, held-out seeds)
+- **Test set:** Regimes D–E, seeds 0–69 (unseen regimes — true generalization)
+- **Note:** The generalization axis is the environment regime, not the seed.
+  Seeds 40–69 appear in both validation (regimes A–C) and test (regimes D–E),
+  which is intentional: the test set evaluates regime-level generalization
+  while maximizing statistical power within each regime.

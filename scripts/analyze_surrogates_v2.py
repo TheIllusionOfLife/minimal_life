@@ -153,8 +153,11 @@ def load_phase2_data(out_dir: Path) -> tuple[list[dict], list[dict], list[dict]]
 
         for idx, result in enumerate(results):
             # Use explicit seed if available, otherwise use index as proxy.
-            # When seeds are missing (pre-fix data), index order provides
-            # a consistent random partition since as_completed shuffles results.
+            # WARNING: The index fallback is non-deterministic for pre-fix data
+            # because as_completed() returns futures by completion time, not seed
+            # order. This produces a valid random split but is not reproducible.
+            # Re-generate data with the fixed experiment_common.py (which injects
+            # result["seed"]) for exact reproducibility.
             seed = result.get("seed", idx)
             features = extract_features(result.get("samples", []), 2000)
             target = compute_target(result)

@@ -580,7 +580,11 @@ Phase~2 expands to 200 conditions across 5 environment regimes (14{,}000 runs
 total), with a 3-layer regime-based split:
 train (regimes A--C, seeds 0--39; $n$=4{,}800),
 validate (regimes A--C, seeds 40--69; $n$=3{,}600),
-and test (regimes D--E, all seeds; $n$=5{,}600).
+and test (regimes D--E, seeds 0--69; $n$=5{,}600).
+The generalization axis is the environment regime: the test set evaluates
+whether surrogates transfer to entirely unseen regimes (D--E), while seeds
+40--69 appear in both validation and test partitions to maximise
+statistical power within each regime.
 Decision thresholds are pre-registered before analysis
 (\texttt{docs/decision\_rules.md}).
 
