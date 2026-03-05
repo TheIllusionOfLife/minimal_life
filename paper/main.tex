@@ -159,8 +159,9 @@ our criterion-ablation approach.
 Abl.=ablation-testable (per-criterion toggle enabling controlled removal).
 Rubric definitions in \S S4 (Table~\ref{tab:rubric}).}
 \label{tab:comparison}
-\footnotesize
-\begin{tabular}{@{}l@{\hskip 3pt}c@{\hskip 3pt}c@{\hskip 3pt}c@{\hskip 3pt}c@{\hskip 3pt}c@{\hskip 3pt}c@{\hskip 3pt}c@{\hskip 3pt}c@{\hskip 3pt}c@{}}
+\scriptsize
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}l@{\hskip 2pt}c@{\hskip 2pt}c@{\hskip 2pt}c@{\hskip 2pt}c@{\hskip 2pt}c@{\hskip 2pt}c@{\hskip 2pt}c@{\hskip 2pt}c@{\hskip 2pt}c@{}}
 \toprule
 System & CO & Me & Ho & Gr & Re & Rs & Ev & $\Sigma$ & Abl. \\
 \midrule
@@ -175,7 +176,8 @@ ALIEN \citep{heinemann_2008_alien}      & \textbf{4} & 3 & 2 & 3 & \textbf{4} & 
 \bottomrule
 \multicolumn{10}{@{}l@{}}{\scriptsize $^\dagger$Self-assessed. CO=Cell.Org, Me=Metab, Ho=Homeo,}\\
 \multicolumn{10}{@{}l@{}}{\scriptsize Gr=Growth, Re=Reprod, Rs=Response, Ev=Evol.}
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 We acknowledge that Table~\ref{tab:comparison} relies on self-assessment
@@ -1036,7 +1038,7 @@ Table~\ref{tab:comparison}.
 \caption{Five-level criterion implementation rubric.}
 \label{tab:rubric}
 \footnotesize
-\begin{tabular}{@{}cl@{}}
+\begin{tabular}{@{}cp{0.68\linewidth}@{}}
 \toprule
 Level & Definition \\
 \midrule

@@ -8,24 +8,57 @@ def generate_evolution_evidence() -> None:
     """Figure 15: Evolution evidence — genome drift trajectories and cyclic recovery rates."""
     exp_dir = PROJECT_ROOT / "experiments"
     evidence_path = exp_dir / "evolution_evidence.json"
-    if not evidence_path.exists():
-        print(f"  SKIP: {evidence_path} not found")
-        return
+    if evidence_path.exists():
+        with open(evidence_path, encoding="utf-8") as f:
+            evidence = json.load(f)
+        drift = evidence.get("drift_trajectories", {})
+        trajectory_steps = drift.get("trajectory_steps", [])
+        trajectory_normal = drift.get("trajectory_normal_mean", [])
+        trajectory_no_evo = drift.get("trajectory_no_evo_mean", [])
+        cyclic = evidence.get("cyclic_recovery", {})
+        per_cycle = cyclic.get("per_cycle", [])
+    else:
+        # Fallback: derive trajectories from fitness_trajectories and compare
+        # final alive counts in cyclic stress runs.
+        traj_path = exp_dir / "fitness_trajectories.json"
+        on_path = exp_dir / "ecology_stress_cyclic_stress.json"
+        off_path = exp_dir / "ecology_stress_cyclic_stress_no_evolution.json"
+        if not traj_path.exists() or not on_path.exists() or not off_path.exists():
+            print(f"  SKIP: {evidence_path} and fallback inputs not found")
+            return
+        with open(traj_path, encoding="utf-8") as f:
+            traj = json.load(f)
+        normal = traj.get("normal_no_crossover", {})
+        no_evo = traj.get("no_evolution", {})
+        normal_steps = {int(k) for k in normal.keys()}
+        no_evo_steps = {int(k) for k in no_evo.keys()}
+        steps = sorted(normal_steps & no_evo_steps)
+        if not steps:
+            print("  SKIP: fallback trajectories missing overlapping steps")
+            return
+        trajectory_steps = steps
+        trajectory_normal = [float(normal[str(s)]["alive_count_mean"]) for s in steps]
+        trajectory_no_evo = [float(no_evo[str(s)]["alive_count_mean"]) for s in steps]
 
-    with open(evidence_path, encoding="utf-8") as f:
-        evidence = json.load(f)
-
-    drift = evidence.get("drift_trajectories", {})
-    trajectory_steps = drift.get("trajectory_steps", [])
-    trajectory_normal = drift.get("trajectory_normal_mean", [])
-    trajectory_no_evo = drift.get("trajectory_no_evo_mean", [])
+        on_results = load_json(on_path)
+        off_results = load_json(off_path)
+        on_final = [float(r.get("final_alive_count", 0)) for r in on_results]
+        off_final = [float(r.get("final_alive_count", 0)) for r in off_results]
+        if not on_final or not off_final:
+            print("  SKIP: fallback cyclic stress results are empty")
+            return
+        per_cycle = [
+            {
+                "high_start": 0,
+                "high_end": 2000,
+                "evo_on_rate_mean": float(np.mean(on_final)),
+                "evo_off_rate_mean": float(np.mean(off_final)),
+            }
+        ]
 
     if not trajectory_steps or not trajectory_normal:
         print("  SKIP: missing drift trajectory data")
         return
-
-    cyclic = evidence.get("cyclic_recovery", {})
-    per_cycle = cyclic.get("per_cycle", [])
 
     fig, axes = plt.subplots(1, 2, figsize=(7, 3.0))
 

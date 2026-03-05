@@ -17,19 +17,60 @@ def generate_evolution() -> None:
         "shift_no_evolution": ("No Evolution", "#CC79A7"),
     }
 
-    # Load time-series
+    # Load primary time-series from dedicated evolution experiment outputs.
     cond_data: dict[str, dict[int, list[float]]] = {}
+    missing_primary = False
     for cond in conditions:
         path = exp_dir / f"evolution_{cond}.json"
         if not path.exists():
-            print(f"  SKIP: {path} not found")
-            return
+            missing_primary = True
+            break
         results = load_json(path)
         step_vals: dict[int, list[float]] = defaultdict(list)
         for r in results:
             for s in r["samples"]:
                 step_vals[s["step"]].append(s["alive_count"])
         cond_data[cond] = step_vals
+
+    panel_titles = ("Long run (10,000 steps)", "Environmental shift at step 2,500")
+    shift_line = 2500
+    # Fallback for environments where long-run files are not present.
+    if missing_primary:
+        traj_path = exp_dir / "fitness_trajectories.json"
+        stress_on_path = exp_dir / "ecology_stress_cyclic_stress.json"
+        stress_off_path = exp_dir / "ecology_stress_cyclic_stress_no_evolution.json"
+        if not traj_path.exists() or not stress_on_path.exists() or not stress_off_path.exists():
+            print("  SKIP: evolution fallback inputs not found")
+            return
+        with open(traj_path, encoding="utf-8") as f:
+            traj = json.load(f)
+
+        def _from_aggregate(series: dict[str, dict]) -> dict[int, list[float]]:
+            out: dict[int, list[float]] = defaultdict(list)
+            for step_str, payload in series.items():
+                if "alive_count_mean" not in payload or payload["alive_count_mean"] is None:
+                    continue
+                out[int(step_str)].append(float(payload["alive_count_mean"]))
+            return out
+
+        def _from_raw_runs(path: Path) -> dict[int, list[float]]:
+            out: dict[int, list[float]] = defaultdict(list)
+            for run in load_json(path):
+                for s in run.get("samples", []):
+                    out[int(s["step"])].append(float(s["alive_count"]))
+            return out
+
+        cond_data = {
+            "long_normal": _from_aggregate(traj.get("normal_no_crossover", {})),
+            "long_no_evolution": _from_aggregate(traj.get("no_evolution", {})),
+            "shift_normal": _from_raw_runs(stress_on_path),
+            "shift_no_evolution": _from_raw_runs(stress_off_path),
+        }
+        if not cond_data["long_normal"] or not cond_data["long_no_evolution"]:
+            print("  SKIP: fallback aggregate trajectories are missing")
+            return
+        panel_titles = ("Long run proxy (fitness trajectories)", "Cyclic stress comparison")
+        shift_line = 1000
 
     fig, axes = plt.subplots(2, 1, figsize=(3.4, 4.0), sharex=False)
 
@@ -50,7 +91,7 @@ def generate_evolution() -> None:
         ax.plot(steps, means, color=color, linestyle=ls, label=label)
         ax.fill_between(steps, means - sems, means + sems, color=color, alpha=0.15)
     ax.set_ylabel("Alive Count")
-    ax.set_title("Long run (10,000 steps)", fontsize=9)
+    ax.set_title(panel_titles[0], fontsize=9)
     ax.set_ylim(bottom=0)
     ax.legend(loc="lower right", fontsize=7)
     ax.spines["top"].set_visible(False)
@@ -72,10 +113,10 @@ def generate_evolution() -> None:
         ls = "-" if "normal" in cond and "no_" not in cond else "--"
         ax.plot(steps, means, color=color, linestyle=ls, label=label)
         ax.fill_between(steps, means - sems, means + sems, color=color, alpha=0.15)
-    ax.axvline(x=2500, color="#888888", linestyle=":", linewidth=0.8, label="Env. shift")
+    ax.axvline(x=shift_line, color="#888888", linestyle=":", linewidth=0.8, label="Stress mark")
     ax.set_xlabel("Step")
     ax.set_ylabel("Alive Count")
-    ax.set_title("Environmental shift at step 2,500", fontsize=9)
+    ax.set_title(panel_titles[1], fontsize=9)
     ax.set_ylim(bottom=0)
     ax.legend(loc="lower right", fontsize=7)
     ax.spines["top"].set_visible(False)

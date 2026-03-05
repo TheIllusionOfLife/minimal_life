@@ -58,9 +58,6 @@ def generate_phenotype() -> None:
 
 def generate_persistent_clusters() -> None:
     """Figure 16: Per-organism phenotype clusters — PCA scatter at early vs late windows."""
-    from sklearn.decomposition import PCA
-    from sklearn.preprocessing import StandardScaler
-
     analysis_path = PROJECT_ROOT / "experiments" / "phenotype_analysis.json"
     if not analysis_path.exists():
         print(f"  SKIP: {analysis_path} not found")
@@ -71,8 +68,71 @@ def generate_persistent_clusters() -> None:
 
     olp = analysis.get("organism_level_persistence")
     if not olp or "error" in olp:
-        print("  SKIP: no organism_level_persistence data in phenotype_analysis.json")
+        # Fallback: visualize seed-level temporal persistence if organism-level
+        # long-horizon data is unavailable in the current local dataset.
+        tp = analysis.get("temporal_persistence", {})
+        early = tp.get("early_clusters", {})
+        late = tp.get("late_clusters", {})
+        ari = tp.get("adjusted_rand_index", 0.0)
+        early_props = early.get("cluster_proportions", [])
+        late_props = late.get("cluster_proportions", [])
+        if not early_props or not late_props:
+            print("  SKIP: no organism_level_persistence or temporal_persistence data")
+            return
+
+        n_clusters = max(len(early_props), len(late_props))
+        # Pad proportions to align cluster bars.
+        early_props = list(early_props) + [0.0] * (n_clusters - len(early_props))
+        late_props = list(late_props) + [0.0] * (n_clusters - len(late_props))
+        cluster_colors = ["#0072B2", "#D55E00", "#009E73", "#E69F00", "#CC79A7"]
+
+        fig, axes = plt.subplots(1, 2, figsize=(7, 3.0))
+        for ax, title, props in [
+            (axes[0], "(A) Early Window Cluster Mix", early_props),
+            (axes[1], "(B) Late Window Cluster Mix", late_props),
+        ]:
+            bottom = 0.0
+            for idx, p in enumerate(props):
+                ax.bar(
+                    [0],
+                    [p],
+                    bottom=[bottom],
+                    color=cluster_colors[idx % len(cluster_colors)],
+                    width=0.6,
+                    label=f"Cluster {idx}" if title.startswith("(A)") else None,
+                )
+                bottom += p
+            ax.set_ylim(0, 1)
+            ax.set_xlim(-0.7, 0.7)
+            ax.set_xticks([])
+            ax.set_ylabel("Proportion")
+            ax.set_title(title, fontsize=9)
+            ax.spines["top"].set_visible(False)
+            ax.spines["right"].set_visible(False)
+
+        axes[0].legend(loc="upper right", fontsize=7)
+        fig.text(
+            0.5,
+            0.01,
+            f"Temporal persistence ARI: {ari:.3f} (seed-level fallback view)",
+            ha="center",
+            va="bottom",
+            fontsize=8,
+            bbox=dict(
+                boxstyle="round,pad=0.3",
+                facecolor="#FFF9C4",
+                edgecolor="0.8",
+                alpha=0.9,
+            ),
+        )
+        fig.tight_layout(rect=[0, 0.06, 1, 1])
+        fig.savefig(FIG_DIR / "fig_persistent_clusters.pdf", format="pdf")
+        plt.close(fig)
+        print(f"  Saved {FIG_DIR / 'fig_persistent_clusters.pdf'} (temporal fallback)")
         return
+
+    from sklearn.decomposition import PCA
+    from sklearn.preprocessing import StandardScaler
 
     ari = olp.get("adjusted_rand_index", 0.0)
     cluster_colors = ["#0072B2", "#D55E00"]
