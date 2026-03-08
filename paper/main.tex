@@ -572,29 +572,31 @@ total), with a 3-layer regime-based split:
 train (regimes A--C, seeds 0--39; $n$=4{,}800),
 validate (regimes A--C, seeds 40--69; $n$=3{,}600),
 and test (regimes D--E, seeds 0--69; $n$=5{,}600).
-The generalization axis is the environment regime: the test set evaluates
-whether surrogates transfer to entirely unseen regimes (D--E), while seeds
-40--69 appear in both validation and test partitions to maximise
-statistical power within each regime.
-A fully seed-disjoint split would require additional simulation runs beyond
-our current data; the regime-based generalization design ensures that the
-primary independence axis (environment parameters) is strictly separated.
+The generalization axis is the environment regime: test evaluates transfer
+to unseen regimes (D--E); seeds 40--69 appear in both validation and test
+partitions to maximise power within each regime (a fully seed-disjoint
+split would require additional runs beyond current data).
 Decision thresholds are pre-registered before analysis.
 
-From 12 candidate features (alive\_auc, energy\_mean\_late, energy\_autocorr,
-waste\_slope, boundary\_stability, birth\_rate, death\_rate, genome\_diversity\_late,
-maturity\_late, population\_variance, mean\_generation\_late, turnover\_ratio),
-LASSO/Elastic Net stability selection (500 bootstraps, threshold$\geq$0.60)
-retains 11 features (all stability frequencies$\geq$0.984).
-VIF screening was applied in Phase~1 (14$\to$6 features); Phase~2 used an
-expanded 12-feature set and relied on LASSO/Elastic Net stability selection
-for implicit regularization of collinearity.
-The resulting model achieves train $R^2=0.954$, validation $R^2=0.955$,
-and out-of-regime test $R^2=0.950$ (permutation $p{<}0.001$, null 95th
-percentile $R^2=0.004$).
+From 12 candidate features (alive\_auc, energy metrics, boundary\_stability,
+demographic rates, and generation metrics), LASSO/Elastic Net stability
+selection (500 bootstraps, threshold$\geq$0.60) retains 11 features
+(all frequencies$\geq$0.984), replacing Phase~1 VIF screening with
+implicit regularization of collinearity.
+The resulting model achieves train $R^2=0.954$, validation $R^2=0.954$,
+and out-of-regime test $R^2=0.950$ (permutation $p{<}0.001$).
 The surrogate set exceeds the alive-AUC-only baseline
 (validation $R^2=0.921$), indicating multi-surrogate benefit
 (Table~\ref{tab:phase1}).
+Forward selection by LASSO coefficient magnitude shows that $k=1$ surrogate
+(\texttt{alive\_auc}) captures $\geq$90\% of full-model validation $R^2$
+($R^2=0.921$ vs.\ $0.954$ full); \texttt{boundary\_stability} contributes the
+largest additional gain at $k=4$ ($\Delta R^2=+0.020$, $R^2=0.949$), with
+near-plateau thereafter.
+Excluding \texttt{alive\_auc}, the remaining 11 non-alive\_auc candidates
+achieve validation $R^2=0.941$ and test $R^2=0.845$ (LASSO, same protocol),
+indicating that predictive power remains substantial without the near-tautological
+alive-count proxy.
 
 % ============================================================================
 \section{Discussion}
@@ -1359,8 +1361,9 @@ The clonal control is similarly flat ($p > 0.99$).
 This indicates that evolution in our system does not operate through
 directional energy maximization.
 H2 (heritability): The parent-offspring regression slope is $\hat{b} = 0.747$,
-95\% bootstrap CI $[0.730, 0.763]$ ($n = 68{,}497$ pairs), excluding zero
-and confirming strong heritability of the energy phenotype.
+95\% bootstrap CI $[0.730, 0.763]$ ($n = 68{,}497$ pairs); seed-level
+cluster-robust CI $[0.707, 0.785]$ ($n_{\text{seeds}}=30$), both excluding zero,
+indicating strong heritability of the energy phenotype.
 Cohen's $d = 0.058$ (evolved $n = 11{,}340$ vs.\ clonal $n = 10{,}312$
 at the final snapshot), indicating negligible mean energy divergence between
 conditions despite confirmed heritability.

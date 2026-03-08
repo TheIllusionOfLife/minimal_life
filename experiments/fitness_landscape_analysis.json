@@ -44,6 +44,13 @@
     "ci_upper": 0.7630911212285544,
     "n_pairs": 68497
   },
+  "h2_regression_clustered": {
+    "slope": 0.7465979248818109,
+    "cluster_ci_lower": 0.7064787195655968,
+    "cluster_ci_upper": 0.7852182978138963,
+    "n_seeds": 30,
+    "n_pairs": 68497
+  },
   "effect_size": {
     "cohens_d": 0.05770464860499192,
     "n_evolved": 11340,

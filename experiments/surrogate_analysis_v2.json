@@ -1,0 +1,139 @@
+{
+  "stable_features": [
+    [
+      "alive_auc",
+      1.0
+    ],
+    [
+      "energy_mean_late",
+      1.0
+    ],
+    [
+      "energy_autocorr",
+      1.0
+    ],
+    [
+      "waste_slope",
+      1.0
+    ],
+    [
+      "boundary_stability",
+      1.0
+    ],
+    [
+      "birth_rate",
+      1.0
+    ],
+    [
+      "death_rate",
+      1.0
+    ],
+    [
+      "genome_diversity_late",
+      1.0
+    ],
+    [
+      "maturity_late",
+      1.0
+    ],
+    [
+      "population_variance",
+      1.0
+    ],
+    [
+      "mean_generation_late",
+      0.994
+    ]
+  ],
+  "train_r2": 0.9546779837424121,
+  "permutation_p": 0.0,
+  "null_95th": 0.0041215856291614275,
+  "validation_r2": 0.954320314793241,
+  "test_r2": 0.9500844037293912,
+  "n_train": 4800,
+  "n_validate": 3600,
+  "n_test": 5600,
+  "anti_circularity": {
+    "no_auc_val_r2": 0.9411501501009186,
+    "no_auc_test_r2": 0.8445548457370915,
+    "n_features_without_auc": 11
+  },
+  "pareto_analysis": {
+    "pareto": [
+      {
+        "k": 1,
+        "feature": "alive_auc",
+        "val_r2": 0.9206
+      },
+      {
+        "k": 2,
+        "feature": "maturity_late",
+        "val_r2": 0.923
+      },
+      {
+        "k": 3,
+        "feature": "population_variance",
+        "val_r2": 0.929
+      },
+      {
+        "k": 4,
+        "feature": "boundary_stability",
+        "val_r2": 0.9494
+      },
+      {
+        "k": 5,
+        "feature": "genome_diversity_late",
+        "val_r2": 0.9529
+      },
+      {
+        "k": 6,
+        "feature": "birth_rate",
+        "val_r2": 0.9528
+      },
+      {
+        "k": 7,
+        "feature": "death_rate",
+        "val_r2": 0.9535
+      },
+      {
+        "k": 8,
+        "feature": "waste_slope",
+        "val_r2": 0.9537
+      },
+      {
+        "k": 9,
+        "feature": "energy_mean_late",
+        "val_r2": 0.9543
+      },
+      {
+        "k": 10,
+        "feature": "energy_autocorr",
+        "val_r2": 0.9543
+      },
+      {
+        "k": 11,
+        "feature": "mean_generation_late",
+        "val_r2": 0.9543
+      },
+      {
+        "k": 12,
+        "feature": "turnover_ratio",
+        "val_r2": 0.9543
+      }
+    ],
+    "ordered_features": [
+      "alive_auc",
+      "maturity_late",
+      "population_variance",
+      "boundary_stability",
+      "genome_diversity_late",
+      "birth_rate",
+      "death_rate",
+      "waste_slope",
+      "energy_mean_late",
+      "energy_autocorr",
+      "mean_generation_late",
+      "turnover_ratio"
+    ]
+  }
+}
