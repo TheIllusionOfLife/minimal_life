@@ -44,7 +44,7 @@ single-predictor baseline ($R^2=0.921$).
 \end{abstract}
 
 Submission type: \textbf{Full Paper}\\
-Data/Code available at: \url{https://anonymous.4open.science/}
+Data/Code available at: [REDACTED FOR BLIND REVIEW]
 \blfootnote{\textcopyright\ 2026 Authors. Published under a Creative Commons Attribution 4.0 International (CC BY 4.0) license.}
 
 % ============================================================================
@@ -262,9 +262,8 @@ regenerate at 0.01/cell/step; ablation toggles skip disabled processes
 without altering event ordering.
 Importantly, skipping a process does \emph{not} redistribute saved energy
 or computation to other processes---the ablation simply removes the process's
-contribution, preserving the baseline resource budget. Run manifests (\texttt{*\_manifest.json})
-lock parameters to reported results (registry:
-\texttt{docs/research/result\_manifest\_bindings.json}).
+contribution, preserving the baseline resource budget. Run manifests lock parameters to reported results
+(registry file available in the supplementary repository).
 
 \subsection{Statistical Design}
 
@@ -440,7 +439,7 @@ total) tests criterion-reduction feasibility.
 Conditions cover: the full 7-criteria baseline, the all-criteria-off control,
 7 single-criterion drops, and 15 pairwise drops; 6 evolution-ablation conditions
 are held out.
-Decision thresholds are pre-registered in \texttt{docs/research/decision\_rules.md}
+Decision thresholds are pre-registered in a decision rules document
 before held-out conditions are observed.
 
 \subsection{Results (Phase~1)}
@@ -580,8 +579,7 @@ statistical power within each regime.
 A fully seed-disjoint split would require additional simulation runs beyond
 our current data; the regime-based generalization design ensures that the
 primary independence axis (environment parameters) is strictly separated.
-Decision thresholds are pre-registered before analysis
-(\texttt{docs/decision\_rules.md}).
+Decision thresholds are pre-registered before analysis.
 
 From 12 candidate features (alive\_auc, energy\_mean\_late, energy\_autocorr,
 waste\_slope, boundary\_stability, birth\_rate, death\_rate, genome\_diversity\_late,
@@ -724,10 +722,11 @@ sub-additive pairwise interactions consistent with shared viability pathways.
 
 Phase~2 achieves out-of-regime test $R^2=0.950$ (Table~\ref{tab:phase1};
 permutation $p{<}0.001$), supporting a minimal diagnostic principle of life.
-Code and data: anonymized repository (DOI upon acceptance).
-Future: larger populations for open-ended evolution
-\citep{bedau_2000_open,taylor_2016_openended}; Level~4 evolution via extended
-runs.
+Code, data, and pre-registered decision rules are available at
+[REDACTED FOR BLIND REVIEW].
+Future work will scale to larger populations for open-ended evolution
+\citep{bedau_2000_open,taylor_2016_openended} and strengthen evolution toward
+Level~4 via extended runs with directional-selection metrics.
 
 \bibliographystyle{apalike}
 \bibliography{references}
