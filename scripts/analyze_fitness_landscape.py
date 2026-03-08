@@ -348,7 +348,7 @@ def parent_offspring_regression_clustered(
         n_bootstrap:        Number of seed-level bootstrap replicates.
         seed:               RNG seed for reproducibility.
 
-    Returns dict with slope, naive_ci (from pair-level), cluster_ci, n_seeds,
+    Returns dict with slope, cluster_ci_lower, cluster_ci_upper, n_seeds,
     n_pairs.
     """
     n_seeds = len(per_seed_parents)

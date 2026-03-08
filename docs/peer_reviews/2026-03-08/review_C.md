@@ -119,7 +119,7 @@ H1棄却（p=0.944）を正直に報告した上で、H2成功（b̂=0.747）と
 
 ### R1: 進化基準のLevel 3からの引き上げ不達成（Minor）
 
-著者は進化がLevel 3に留まることを明確に認めており、crossoverとneutral-drift controlの追加にもかかわらず、open-ended dynamicsの実証にはis 10⁵+ステップが必要と正しく指摘している。Level 3は「Dynamic process with measurable degradation upon removal」であり、現在の結果（δ=0.39 at 2,000 steps、d=1.42 at 10,000 steps）はこの定義を満たしている。しかし、7基準中6基準がLevel 4で1基準がLevel 3という非対称性は、「7基準すべての統合」という主張にやや影を落とす。
+著者は進化がLevel 3に留まることを明確に認めており、crossoverとneutral-drift controlの追加にもかかわらず、open-ended dynamicsの実証には10⁵+ステップが必要と正しく指摘している。Level 3は「Dynamic process with measurable degradation upon removal」であり、現在の結果（δ=0.39 at 2,000 steps、d=1.42 at 10,000 steps）はこの定義を満たしている。しかし、7基準中6基準がLevel 4で1基準がLevel 3という非対称性は、「7基準すべての統合」という主張にやや影を落とす。
 
 著者はこの限界を十分に認識しており、future workの方向4に明記している。改訂版ではこれ以上の対応は不要だが、進化のLevel 4達成は後続研究の最優先課題として位置づけるべきである。
 
@@ -190,7 +190,7 @@ Phase 2分析（200条件、14,000ラン、R²=0.950 out-of-regime）はStage 2�
 
 ---
 
-## 10点到達に向けた残り1ポイントのギャップ
+## 9. 10点到達に向けた残り1ポイントのギャップ
 
 スコアを満点にするために残された課題は、本論文の改訂サイクル内というよりも、後続研究で取り組むべき方向性である。
 

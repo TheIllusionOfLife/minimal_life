@@ -419,6 +419,8 @@ def run_anti_circularity_check(
         with open(output_path, "w") as f:
             json.dump(existing, f, indent=2)
         log(f"  Anti-circularity results appended to {output_path}")
+    else:
+        log(f"  WARNING: {output_path} not found; anti-circularity results not persisted")
 
     return result
 
@@ -481,6 +483,8 @@ def run_pareto_analysis(
         with open(output_path, "w") as f:
             json.dump(existing, f, indent=2)
         log(f"  Pareto results appended to {output_path}")
+    else:
+        log(f"  WARNING: {output_path} not found; Pareto results not persisted")
 
     return result
 
