@@ -20,11 +20,9 @@
 \begin{abstract}
 We present a testable integration implementing all seven textbook biological
 criteria for life---cellular organization, metabolism, homeostasis, growth,
-reproduction, response to stimuli, and evolution---as functionally
-interdependent computational processes within a single artificial life system.
-Existing systems implement at most a subset of these criteria, often as
-independent modules or static proxies that can be removed without measurable
-system degradation.
+reproduction, response to stimuli, and evolution (six at Level~4; evolution
+at Level~3)---as functionally interdependent computational processes within
+a single artificial life system.
 Our hybrid swarm-organism architecture implements each criterion as a dynamic
 process satisfying three conditions---sustained resource consumption,
 measurable degradation upon removal, and feedback coupling with other
@@ -35,24 +33,23 @@ statistically significant population decline (Mann-Whitney $U$,
 Holm-Bonferroni corrected, all $p \leq 0.004728$), with Cliff's $\delta$
 ranging from 0.39 to 1.00.
 Pairwise ablations reveal sub-additive interactions consistent with
-shared failure pathways, confirming that criteria damage overlapping
+shared failure pathways, providing evidence that criteria damage overlapping
 subsystems rather than operating independently.
 A proxy control comparison shows that metabolism implementations of
 differing complexity produce qualitatively distinct population dynamics,
-ruling out tautological criterion definitions.
+providing evidence against tautological criterion definitions.
 The strongest single-ablation effects arise from disabling reproduction
 ($\Delta\%$=--91.1), response to stimuli ($\Delta\%$=--88.5), and metabolism
-($\Delta\%$=--86.8), confirming that these criteria function as necessary,
+($\Delta\%$=--86.8), indicating that these criteria function as necessary,
 interdependent components of organismal viability rather than decorative
 labels.
 A Phase~1 criterion-reduction analysis (30 ablation conditions, 600 simulation
 runs; full vs.\ all-off Cohen's $d$=10.68) identifies six stable non-collinear
-surrogates via VIF screening and stability selection
-\citep{meinshausen_2010_stability}; directional Elastic Net evidence ranks
-metabolism, response, and homeostasis as the strongest criterion contributors.
+surrogates \citep{meinshausen_2010_stability}; directional Elastic Net evidence
+ranks metabolism, response, and homeostasis as the strongest criterion
+contributors.
 A powered Phase~2 expansion (200 conditions across 5 environment regimes,
-14{,}000 runs) with LASSO/Elastic Net stability selection
-confirms 11 of 12 candidate surrogates (all stability frequencies $\geq 0.98$),
+14{,}000 runs) retains 11 of 12 candidate surrogates,
 achieving validation $R^2=0.955$ and out-of-regime test $R^2=0.950$
 (permutation $p<0.001$), exceeding a single-predictor baseline ($R^2=0.921$).
 \end{abstract}
@@ -322,7 +319,7 @@ Three ablations cause near-total collapse ($>$86\%): reproduction, response,
 and metabolism---the core viability loop (Figure~\ref{fig:timeseries}).
 The key takeaway from Figure~\ref{fig:timeseries} is that the top three
 ablations converge to near-zero populations within 500 steps, while
-evolution ablation remains close to baseline, confirming a clear effect
+evolution ablation remains close to baseline, consistent with a clear effect
 hierarchy.
 Metabolic ablation collapses within 200 steps; reproduction ablation declines
 progressively; evolution ablation ($\delta$=0.39) shows only modest impact,
@@ -361,12 +358,12 @@ Three metabolism implementations on the same seeds ($n$=30)---Counter
 (single-step, no waste), Toy (single-step with waste), Graph (multi-step
 network)---all satisfy ``dynamic resource consumption'' yet produce
 qualitatively different dynamics (Figure~\ref{fig:proxy}): population size
-differs by 27\% and genome diversity varies non-monotonically, confirming
+differs by 27\% and genome diversity varies non-monotonically, indicating
 that the specific implementation shapes system behavior, providing evidence
 against tautological definitions.
 Importantly, the direction of ablation effects (metabolism removal causes
 population decline) is consistent across all three implementations,
-confirming that the qualitative conclusions are not implementation-specific.
+indicating that the qualitative conclusions are not implementation-specific.
 
 \begin{figure}[t]
 \centering
@@ -384,7 +381,7 @@ simple population scaling.}
 
 Pairwise ablations (15 combinations; 6 reported in Table~\ref{tab:pairwise})
 show uniformly sub-additive synergy (bootstrap 95\% CI excludes zero for 5/6
-pairs), confirming shared failure pathways rather than independent kill switches.
+pairs), consistent with shared failure pathways rather than independent kill switches.
 The (metabolism, homeostasis) pair exemplifies convergent boundary failure: both
 routes reduce energy-funded boundary repair, so $\Delta_{AB}$=298.1 falls below
 the additive expectation 450.7 (ratio 0.66).
@@ -393,14 +390,14 @@ appear in~\S S5.
 
 \paragraph{Evolution at longer timescales.}
 At 10,000 steps the evolution effect grows to $d$=1.42 ($\delta$=0.66,
-$p<0.001$), confirming adaptation accumulates across generations; genome-drift
+$p<0.001$), indicating that adaptation accumulates across generations; genome-drift
 divergence provides primary directional evidence ($\delta$=1.00,
 Figure~\ref{fig:evo_evidence}A); cyclic-recovery differences are mixed
 ($p$=0.341). See~\S S6 for full results and generation-stratified physiology.
 
 Graded ablation ($\{1.0, 0.75, 0.5, 0.25, 0.0\}$ efficiency; $n$=30) shows a
-monotonic dose-response (Jonckheere-Terpstra, $p<0.001$), confirming metabolic
-contribution is quantitatively proportional rather than a binary switch.
+monotonic dose-response (Jonckheere-Terpstra, $p<0.001$), consistent with
+metabolic contribution being quantitatively proportional rather than a binary switch.
 A state-neutral sham control ($n$=30) yields no significant difference
 ($p>0.05$), validating that effects are functional. Full graded and cyclic
 environment results appear in~\S S7.
@@ -599,7 +596,7 @@ The resulting model achieves train $R^2=0.954$, validation $R^2=0.955$,
 and out-of-regime test $R^2=0.950$ (permutation $p{<}0.001$, null 95th
 percentile $R^2=0.004$).
 The surrogate set exceeds the alive-AUC-only baseline
-(validation $R^2=0.921$), confirming multi-surrogate benefit
+(validation $R^2=0.921$), indicating multi-surrogate benefit
 (Table~\ref{tab:phase1}).
 
 % ============================================================================
@@ -623,7 +620,7 @@ providing evidence against tautological definitions.
 
 \paragraph{Evolution at longer timescales.}
 The modest 2,000-step evolution effect ($d$=0.78, $\delta$=0.39) grows to
-$d$=1.42 ($\delta$=0.66) at 10,000 steps (\S S6), confirming that adaptation
+$d$=1.42 ($\delta$=0.66) at 10,000 steps (\S S6), indicating that adaptation
 accumulates across generations; cyclic-environment recovery differences
 are mixed and treated as supplemental evidence (\S S2).
 We explicitly acknowledge that our pre-registered H1 (directional energy
@@ -714,7 +711,7 @@ achieving train $R^2=0.954$, validation $R^2=0.955$ (seen regimes,
 held-out seeds), and out-of-regime test $R^2=0.950$ (unseen regimes D--E;
 permutation $p{<}0.001$, null 95th percentile $R^2=0.004$).
 The surrogate set exceeds a single-predictor baseline
-(alive-AUC-only $R^2=0.921$), confirming multi-surrogate benefit,
+(alive-AUC-only $R^2=0.921$), indicating multi-surrogate benefit,
 though the modest improvement suggests population viability alone
 captures most predictive variance.
 Decision thresholds were pre-registered before Phase~2 analysis
@@ -761,7 +758,8 @@ a claim that digital organisms are alive.
 \section{Conclusion}
 
 We presented a testable integration of all seven textbook biological criteria
-as functionally interdependent processes within a single artificial life system,
+(six at Level~4; evolution at Level~3) as functionally interdependent processes
+within a single artificial life system,
 verified through controlled criterion-ablation, pairwise interaction, proxy
 control, graded ablation, and cyclic environment experiments.
 The functional-analogy framework---requiring dynamic operation, measurable
