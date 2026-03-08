@@ -314,8 +314,8 @@ def main():
         from sklearn.linear_model import LinearRegression
 
         baseline = LinearRegression()
-        baseline.fit(X_train_s[:, auc_idx:auc_idx + 1], y_train)
-        baseline_val_r2 = r2_score(y_val, baseline.predict(X_val_s[:, auc_idx:auc_idx + 1]))
+        baseline.fit(X_train_s[:, auc_idx : auc_idx + 1], y_train)
+        baseline_val_r2 = r2_score(y_val, baseline.predict(X_val_s[:, auc_idx : auc_idx + 1]))
         log(f"  Baseline (alive_auc only) Validation R²={baseline_val_r2:.4f}")
         log(f"  Surrogate set Validation R²={val_r2:.4f}")
         if val_r2 > baseline_val_r2:
@@ -352,5 +352,133 @@ def main():
         log(f"  OK: Validation R²={val_r2:.3f} — adequate surrogate predictive power.")
 
 
+def run_anti_circularity_check(
+    train: list[dict],
+    validate: list[dict],
+    test: list[dict],
+    out_dir: Path,
+) -> dict:
+    """Leave-alive_auc-out check to test for feature-target circularity.
+
+    alive_auc (time-averaged alive count) and final_alive_count (target) are
+    near-tautological proxies.  Removing alive_auc tests whether the remaining
+    11 features retain predictive power independently.
+    """
+    log("\n=== Anti-Circularity Check (leave-alive_auc-out) ===")
+    auc_idx = FEATURE_NAMES.index("alive_auc")
+    non_auc_features = [f for i, f in enumerate(FEATURE_NAMES) if i != auc_idx]
+
+    def _to_arrays_no_auc(data: list[dict]) -> tuple[np.ndarray, np.ndarray]:
+        X = np.array([[d["features"][f] for f in non_auc_features] for d in data])
+        y = np.array([d["target"] for d in data])
+        return X, y
+
+    X_train, y_train = _to_arrays_no_auc(train)
+    X_val, y_val = _to_arrays_no_auc(validate)
+    X_train = np.nan_to_num(X_train, nan=0.0, posinf=0.0, neginf=0.0)
+    X_val = np.nan_to_num(X_val, nan=0.0, posinf=0.0, neginf=0.0)
+
+    scaler = StandardScaler()
+    X_train_s = scaler.fit_transform(X_train)
+    X_val_s = scaler.transform(X_val)
+
+    lasso = Lasso(alpha=0.01, max_iter=5000)
+    lasso.fit(X_train_s, y_train)
+
+    no_auc_val_r2 = r2_score(y_val, lasso.predict(X_val_s)) if len(y_val) > 0 else float("nan")
+    log(f"  Validation R² without alive_auc: {no_auc_val_r2:.4f}")
+
+    if test:
+        X_test, y_test = _to_arrays_no_auc(test)
+        X_test = np.nan_to_num(X_test, nan=0.0, posinf=0.0, neginf=0.0)
+        X_test_s = scaler.transform(X_test)
+        no_auc_test_r2 = r2_score(y_test, lasso.predict(X_test_s))
+        log(f"  Test R² without alive_auc: {no_auc_test_r2:.4f}")
+    else:
+        no_auc_test_r2 = float("nan")
+
+    result = {
+        "no_auc_val_r2": no_auc_val_r2,
+        "no_auc_test_r2": no_auc_test_r2,
+        "n_features_without_auc": len(non_auc_features),
+    }
+
+    # Append to surrogate_analysis_v2.json
+    output_path = out_dir / "surrogate_analysis_v2.json"
+    if output_path.exists():
+        with open(output_path) as f:
+            existing = json.load(f)
+        existing["anti_circularity"] = result
+        with open(output_path, "w") as f:
+            json.dump(existing, f, indent=2)
+        log(f"  Anti-circularity results appended to {output_path}")
+
+    return result
+
+
+def run_pareto_analysis(
+    train: list[dict],
+    validate: list[dict],
+    out_dir: Path,
+) -> dict:
+    """Forward-selection Pareto showing validation R² at k=1..N features.
+
+    Features are ordered by LASSO coefficient magnitude (trained on full set).
+    This directly supports the 'minimal' framing in the paper title.
+    """
+    log("\n=== Phase 2 Surrogate Pareto (forward selection by LASSO coef) ===")
+
+    X_train, y_train = data_to_arrays(train)
+    X_val, y_val = data_to_arrays(validate)
+    X_train = np.nan_to_num(X_train, nan=0.0, posinf=0.0, neginf=0.0)
+    X_val = np.nan_to_num(X_val, nan=0.0, posinf=0.0, neginf=0.0)
+
+    # Fit full model to get coefficient-magnitude order
+    scaler_full = StandardScaler()
+    X_train_s = scaler_full.fit_transform(X_train)
+    lasso_full = Lasso(alpha=0.01, max_iter=5000)
+    lasso_full.fit(X_train_s, y_train)
+    coef_order = np.argsort(np.abs(lasso_full.coef_))[::-1]
+    ordered_features = [FEATURE_NAMES[i] for i in coef_order]
+    log(f"  Feature order by |coef|: {ordered_features}")
+
+    pareto = []
+    for k in range(1, len(FEATURE_NAMES) + 1):
+        selected = ordered_features[:k]
+        X_tr_k = np.array([[d["features"][f] for f in selected] for d in train])
+        X_va_k = np.array([[d["features"][f] for f in selected] for d in validate])
+        X_tr_k = np.nan_to_num(X_tr_k, nan=0.0, posinf=0.0, neginf=0.0)
+        X_va_k = np.nan_to_num(X_va_k, nan=0.0, posinf=0.0, neginf=0.0)
+
+        scaler_k = StandardScaler()
+        X_tr_ks = scaler_k.fit_transform(X_tr_k)
+        X_va_ks = scaler_k.transform(X_va_k)
+
+        lasso_k = Lasso(alpha=0.01, max_iter=5000)
+        lasso_k.fit(X_tr_ks, y_train)
+        val_r2_k = r2_score(y_val, lasso_k.predict(X_va_ks)) if len(y_val) > 0 else float("nan")
+        pareto.append({"k": k, "feature": selected[-1], "val_r2": round(float(val_r2_k), 4)})
+        log(f"  k={k:2d} ({selected[-1]:28s}): val R²={val_r2_k:.4f}")
+
+    result = {"pareto": pareto, "ordered_features": ordered_features}
+
+    # Append to surrogate_analysis_v2.json
+    output_path = out_dir / "surrogate_analysis_v2.json"
+    if output_path.exists():
+        with open(output_path) as f:
+            existing = json.load(f)
+        existing["pareto_analysis"] = result
+        with open(output_path, "w") as f:
+            json.dump(existing, f, indent=2)
+        log(f"  Pareto results appended to {output_path}")
+
+    return result
+
+
 if __name__ == "__main__":
     main()
+    out_dir = experiment_output_dir()
+    train, validate, test = load_phase2_data(out_dir)
+    if len(train) >= 50:
+        run_anti_circularity_check(train, validate, test, out_dir)
+        run_pareto_analysis(train, validate, out_dir)

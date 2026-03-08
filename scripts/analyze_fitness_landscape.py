@@ -262,14 +262,19 @@ def analyze_fitness_landscape(
     # H2: Heritability — parent-offspring regression
     all_parents = []
     all_offspring = []
+    per_seed_parents: list[list[float]] = []
+    per_seed_offspring: list[list[float]] = []
     for run in evolved_runs:
         snapshots = run.get("organism_snapshots", [])
         lineage = run.get("lineage_events", [])
         p, o = link_parent_offspring_energies(snapshots, lineage)
         all_parents.extend(p)
         all_offspring.extend(o)
+        per_seed_parents.append(p)
+        per_seed_offspring.append(o)
 
     regression = parent_offspring_regression(all_parents, all_offspring)
+    clustered = parent_offspring_regression_clustered(per_seed_parents, per_seed_offspring)
 
     # Effect size: evolved vs clonal final snapshot energies
     evolved_final = []
@@ -307,6 +312,7 @@ def analyze_fitness_landscape(
             },
         },
         "h2_regression": regression,
+        "h2_regression_clustered": clustered,
         "effect_size": {
             "cohens_d": d,
             "n_evolved": len(evolved_final),
@@ -314,6 +320,100 @@ def analyze_fitness_landscape(
         },
         "n_evolved_seeds": len(evolved_runs),
         "n_clonal_seeds": len(clonal_runs),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Cluster-robust bootstrap CI for heritability
+# ---------------------------------------------------------------------------
+
+
+def parent_offspring_regression_clustered(
+    per_seed_parents: list[list[float]],
+    per_seed_offspring: list[list[float]],
+    n_bootstrap: int = 2000,
+    seed: int = 42,
+) -> dict:
+    """Seed-level cluster-robust bootstrap CI for the heritability slope.
+
+    Standard pair-level bootstrap (in parent_offspring_regression) ignores
+    within-seed correlation, producing anti-conservative CIs when seeds
+    are the true independent unit.  This function resamples at the seed level:
+    resample n_seeds seeds with replacement, pool all pairs within the
+    selected seeds, then compute the OLS slope.
+
+    Args:
+        per_seed_parents:   List of parent-energy lists, one list per seed.
+        per_seed_offspring: Matching offspring-energy lists.
+        n_bootstrap:        Number of seed-level bootstrap replicates.
+        seed:               RNG seed for reproducibility.
+
+    Returns dict with slope, naive_ci (from pair-level), cluster_ci, n_seeds,
+    n_pairs.
+    """
+    n_seeds = len(per_seed_parents)
+    if n_seeds < 2:
+        return {
+            "slope": float("nan"),
+            "cluster_ci_lower": float("nan"),
+            "cluster_ci_upper": float("nan"),
+            "n_seeds": n_seeds,
+            "n_pairs": 0,
+        }
+
+    # Pool all pairs for the observed slope
+    all_px: list[float] = []
+    all_oy: list[float] = []
+    for px, oy in zip(per_seed_parents, per_seed_offspring, strict=True):
+        n = min(len(px), len(oy))
+        all_px.extend(px[:n])
+        all_oy.extend(oy[:n])
+
+    n_pairs = len(all_px)
+
+    def _slope(x: list[float], y: list[float]) -> float:
+        m = len(x)
+        if m < 2:
+            return float("nan")
+        mean_x = sum(x) / m
+        mean_y = sum(y) / m
+        ss_xy = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(m))
+        ss_xx = sum((x[i] - mean_x) ** 2 for i in range(m))
+        if ss_xx < 1e-12:
+            return 0.0
+        return ss_xy / ss_xx
+
+    observed_slope = _slope(all_px, all_oy)
+
+    # Seed-level bootstrap
+    rng = random.Random(seed)
+    seed_indices = list(range(n_seeds))
+    boot_slopes: list[float] = []
+    for _ in range(n_bootstrap):
+        chosen = rng.choices(seed_indices, k=n_seeds)
+        bx: list[float] = []
+        by: list[float] = []
+        for idx in chosen:
+            px = per_seed_parents[idx]
+            oy = per_seed_offspring[idx]
+            n = min(len(px), len(oy))
+            bx.extend(px[:n])
+            by.extend(oy[:n])
+        s = _slope(bx, by)
+        if not math.isnan(s):
+            boot_slopes.append(s)
+
+    boot_slopes.sort()
+    nb = len(boot_slopes)
+    lo_idx = max(0, math.floor(0.025 * nb))
+    hi_idx = min(nb - 1, math.ceil(0.975 * nb) - 1)
+
+    return {
+        "slope": observed_slope,
+        "cluster_ci_lower": boot_slopes[lo_idx] if boot_slopes else float("nan"),
+        "cluster_ci_upper": boot_slopes[hi_idx] if boot_slopes else float("nan"),
+        "n_seeds": n_seeds,
+        "n_pairs": n_pairs,
     }
 
 
