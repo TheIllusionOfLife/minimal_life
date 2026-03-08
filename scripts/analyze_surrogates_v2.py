@@ -365,6 +365,13 @@ def run_anti_circularity_check(
     11 features retain predictive power independently.
     """
     log("\n=== Anti-Circularity Check (leave-alive_auc-out) ===")
+    if not train or not validate:
+        log("  SKIP: insufficient data for anti-circularity check")
+        return {
+            "no_auc_val_r2": float("nan"),
+            "no_auc_test_r2": float("nan"),
+            "n_features_without_auc": 0,
+        }
     auc_idx = FEATURE_NAMES.index("alive_auc")
     non_auc_features = [f for i, f in enumerate(FEATURE_NAMES) if i != auc_idx]
 
@@ -427,6 +434,9 @@ def run_pareto_analysis(
     This directly supports the 'minimal' framing in the paper title.
     """
     log("\n=== Phase 2 Surrogate Pareto (forward selection by LASSO coef) ===")
+    if not train or not validate:
+        log("  SKIP: insufficient data for Pareto analysis")
+        return {"pareto": [], "ordered_features": []}
 
     X_train, y_train = data_to_arrays(train)
     X_val, y_val = data_to_arrays(validate)

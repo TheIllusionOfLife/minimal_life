@@ -380,7 +380,7 @@ def parent_offspring_regression_clustered(
         ss_xy = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(m))
         ss_xx = sum((x[i] - mean_x) ** 2 for i in range(m))
         if ss_xx < 1e-12:
-            return 0.0
+            return float("nan")
         return ss_xy / ss_xx
 
     observed_slope = _slope(all_px, all_oy)
