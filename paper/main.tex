@@ -583,7 +583,7 @@ demographic rates, and generation metrics), LASSO/Elastic Net stability
 selection (500 bootstraps, threshold$\geq$0.60) retains 11 features
 (all frequencies$\geq$0.984), replacing Phase~1 VIF screening with
 implicit regularization of collinearity.
-The resulting model achieves train $R^2=0.954$, validation $R^2=0.955$,
+The resulting model achieves train $R^2=0.954$, validation $R^2=0.954$,
 and out-of-regime test $R^2=0.950$ (permutation $p{<}0.001$).
 The surrogate set exceeds the alive-AUC-only baseline
 (validation $R^2=0.921$), indicating multi-surrogate benefit
@@ -593,10 +593,10 @@ Forward selection by LASSO coefficient magnitude shows that $k=1$ surrogate
 ($R^2=0.921$ vs.\ $0.954$ full); \texttt{boundary\_stability} contributes the
 largest additional gain at $k=4$ ($\Delta R^2=+0.020$, $R^2=0.949$), with
 near-plateau thereafter.
-Excluding \texttt{alive\_auc}, the remaining 11 surrogates achieve validation
-$R^2=0.941$ and test $R^2=0.845$ (LASSO, same protocol), indicating that
-predictive power does not depend on the near-tautological alive-count proxy
-alone.
+Excluding \texttt{alive\_auc}, the remaining 11 non-alive\_auc candidates
+achieve validation $R^2=0.941$ and test $R^2=0.845$ (LASSO, same protocol),
+indicating that predictive power remains substantial without the near-tautological
+alive-count proxy.
 
 % ============================================================================
 \section{Discussion}
@@ -1362,7 +1362,7 @@ This indicates that evolution in our system does not operate through
 directional energy maximization.
 H2 (heritability): The parent-offspring regression slope is $\hat{b} = 0.747$,
 95\% bootstrap CI $[0.730, 0.763]$ ($n = 68{,}497$ pairs); seed-level
-cluster-robust CI $[0.706, 0.785]$ ($n_{\text{seeds}}=30$), both excluding zero,
+cluster-robust CI $[0.707, 0.785]$ ($n_{\text{seeds}}=30$), both excluding zero,
 indicating strong heritability of the energy phenotype.
 Cohen's $d = 0.058$ (evolved $n = 11{,}340$ vs.\ clonal $n = 10{,}312$
 at the final snapshot), indicating negligible mean energy divergence between
