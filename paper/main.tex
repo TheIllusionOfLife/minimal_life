@@ -1,7 +1,8 @@
 \documentclass[letterpaper]{article}
 \usepackage{natbib,alifeconf}
 \usepackage{graphicx,amsmath,amssymb,booktabs,xcolor,multirow}
-\usepackage{url}\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
 
 \newcommand\blfootnote[1]{%
   \begingroup
@@ -96,7 +97,7 @@ not a claim that the organisms are alive.
 The framework requires only: (1)~per-criterion enable/disable toggles;
 (2)~at least one measurable outcome variable; and (3)~stochastic replication
 for statistical comparison.
-The contribution is methodological: a two-stage design: Stage~1 integrates
+The contribution is methodological, comprising a two-stage design: Stage~1 integrates
 all seven criteria and verifies functional necessity via controlled ablation;
 Stage~2 applies \emph{criterion reduction} (identifying which criteria
 contribute most to life-likeness) and \emph{surrogate selection} (finding
@@ -145,7 +146,7 @@ our criterion-ablation approach.
 \centering
 \caption{Criterion comparison (five-level rubric; bold $\geq$4).
 Abl.=ablation-testable (per-criterion toggle enabling controlled removal).
-Rubric definitions in §S4 (Table~S4).}
+Rubric definitions in §S4 (Table~S2).}
 \label{tab:comparison}
 \scriptsize
 \resizebox{\linewidth}{!}{%
@@ -368,7 +369,7 @@ simple population scaling.}
 \label{fig:proxy}
 \end{figure}
 
-Pairwise ablations (15 combinations; 6 reported in Table~S5)
+Pairwise ablations (15 combinations; 6 reported in Table~S3)
 show uniformly sub-additive synergy (bootstrap 95\% CI excludes zero for 5/6
 pairs), consistent with shared failure pathways rather than independent kill switches.
 The (metabolism, homeostasis) pair exemplifies convergent boundary failure: both
@@ -380,8 +381,8 @@ appear in~§S5.
 \paragraph{Evolution at longer timescales.}
 At 10,000 steps the evolution effect grows to $d$=1.42 ($\delta$=0.66,
 $p <0.001$), indicating that adaptation accumulates across generations; genome-drift
-divergence provides primary directional evidence ($\delta$=1.00,
-§S6); cyclic-recovery differences are mixed
+divergence provides primary directional evidence ($\delta$=1.00;
+see §S6); cyclic-recovery differences are mixed
 ($p$=0.341). See~§S6 for full results and generation-stratified physiology.
 
 Graded ablation ($\{1.0, 0.75, 0.5, 0.25, 0.0\}$ efficiency; $n$=30) shows a
@@ -389,7 +390,7 @@ monotonic dose-response (Jonckheere-Terpstra, $p <0.001$), consistent with
 metabolic contribution being quantitatively proportional rather than a binary switch.
 A state-neutral sham control ($n$=30) yields no significant difference
 ($p>0.05$), validating that effects are functional. Full graded and cyclic
-environment results appear in §S7.
+environment results appear in §S11.
 
 \textit{See Supplementary Material for mid-run extensions~(§S1),
 ecology stressor protocol~(§S2), phenotype clustering validation~(§S3),
@@ -567,7 +568,7 @@ demographic rates, and generation metrics), LASSO/Elastic Net stability
 selection (500 bootstraps, threshold$\geq$0.60) retains 11 features
 (all frequencies$\geq$0.984), replacing Phase~1 VIF screening with
 implicit regularization of collinearity.
-The resulting model achieves train $R^2=0.954$, validation $R^2=0.954$,
+The resulting model achieves train $R^2=0.954$, validation $R^2=0.955$,
 and out-of-regime test $R^2=0.950$ (permutation $p <0.001$).
 The surrogate set exceeds the alive-AUC-only baseline
 (validation $R^2=0.921$), indicating multi-surrogate benefit
@@ -590,7 +591,7 @@ Single ablations reveal a hierarchy: reproduction, response, and metabolism
 form an essential triad ($>$86\% decline), while growth and homeostasis
 occupy a middle tier ($\sim$46\%), followed by boundary ($\sim$35\%).
 Pairwise ablations show uniformly sub-additive interactions
-(Table~S5), consistent with criteria converging on a
+(Table~S3), consistent with criteria converging on a
 \emph{shared viability attractor} (boundary collapse), reachable via
 multiple independent failure routes rather than independent kill switches.
 This attractor interpretation separates emergent integration from
@@ -637,7 +638,7 @@ Four lines of evidence argue against this: (1)~proxy control shows
 alternative implementations produce distinct dynamics
 (Figure~\ref{fig:proxy}); (2)~pairwise ablations reveal sub-additive
 interactions inconsistent with independent modules
-(Table~S5); (3)~sham ablation control produces no
+(Table~S3); (3)~sham ablation control produces no
 significant difference; (4)~graded ablation yields proportional dose-response (§S7).
 
 \paragraph{Growth and criterion maturity.}
