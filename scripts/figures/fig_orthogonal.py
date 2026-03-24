@@ -68,7 +68,7 @@ def plot_violin_strip(
     ax.set_ylabel(ylabel)
     if title:
         ax.set_title(title, fontsize=9)
-    ax.legend(loc="upper right", fontsize=8)
+    ax.legend(loc="upper right")
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 

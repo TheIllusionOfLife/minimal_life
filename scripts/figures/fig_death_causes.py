@@ -67,7 +67,7 @@ def generate_death_causes() -> None:
     ax.set_xticklabels([LABELS.get(c, c) for c in conditions], rotation=30, ha="right", fontsize=9)
     ax.set_ylabel("Proportion of Deaths")
     ax.set_ylim(0, 1.05)
-    ax.legend(loc="upper right", fontsize=8)
+    ax.legend(loc="upper right")
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
