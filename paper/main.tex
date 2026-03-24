@@ -188,7 +188,7 @@ The inner layer consists of 10--50 \emph{organisms}, each composed of 10--50
 \includegraphics[width=\textwidth]{figures/fig_architecture.pdf}
 \caption{Two-layer architecture. Each organism comprises swarm agents maintaining
 a spatial boundary, a neural-network controller, a graph-based metabolic network,
-and a variable-length genome encoding all seven criteria. Organisms inhabit a
+and a fixed 256-float genome organized into seven segments encoding all criteria. Organisms inhabit a
 continuous toroidal environment with a diffusing resource field.}
 \label{fig:arch}
 \end{figure*}
@@ -288,7 +288,7 @@ decline compared to the normal baseline (Table~\ref{tab:ablation}).
 Normal baseline mean: 348.9 (median: 349.5, IQR: 335.0--363.5).
 $\delta$=Cliff's delta [bootstrap 95\% CI].
 Seven one-sided tests, Holm-Bonferroni corrected at $\alpha=0.05$.
-$^{***}p<0.001$, $^{*}p<0.05$.}
+$^{***}p < 0.001$, $^{*}p < 0.05$.}
 \label{tab:ablation}
 \small
 \begin{tabular}{@{}lr@{\hskip 4pt}r@{\hskip 4pt}l@{\hskip 4pt}r@{\hskip 4pt}r@{}}
@@ -389,7 +389,7 @@ Graded ablation ($\{1.0, 0.75, 0.5, 0.25, 0.0\}$ efficiency; $n$=30) shows a
 monotonic dose-response (Jonckheere-Terpstra, $p <0.001$), consistent with
 metabolic contribution being quantitatively proportional rather than a binary switch.
 A state-neutral sham control ($n$=30) yields no significant difference
-($p>0.05$), validating that effects are functional. Full graded and cyclic
+($p > 0.05$), validating that effects are functional. Full graded and cyclic
 environment results appear in §S11.
 
 \textit{See Supplementary Material for mid-run extensions~(§S1),
@@ -575,7 +575,7 @@ The surrogate set exceeds the alive-AUC-only baseline
 (Table~\ref{tab:phase1}).
 Forward selection by LASSO coefficient magnitude shows that $k=1$ surrogate
 (\texttt{alive\_auc}) captures $\geq$90\% of full-model validation $R^2$
-($R^2=0.921$ vs.\ $0.954$ full); \texttt{boundary\_stability} contributes the
+($R^2=0.921$ vs.\ $0.955$ full); \texttt{boundary\_stability} contributes the
 largest additional gain at $k=4$ ($\Delta R^2=+0.020$, $R^2=0.949$), with
 near-plateau thereafter.
 Excluding \texttt{alive\_auc}, the remaining 11 non-alive\_auc candidates
