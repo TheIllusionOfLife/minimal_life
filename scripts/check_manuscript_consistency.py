@@ -13,6 +13,7 @@ except ImportError:
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_PAPER = PROJECT_ROOT / "paper" / "main.tex"
+DEFAULT_SUPPLEMENTARY = PROJECT_ROOT / "paper" / "supplementary.tex"
 DEFAULT_MANIFEST = PROJECT_ROOT / "docs" / "research" / "final_graph_manifest_reference.json"
 DEFAULT_BINDINGS = PROJECT_ROOT / "docs" / "research" / "result_manifest_bindings.json"
 EXPERIMENT_SCRIPTS = [
@@ -140,6 +141,10 @@ def _check_bindings(registry: dict, tex: str) -> tuple[list[str], list[str]]:
 
     checks.append("bindings registry non-empty")
     paper_labels = set(re.findall(r"\\label\{([^}]+)\}", tex))
+    # Also scan supplementary.tex for labels (figures/tables moved there)
+    if DEFAULT_SUPPLEMENTARY.exists():
+        supp_tex = DEFAULT_SUPPLEMENTARY.read_text()
+        paper_labels.update(re.findall(r"\\label\{([^}]+)\}", supp_tex))
     registry_refs: set[str] = set()
     for idx, binding in enumerate(bindings):
         paper_ref = binding.get("paper_ref")
