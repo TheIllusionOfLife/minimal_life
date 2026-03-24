@@ -14,10 +14,13 @@
 \renewcommand{\thefigure}{S\arabic{figure}}
 \setcounter{table}{0}
 \renewcommand{\thetable}{S\arabic{table}}
+\setcounter{secnumdepth}{2}
+\setcounter{section}{0}
+\renewcommand{\thesection}{S\arabic{section}}
 
 \section*{Supplementary Material}
 
-\subsection*{S1: Mid-run and Invariance Protocol Extensions}
+\section{Mid-run and Invariance Protocol Extensions}
 
 To directly test continuous necessity, we include a delayed-ablation protocol
 that compares step-0 and step-1000 criterion removal on matched seeds
@@ -54,7 +57,7 @@ confirming results are not implementation-specific.}
 \label{fig:protocol_extensions}
 \end{figure}
 
-\subsection*{S2: Ecology Stressor Protocol Extension}
+\section{Ecology Stressor Protocol Extension}
 
 Beyond static conditions, we add an ecology-stressor protocol with abrupt
 environment shifts and cyclic stress phases
@@ -78,7 +81,7 @@ environmental perturbation.}
 \label{fig:ecology_stress}
 \end{figure}
 
-\subsection*{S3: Additional Validation}
+\section{Additional Validation}
 
 \paragraph{Phenotype clustering.}
 PCA projection of per-seed organism traits (energy, waste, boundary
@@ -229,7 +232,7 @@ Growth & +3\% & +1\% & +17\% & $-$6\% \\
 \end{tabular}
 \end{table}
 
-\subsection*{S4: System Design Details}
+\section{System Design Details}
 
 \paragraph{Rubric definition.}
 Table~\ref{tab:rubric} defines the five-level rubric used in
@@ -354,7 +357,7 @@ Test seeds & 100--129 ($n$=30) \\
 \normalsize
 
 % ----------------------------------------------------------------------------
-\subsection*{S5: Pairwise Ablation Analysis}
+\section{Pairwise Ablation Analysis}
 
 To test interaction effects beyond individual necessity, we disable pairs of
 criteria and compute synergy:
@@ -405,7 +408,7 @@ disabled still produces measurably lower boundary integrity than the growth-enab
 control, confirming growth's contribution extends beyond reproduction gating.
 
 % ----------------------------------------------------------------------------
-\subsection*{S6: Evolution Timescale Extension}
+\section{Evolution Timescale Extension}
 
 The modest 2,000-step evolution effect ($d$=0.78, $\delta$=0.39) grows
 substantially at longer timescales (Figure~\ref{fig:evolution}).
@@ -501,18 +504,6 @@ The distribution of death causes across ablation conditions
 ablations shift the dominant failure mode, providing mechanistic
 insight into how criterion removal disrupts organismal viability.
 
-\begin{figure}[htbp]
-\centering
-\IfFileExists{figures/fig_death_causes.pdf}%
-  {\includegraphics[width=\columnwidth]{figures/fig_death_causes.pdf}}%
-  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
-    \centering\vspace{2em}[fig\_death\_causes.pdf]\vspace{2em}}}}
-\caption{Death cause distribution across ablation conditions.
-Stacked bars show the proportion of deaths by cause
-(boundary collapse, energy depletion, age limit).}
-\label{fig:death_causes}
-\end{figure}
-
 \paragraph{Homeostatic regulation.}
 Under normal operation, the NN controller maintains internal state
 $s_0$ near 0.99; disabling homeostasis causes monotonic decay
@@ -535,7 +526,7 @@ differences are mixed and pooled significance is not reached
 \end{figure}
 
 % ----------------------------------------------------------------------------
-\subsection*{S7: Full Statistical Results}
+\section{Full Statistical Results}
 
 Table~\ref{tab:full_stats} reports uncorrected and Holm-Bonferroni corrected
 $p$-values, Cliff's $\delta$ with percentile bootstrap 95\% CIs (2,000
@@ -567,7 +558,7 @@ No Evol.    & $-$7.8  & 6.8e-4   & .0047    & 0.39 [0.11, 0.64] & 7 \\
 \end{table}
 
 % ----------------------------------------------------------------------------
-\subsection*{S8: Failure Mode Analysis}
+\section{Failure Mode Analysis}
 
 To address which internal variables collapse first
 under each ablation, we perform a systematic failure
@@ -612,7 +603,7 @@ and internal state while energy and boundary remain stable.}
 \end{figure}
 
 % ----------------------------------------------------------------------------
-\subsection*{S9: Fitness Landscape Evidence}
+\section{Fitness Landscape Evidence}
 
 To strengthen the evolution criterion beyond genome-drift divergence, we
 test two pre-specified hypotheses:
@@ -664,7 +655,7 @@ with 95\% bootstrap CI.}
 \end{figure}
 
 % ----------------------------------------------------------------------------
-\subsection*{S10: Sensitivity and Robustness}
+\section{Sensitivity and Robustness}
 
 \paragraph{Threshold sensitivity.}
 To test whether the ablation effect hierarchy is robust to death threshold
@@ -737,7 +728,7 @@ $\Delta$\% effect hierarchy comparison with Spearman rank correlation.}
 \end{figure}
 
 % ----------------------------------------------------------------------------
-\subsection*{S11: Graded and Cyclic Experiments}
+\section{Graded and Cyclic Experiments}
 
 \paragraph{Graded metabolic ablation.}
 We sweep the metabolism efficiency multiplier over $\{1.0, 0.75, 0.5, 0.25,
@@ -776,7 +767,7 @@ low-resource phases; recovery-rate differences are mixed in the refreshed run.}
 \end{figure}
 
 % ----------------------------------------------------------------------------
-\subsection*{S12: NN Controller Sensitivity}
+\section{NN Controller Sensitivity}
 
 To rule out that ablation results depend on a specific neural network
 architecture, we sweep the hidden layer size over $\{8, 16, 32\}$ neurons
@@ -793,7 +784,7 @@ design (NN size $\times$ ablation condition) verifying hierarchy preservation
 across architectures remains future work.
 
 % ----------------------------------------------------------------------------
-\subsection*{S13: Counter/Toy Engine Comparison}
+\section{Counter/Toy Engine Comparison}
 
 To verify that criterion effects are not artifacts of the graph-based
 metabolic engine, we compare ablation effects across two alternative
@@ -810,7 +801,7 @@ This cross-engine replication strengthens the claim that criterion necessity
 is a system-level property, not an artifact of the metabolic implementation.
 
 % ----------------------------------------------------------------------------
-\subsection*{S14: Growth/Reproduction Separability}
+\section{Growth/Reproduction Separability}
 
 To address the concern that growth functions primarily through reproduction
 gating (the maturity requirement), we compare four conditions ($n$=30):

@@ -57,7 +57,7 @@ plt.rcParams.update(
         "font.size": 9,
         "axes.labelsize": 10,
         "axes.titlesize": 10,
-        "legend.fontsize": 7,
+        "legend.fontsize": 8,
         "xtick.labelsize": 8,
         "ytick.labelsize": 8,
         "lines.linewidth": 1.2,
