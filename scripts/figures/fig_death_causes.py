@@ -33,10 +33,10 @@ def generate_death_causes() -> None:
             results = json.load(f)
         for result in results:
             # Aggregate from per-step samples (death counts are per-step, not in summary)
-            for sample in result.get("samples", []):
-                totals[cond]["boundary_collapse"] += sample.get("deaths_boundary", 0)
-                totals[cond]["energy_depletion"] += sample.get("deaths_energy", 0)
-                totals[cond]["age_limit"] += sample.get("deaths_age", 0)
+            samples = result.get("samples", [])
+            totals[cond]["boundary_collapse"] += sum(s.get("deaths_boundary", 0) for s in samples)
+            totals[cond]["energy_depletion"] += sum(s.get("deaths_energy", 0) for s in samples)
+            totals[cond]["age_limit"] += sum(s.get("deaths_age", 0) for s in samples)
 
     if not found_any:
         print("  SKIP: no death_causes_*.json files found")
