@@ -32,10 +32,11 @@ def generate_death_causes() -> None:
         with open(path) as f:
             results = json.load(f)
         for result in results:
-            summary = result.get("summary", result)
-            totals[cond]["boundary_collapse"] += summary.get("deaths_boundary", 0)
-            totals[cond]["energy_depletion"] += summary.get("deaths_energy", 0)
-            totals[cond]["age_limit"] += summary.get("deaths_age", 0)
+            # Aggregate from per-step samples (death counts are per-step, not in summary)
+            samples = result.get("samples", [])
+            totals[cond]["boundary_collapse"] += sum(s.get("deaths_boundary", 0) for s in samples)
+            totals[cond]["energy_depletion"] += sum(s.get("deaths_energy", 0) for s in samples)
+            totals[cond]["age_limit"] += sum(s.get("deaths_age", 0) for s in samples)
 
     if not found_any:
         print("  SKIP: no death_causes_*.json files found")
@@ -58,8 +59,14 @@ def generate_death_causes() -> None:
     for cause, color, label in zip(cause_names, cause_colors, cause_labels, strict=True):
         values = [props[cond][cause] for cond in conditions]
         ax.bar(
-            x, values, width, bottom=bottoms,
-            color=color, label=label, edgecolor="white", linewidth=0.5,
+            x,
+            values,
+            width,
+            bottom=bottoms,
+            color=color,
+            label=label,
+            edgecolor="white",
+            linewidth=0.5,
         )
         bottoms += values
 

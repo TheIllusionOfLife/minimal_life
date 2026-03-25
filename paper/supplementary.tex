@@ -496,6 +496,37 @@ fitness-based parent selection to population dynamics.
 \label{fig:fitness_trajectory}
 \end{figure}
 
+\paragraph{Death cause analysis.}
+Per-step death cause tracking classifies organism deaths into three
+categories: boundary collapse ($b < 0.1$), energy depletion ($e \leq 0.0$),
+and age limit (age $> 20{,}000$ steps).
+Across all ablation conditions, boundary collapse is the registered terminal
+cause in 100\% of deaths within the 2,000-step evaluation window
+(Figure~\ref{fig:death_causes}). This does not mean boundary is always the
+first variable to deteriorate: the cascade analysis above shows that energy
+collapses first under metabolism and response ablation. Rather, boundary
+integrity reaches the lethal threshold ($b < 0.1$) before energy reaches
+exactly zero, because boundary decay is continuous while the energy-depletion
+threshold ($e \leq 0.0$) is rarely crossed. The age limit (20{,}000 steps)
+is never reached within the evaluation horizon. Boundary disintegration thus
+serves as the common terminal pathway, consistent with the convergent failure
+attractor described in the Discussion.
+
+\begin{figure}[htbp]
+\centering
+\IfFileExists{figures/fig_death_causes.pdf}%
+  {\includegraphics[width=\columnwidth]{figures/fig_death_causes.pdf}}%
+  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
+    \centering\vspace{2em}[fig\_death\_causes.pdf]\vspace{2em}}}}
+\caption{Terminal death cause distribution across ablation conditions
+(2,000-step evaluation window). Boundary collapse ($b < 0.1$) is the
+registered terminal cause in all conditions. Energy depletion ($e \leq 0.0$)
+and age limit ($> 20{,}000$ steps) are never the proximal trigger within
+this horizon, though energy may collapse first in the cascade ordering
+(see failure mode analysis above).}
+\label{fig:death_causes}
+\end{figure}
+
 \paragraph{Homeostatic regulation.}
 Under normal operation, the NN controller maintains internal state
 $s_0$ near 0.99; disabling homeostasis causes monotonic decay
