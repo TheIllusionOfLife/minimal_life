@@ -49,7 +49,7 @@ def generate_midrun_ablation() -> None:
     ax.set_ylabel("Final Alive Count ($N_T$)")
     ax.set_title("Mid-run vs. Step-0 Ablation", fontsize=9)
     ax.set_ylim(bottom=0)
-    ax.legend(loc="upper right", fontsize=7)
+    ax.legend(loc="upper right")
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
