@@ -496,6 +496,30 @@ fitness-based parent selection to population dynamics.
 \label{fig:fitness_trajectory}
 \end{figure}
 
+\paragraph{Death cause analysis.}
+Per-step death cause tracking classifies organism deaths into three
+categories: boundary collapse, energy depletion, and age limit.
+Across all ablation conditions, boundary collapse is the universal
+terminal failure mode (Figure~\ref{fig:death_causes}): boundary integrity
+($b < 0.1$) consistently reaches the lethal threshold before energy
+reaches zero ($e \leq 0.0$), and no age limit is imposed in the default
+configuration. This confirms that boundary disintegration is the common
+final pathway through which all criterion removals ultimately cause death,
+consistent with the convergent failure attractor described in the Discussion.
+
+\begin{figure}[htbp]
+\centering
+\IfFileExists{figures/fig_death_causes.pdf}%
+  {\includegraphics[width=\columnwidth]{figures/fig_death_causes.pdf}}%
+  {\fbox{\parbox{\dimexpr\columnwidth-2\fboxsep-2\fboxrule}{%
+    \centering\vspace{2em}[fig\_death\_causes.pdf]\vspace{2em}}}}
+\caption{Death cause distribution across ablation conditions.
+Boundary collapse is the universal terminal cause: all criterion removals
+ultimately manifest as boundary disintegration ($b < 0.1$) before energy
+depletion or age limits are reached.}
+\label{fig:death_causes}
+\end{figure}
+
 \paragraph{Homeostatic regulation.}
 Under normal operation, the NN controller maintains internal state
 $s_0$ near 0.99; disabling homeostasis causes monotonic decay
