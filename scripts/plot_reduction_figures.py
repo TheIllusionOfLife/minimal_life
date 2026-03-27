@@ -170,7 +170,7 @@ def plot_criterion_pareto(ax: plt.Axes, crit_data: dict) -> None:
     ax.set_ylabel("Out-of-fold R²")
     ax.set_xticks(ks)
     ax.set_title("Criterion Pareto Curve (Ridge, k=1..7)")
-    ax.legend(loc="upper right", fontsize=7)
+    ax.legend(loc="center right", fontsize=6)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 

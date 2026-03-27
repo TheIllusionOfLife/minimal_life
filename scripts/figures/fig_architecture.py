@@ -164,9 +164,9 @@ def _draw_internal_state_label(ax: plt.Axes, ox: float, oy: float) -> None:
 def _draw_criteria_sidebar(ax: plt.Axes, sidebar_x: float) -> None:
     # Criteria mapping sidebar (right side, clearly separated)
     sidebar_rect = mpatches.FancyBboxPatch(
-        (sidebar_x, 0.8),
-        3.2,
-        4.2,
+        (sidebar_x, 1.0),
+        2.9,
+        3.8,
         boxstyle="round,pad=0.08",
         facecolor="#FFFFFF",
         edgecolor="#999999",
@@ -175,8 +175,8 @@ def _draw_criteria_sidebar(ax: plt.Axes, sidebar_x: float) -> None:
     )
     ax.add_patch(sidebar_rect)
     ax.text(
-        sidebar_x + 1.6,
-        4.65,
+        sidebar_x + 1.45,
+        4.5,
         "7 Criteria",
         fontsize=5,
         fontweight="bold",
@@ -194,9 +194,9 @@ def _draw_criteria_sidebar(ax: plt.Axes, sidebar_x: float) -> None:
         ("(7) Evolution", "#E69F00"),
     ]
     for j, (label, color) in enumerate(criteria_items):
-        yy = 4.25 - j * 0.47
-        ax.plot(sidebar_x + 0.3, yy, "s", color=color, markersize=3)
-        ax.text(sidebar_x + 0.55, yy, label, fontsize=5, color="#333333", va="center")
+        yy = 4.15 - j * 0.42
+        ax.plot(sidebar_x + 0.25, yy, "s", color=color, markersize=3)
+        ax.text(sidebar_x + 0.48, yy, label, fontsize=4.5, color="#333333", va="center")
 
 
 def generate_architecture() -> None:
