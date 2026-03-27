@@ -42,7 +42,7 @@ def _draw_environment(ax: plt.Axes) -> None:
 def _draw_organism_box(ax: plt.Axes, ox: float, oy: float) -> None:
     org_rect = mpatches.FancyBboxPatch(
         (ox, oy),
-        4.8,
+        5.4,
         4.2,
         boxstyle="round,pad=0.08",
         facecolor="#FFFFFF",
@@ -51,7 +51,7 @@ def _draw_organism_box(ax: plt.Axes, ox: float, oy: float) -> None:
     )
     ax.add_patch(org_rect)
     ax.text(
-        ox + 2.4,
+        ox + 2.7,
         oy + 3.85,
         "Organism (10-50 per environment)",
         ha="center",
@@ -65,21 +65,21 @@ def _draw_organism_box(ax: plt.Axes, ox: float, oy: float) -> None:
 def _draw_organism_components(ax: plt.Axes, ox: float, oy: float) -> None:
     # Internal components (wider boxes for the single organism)
     components = [
-        ("Genome\n(7 segments, 256 floats)", ox + 0.2, oy + 2.7, 2.1, 0.85, "#E69F00"),
-        ("NN Controller\n(8>16>4, 212 wt)", ox + 2.5, oy + 2.7, 2.1, 0.85, "#009E73"),
+        ("Genome\n(7 seg, 256 floats)", ox + 0.2, oy + 2.7, 2.5, 0.85, "#E69F00"),
+        ("NN Controller\n(8>16>4, 212 wt)", ox + 2.85, oy + 2.7, 2.35, 0.85, "#009E73"),
         (
             "Graph Metabolism\n(2-4 nodes, directed)",
             ox + 0.2,
             oy + 1.3,
-            2.1,
+            2.5,
             0.85,
             "#D55E00",
         ),
         (
-            "Boundary Maintenance\n(10-50 swarm agents)",
-            ox + 2.5,
+            "Boundary Maint.\n(10-50 swarm agents)",
+            ox + 2.85,
             oy + 1.3,
-            2.1,
+            2.35,
             0.85,
             "#56B4E9",
         ),
@@ -121,28 +121,28 @@ def _draw_organism_arrows(ax: plt.Axes, ox: float, oy: float) -> None:
     # Arrows: Genome -> NN, Genome -> Metabolism
     ax.annotate(
         "",
-        xy=(ox + 2.5, oy + 3.12),
-        xytext=(ox + 2.3, oy + 3.12),
+        xy=(ox + 2.85, oy + 3.12),
+        xytext=(ox + 2.7, oy + 3.12),
         arrowprops=dict(arrowstyle="->", color="#888", lw=0.8),
     )
     ax.annotate(
         "",
-        xy=(ox + 1.25, oy + 2.7),
-        xytext=(ox + 1.25, oy + 2.15),
+        xy=(ox + 1.45, oy + 2.7),
+        xytext=(ox + 1.45, oy + 2.15),
         arrowprops=dict(arrowstyle="->", color="#888", lw=0.8),
     )
     # NN -> Boundary (response to stimuli)
     ax.annotate(
         "",
-        xy=(ox + 3.55, oy + 2.7),
-        xytext=(ox + 3.55, oy + 2.15),
+        xy=(ox + 4.02, oy + 2.7),
+        xytext=(ox + 4.02, oy + 2.15),
         arrowprops=dict(arrowstyle="->", color="#888", lw=0.8),
     )
     # Metabolism <-> Boundary (energy <-> integrity)
     ax.annotate(
         "",
-        xy=(ox + 2.5, oy + 1.72),
-        xytext=(ox + 2.3, oy + 1.72),
+        xy=(ox + 2.85, oy + 1.72),
+        xytext=(ox + 2.7, oy + 1.72),
         arrowprops=dict(arrowstyle="<->", color="#888", lw=0.8),
     )
 
@@ -150,7 +150,7 @@ def _draw_organism_arrows(ax: plt.Axes, ox: float, oy: float) -> None:
 def _draw_internal_state_label(ax: plt.Axes, ox: float, oy: float) -> None:
     # Internal state label
     ax.text(
-        ox + 2.4,
+        ox + 2.7,
         oy + 0.45,
         "Internal State Vector (homeostatic regulation)",
         ha="center",
@@ -217,7 +217,7 @@ def generate_architecture() -> None:
     _draw_internal_state_label(ax, ox, oy)
 
     # Criteria mapping sidebar (right side, clearly separated)
-    _draw_criteria_sidebar(ax, 6.2)
+    _draw_criteria_sidebar(ax, 6.6)
 
     fig.tight_layout()
     fig.savefig(FIG_DIR / "fig_architecture.pdf", format="pdf")

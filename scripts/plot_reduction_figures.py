@@ -152,15 +152,17 @@ def plot_criterion_pareto(ax: plt.Axes, crit_data: dict) -> None:
     ax.fill_between(ks, lo, hi, alpha=0.18, color="#4878CF", label="95% CI")
     ax.axhline(0, color="#888888", linestyle=":", linewidth=0.8, label="R²=0 reference")
 
-    # Annotate each point with the added criterion
-    for pt in curve:
+    # Annotate each point with the added criterion, alternating offsets to avoid overlap
+    offsets = [(4, 10), (4, -14), (4, 10), (4, -14), (4, 10), (4, -14), (4, 10)]
+    for i, pt in enumerate(curve):
         label = CRITERION_LABELS.get(pt["added_feature"], pt["added_feature"])
+        ofs = offsets[i % len(offsets)]
         ax.annotate(
             f"+{label}",
             (pt["k"], pt["r2_mean"]),
             textcoords="offset points",
-            xytext=(4, 6),
-            fontsize=6,
+            xytext=ofs,
+            fontsize=5,
             color="#444444",
         )
 
@@ -218,8 +220,8 @@ def plot_surrogate_pareto(ax: plt.Axes, surr_data: dict) -> None:
     ax.annotate(
         "Elbow (k=3)\n+energy_autocorr",
         (3, elbow_r2),
-        xytext=(3.4, elbow_r2 - 0.04),
-        fontsize=6.5,
+        xytext=(4.2, elbow_r2 + 0.12),
+        fontsize=6,
         color="#222222",
         arrowprops=dict(arrowstyle="->", lw=0.8, color="#555555"),
     )
