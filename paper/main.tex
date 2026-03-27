@@ -183,15 +183,15 @@ units) containing a diffusing resource field.
 The inner layer consists of 10--50 \emph{organisms}, each composed of 10--50
 \emph{swarm agents} that collectively maintain the organism's spatial boundary.
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{figures/fig_architecture.pdf}
+\includegraphics[width=\columnwidth]{figures/fig_architecture.pdf}
 \caption{Two-layer architecture. Each organism comprises swarm agents maintaining
 a spatial boundary, a neural-network controller, a graph-based metabolic network,
 and a fixed 256-float genome organized into seven segments encoding all criteria. Organisms inhabit a
 continuous toroidal environment with a diffusing resource field.}
 \label{fig:arch}
-\end{figure*}
+\end{figure}
 
 \subsection{Seven Criteria}
 
@@ -319,9 +319,9 @@ Reproduction-ablated organisms live longer individually (median 751 vs.\ 242
 steps) despite population collapse, confirming absent replacement rather than
 individual fragility (per-seed distributions in §S3).
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{figures/fig_timeseries.pdf}
+\includegraphics[width=\columnwidth]{figures/fig_timeseries.pdf}
 \caption{Population dynamics under criterion ablation. Lines show mean alive
 count across 30 seeds (100--129); shaded bands show $\pm$1 SEM. Normal
 baseline (thick black) stabilizes near 349 organisms by step~1900. Removing reproduction,
@@ -329,7 +329,7 @@ response, or metabolism causes $>$86\% population collapse. Evolution ablation
 shows a modest 8\% decline (Cliff's $\delta$=0.39), consistent with optimization
 rather than short-term survival necessity.}
 \label{fig:timeseries}
-\end{figure*}
+\end{figure}
 
 \paragraph{Quantitative coupling evidence.}
 Granger-style lagged F-tests (lags 1--5, within-seed Holm correction) show
@@ -450,7 +450,7 @@ evolution (0.374) and growth (0.492) rank lowest (Figure~\ref{fig:crit_stability
 No criterion clears 0.60 under LASSO (maximum: metabolism=0.53).
 PCA requires 4 components for 93\% variance (PC1=38\%, PC2=31\%);
 the biplot shows full-criteria and all-off at opposite poles
-(Figure~\ref{fig:pca_reduction}).
+(Figures~\ref{fig:pca_biplot} and~\ref{fig:crit_pareto}).
 Forward Pareto selection yields all-negative $R^2$ values, a null result at this
 sample size (Cohen's $d$=10.68 validates the sweep design, but 24 training
 conditions are insufficient for predictive modeling).
@@ -459,33 +459,43 @@ Enet stability rankings serve only as exploratory prioritization for Phase~2.
 \begin{figure}[t]
 \centering
 \IfFileExists{../figures/reduction/fig_criterion_stability.png}%
-  {\includegraphics[width=0.48\columnwidth]{../figures/reduction/fig_criterion_stability.png}}%
-  {\fbox{\parbox{0.45\columnwidth}{\centering\vspace{2em}[fig\_crit\_stability]\vspace{2em}}}}%
-\hfill%
-\IfFileExists{../figures/reduction/fig_stability_heatmap.png}%
-  {\includegraphics[width=0.48\columnwidth]{../figures/reduction/fig_stability_heatmap.png}}%
-  {\fbox{\parbox{0.45\columnwidth}{\centering\vspace{2em}[fig\_stab\_heatmap]\vspace{2em}}}}
-\caption{Criterion stability (left; dashed=0.60; Enet ranks metabolism$>$response$>$homeostasis,
-evolution lowest) and stability heatmap (right; 7 criteria $\times$ 7 metrics, Enet).}
+  {\includegraphics[width=\columnwidth]{../figures/reduction/fig_criterion_stability.png}}%
+  {\fbox{\parbox{0.9\columnwidth}{\centering\vspace{2em}[fig\_crit\_stability]\vspace{2em}}}}
+\caption{Criterion stability (500-bootstrap Enet vs LASSO; dashed line = 0.60
+threshold). Enet ranks metabolism$>$response$>$homeostasis; evolution lowest.}
 \label{fig:crit_stability}
 \end{figure}
 
 \begin{figure}[t]
 \centering
+\IfFileExists{../figures/reduction/fig_stability_heatmap.png}%
+  {\includegraphics[width=\columnwidth]{../figures/reduction/fig_stability_heatmap.png}}%
+  {\fbox{\parbox{0.9\columnwidth}{\centering\vspace{2em}[fig\_stab\_heatmap]\vspace{2em}}}}
+\caption{Enet stability heatmap (7 criteria $\times$ 7 performance metrics).
+Cells $\geq$0.60 are marked with dashed borders. Rows sorted by mean stability.}
+\label{fig:stab_heatmap}
+\end{figure}
+
+\begin{figure}[t]
+\centering
 \IfFileExists{../figures/reduction/fig_pca_biplot.png}%
-  {\includegraphics[width=0.48\columnwidth]{../figures/reduction/fig_pca_biplot.png}}%
-  {\fbox{\parbox{0.45\columnwidth}{\centering\vspace{2em}[fig\_pca\_biplot]\vspace{2em}}}}%
-\hfill%
+  {\includegraphics[width=\columnwidth]{../figures/reduction/fig_pca_biplot.png}}%
+  {\fbox{\parbox{0.9\columnwidth}{\centering\vspace{2em}[fig\_pca\_biplot]\vspace{2em}}}}
+\caption{PCA biplot (PC1=38\%, PC2=31\%) of ablation conditions. Full-criteria
+and all-off sit at opposite poles; pairwise ablations cluster near all-off,
+reflecting multiplicative criterion interdependence.}
+\label{fig:pca_biplot}
+\end{figure}
+
+\begin{figure}[t]
+\centering
 \IfFileExists{../figures/reduction/fig_criterion_pareto.png}%
-  {\includegraphics[width=0.48\columnwidth]{../figures/reduction/fig_criterion_pareto.png}}%
-  {\fbox{\parbox{0.45\columnwidth}{\centering\vspace{2em}[fig\_crit\_pareto]\vspace{2em}}}}
-\caption{Left: PCA biplot (PC1=38\%, PC2=31\%) shows full-criteria and all-off
-at opposite poles; pairwise ablations cluster near all-off, reflecting
-multiplicative criterion interdependence.
-Right: criterion Pareto curve (note: all $R^2<0$, indicating insufficient
-statistical power for predictive modeling; underpowered); Enet stability
-rankings serve as the primary directional evidence.}
-\label{fig:pca_reduction}
+  {\includegraphics[width=\columnwidth]{../figures/reduction/fig_criterion_pareto.png}}%
+  {\fbox{\parbox{0.9\columnwidth}{\centering\vspace{2em}[fig\_crit\_pareto]\vspace{2em}}}}
+\caption{Criterion Pareto curve (Ridge, $k$=1..7). All $R^2<0$, indicating
+insufficient statistical power for predictive modeling at $n$=24 training
+conditions. Enet stability rankings serve as the primary directional evidence.}
+\label{fig:crit_pareto}
 \end{figure}
 
 % ============================================================================

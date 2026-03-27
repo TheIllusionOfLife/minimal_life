@@ -18,7 +18,7 @@ def generate_timeseries(data: list[dict]) -> None:
         key = (row["condition"], int(row["step"]))
         groups[key].append(row["alive_count"])
 
-    fig, ax = plt.subplots(figsize=(7, 3.2))
+    fig, ax = plt.subplots(figsize=(3.5, 2.4))
 
     for idx, condition in enumerate(CONDITION_ORDER):
         steps = sorted({s for (c, s) in groups if c == condition})
@@ -33,7 +33,7 @@ def generate_timeseries(data: list[dict]) -> None:
         means = np.array(means)
         sems = np.array(sems)
         color = COLORS[condition]
-        lw = 2.0 if condition == "normal" else 1.2
+        lw = 1.5 if condition == "normal" else 0.8
         ls = "-" if condition == "normal" else _LINESTYLES[idx % len(_LINESTYLES)]
         marker = None if condition == "normal" else _MARKERS[idx % len(_MARKERS)]
         # Place markers every 10th data point for readability
@@ -46,7 +46,7 @@ def generate_timeseries(data: list[dict]) -> None:
             linestyle=ls,
             marker=marker,
             markevery=markevery,
-            markersize=4,
+            markersize=3,
             label=LABELS[condition],
             zorder=10 if condition == "normal" else 5,
         )
@@ -56,7 +56,7 @@ def generate_timeseries(data: list[dict]) -> None:
     ax.set_ylabel("Mean Alive Count ($n$=30)")
     ax.set_xlim(0, 2000)
     ax.set_ylim(bottom=0)
-    ax.legend(loc="upper right", ncol=2, framealpha=0.9, edgecolor="0.8")
+    ax.legend(loc="upper left", ncol=2, framealpha=0.9, edgecolor="0.8", fontsize=5)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 

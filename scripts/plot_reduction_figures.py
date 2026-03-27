@@ -414,7 +414,7 @@ def _load_json(path: Path) -> dict:
         return json.load(f)
 
 
-def _save(fig: plt.Figure, path: Path, dpi: int = 150) -> None:
+def _save(fig: plt.Figure, path: Path, dpi: int = 300) -> None:
     fig.tight_layout()
     fig.savefig(path, dpi=dpi)
     plt.close(fig)
@@ -439,23 +439,23 @@ def main() -> None:
 
     FIG_DIR.mkdir(parents=True, exist_ok=True)
 
-    fig, ax = plt.subplots(figsize=(7, 3.5))
+    fig, ax = plt.subplots(figsize=(3.5, 2.5))
     plot_criterion_stability(ax, crit_data)
     _save(fig, FIG_DIR / "fig_criterion_stability.png")
 
-    fig, ax = plt.subplots(figsize=(7, 3.8))
+    fig, ax = plt.subplots(figsize=(3.5, 2.8))
     plot_criterion_pareto(ax, crit_data)
     _save(fig, FIG_DIR / "fig_criterion_pareto.png")
 
-    fig, ax = plt.subplots(figsize=(7, 3.8))
+    fig, ax = plt.subplots(figsize=(3.5, 2.8))
     plot_surrogate_pareto(ax, surr_data)
     _save(fig, FIG_DIR / "fig_surrogate_pareto.png")
 
-    fig, ax = plt.subplots(figsize=(7, 5))
+    fig, ax = plt.subplots(figsize=(3.5, 3.0))
     plot_pca_biplot(ax, crit_data)
     _save(fig, FIG_DIR / "fig_pca_biplot.png")
 
-    fig, ax = plt.subplots(figsize=(9, 4.5))
+    fig, ax = plt.subplots(figsize=(3.5, 2.8))
     plot_stability_heatmap(ax, crit_data)
     _save(fig, FIG_DIR / "fig_stability_heatmap.png")
 

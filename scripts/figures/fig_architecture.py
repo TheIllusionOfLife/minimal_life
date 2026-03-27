@@ -21,7 +21,7 @@ def _draw_environment(ax: plt.Axes) -> None:
         "Environment (Toroidal 2D, 100$\\times$100)",
         ha="center",
         va="center",
-        fontsize=10,
+        fontsize=6,
         fontweight="bold",
         color="#333333",
     )
@@ -33,7 +33,7 @@ def _draw_environment(ax: plt.Axes) -> None:
         "Resource Field",
         ha="left",
         va="center",
-        fontsize=7,
+        fontsize=4.5,
         fontstyle="italic",
         color="#666666",
     )
@@ -56,7 +56,7 @@ def _draw_organism_box(ax: plt.Axes, ox: float, oy: float) -> None:
         "Organism (10-50 per environment)",
         ha="center",
         va="center",
-        fontsize=8,
+        fontsize=5,
         fontweight="bold",
         color="#0072B2",
     )
@@ -112,7 +112,7 @@ def _draw_organism_components(ax: plt.Axes, ox: float, oy: float) -> None:
             label,
             ha="center",
             va="center",
-            fontsize=6,
+            fontsize=3.5,
             color="#333333",
         )
 
@@ -155,7 +155,7 @@ def _draw_internal_state_label(ax: plt.Axes, ox: float, oy: float) -> None:
         "Internal State Vector (homeostatic regulation)",
         ha="center",
         va="center",
-        fontsize=6,
+        fontsize=3.5,
         fontstyle="italic",
         color="#666666",
     )
@@ -178,7 +178,7 @@ def _draw_criteria_sidebar(ax: plt.Axes, sidebar_x: float) -> None:
         sidebar_x + 1.6,
         4.65,
         "7 Criteria",
-        fontsize=8,
+        fontsize=5,
         fontweight="bold",
         ha="center",
         color="#333333",
@@ -195,13 +195,13 @@ def _draw_criteria_sidebar(ax: plt.Axes, sidebar_x: float) -> None:
     ]
     for j, (label, color) in enumerate(criteria_items):
         yy = 4.25 - j * 0.47
-        ax.plot(sidebar_x + 0.3, yy, "s", color=color, markersize=5)
-        ax.text(sidebar_x + 0.55, yy, label, fontsize=6.5, color="#333333", va="center")
+        ax.plot(sidebar_x + 0.3, yy, "s", color=color, markersize=3)
+        ax.text(sidebar_x + 0.55, yy, label, fontsize=4, color="#333333", va="center")
 
 
 def generate_architecture() -> None:
     """Figure 1: Architecture diagram showing two-layer hierarchy."""
-    fig, ax = plt.subplots(figsize=(7, 4.0))
+    fig, ax = plt.subplots(figsize=(3.5, 2.0))
     ax.set_xlim(0, 10)
     ax.set_ylim(0, 6.5)
     ax.set_aspect("equal")
