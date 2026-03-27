@@ -152,15 +152,17 @@ def plot_criterion_pareto(ax: plt.Axes, crit_data: dict) -> None:
     ax.fill_between(ks, lo, hi, alpha=0.18, color="#4878CF", label="95% CI")
     ax.axhline(0, color="#888888", linestyle=":", linewidth=0.8, label="R²=0 reference")
 
-    # Annotate each point with the added criterion
-    for pt in curve:
+    # Annotate each point with the added criterion, alternating offsets to avoid overlap
+    offsets = [(4, 10), (4, -14), (4, 10), (4, -14), (4, 10), (4, -14), (4, 10)]
+    for i, pt in enumerate(curve):
         label = CRITERION_LABELS.get(pt["added_feature"], pt["added_feature"])
+        ofs = offsets[i % len(offsets)]
         ax.annotate(
             f"+{label}",
             (pt["k"], pt["r2_mean"]),
             textcoords="offset points",
-            xytext=(4, 6),
-            fontsize=6,
+            xytext=ofs,
+            fontsize=5,
             color="#444444",
         )
 
@@ -168,7 +170,7 @@ def plot_criterion_pareto(ax: plt.Axes, crit_data: dict) -> None:
     ax.set_ylabel("Out-of-fold R²")
     ax.set_xticks(ks)
     ax.set_title("Criterion Pareto Curve (Ridge, k=1..7)")
-    ax.legend(loc="upper right", fontsize=7)
+    ax.legend(loc="center right", fontsize=6)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
@@ -218,8 +220,8 @@ def plot_surrogate_pareto(ax: plt.Axes, surr_data: dict) -> None:
     ax.annotate(
         "Elbow (k=3)\n+energy_autocorr",
         (3, elbow_r2),
-        xytext=(3.4, elbow_r2 - 0.04),
-        fontsize=6.5,
+        xytext=(4.2, elbow_r2 + 0.12),
+        fontsize=6,
         color="#222222",
         arrowprops=dict(arrowstyle="->", lw=0.8, color="#555555"),
     )
@@ -414,7 +416,7 @@ def _load_json(path: Path) -> dict:
         return json.load(f)
 
 
-def _save(fig: plt.Figure, path: Path, dpi: int = 150) -> None:
+def _save(fig: plt.Figure, path: Path, dpi: int = 300) -> None:
     fig.tight_layout()
     fig.savefig(path, dpi=dpi)
     plt.close(fig)
@@ -439,23 +441,23 @@ def main() -> None:
 
     FIG_DIR.mkdir(parents=True, exist_ok=True)
 
-    fig, ax = plt.subplots(figsize=(7, 3.5))
+    fig, ax = plt.subplots(figsize=(3.5, 2.5))
     plot_criterion_stability(ax, crit_data)
     _save(fig, FIG_DIR / "fig_criterion_stability.png")
 
-    fig, ax = plt.subplots(figsize=(7, 3.8))
+    fig, ax = plt.subplots(figsize=(3.5, 2.8))
     plot_criterion_pareto(ax, crit_data)
     _save(fig, FIG_DIR / "fig_criterion_pareto.png")
 
-    fig, ax = plt.subplots(figsize=(7, 3.8))
+    fig, ax = plt.subplots(figsize=(3.5, 2.8))
     plot_surrogate_pareto(ax, surr_data)
     _save(fig, FIG_DIR / "fig_surrogate_pareto.png")
 
-    fig, ax = plt.subplots(figsize=(7, 5))
+    fig, ax = plt.subplots(figsize=(3.5, 3.0))
     plot_pca_biplot(ax, crit_data)
     _save(fig, FIG_DIR / "fig_pca_biplot.png")
 
-    fig, ax = plt.subplots(figsize=(9, 4.5))
+    fig, ax = plt.subplots(figsize=(3.5, 2.8))
     plot_stability_heatmap(ax, crit_data)
     _save(fig, FIG_DIR / "fig_stability_heatmap.png")
 

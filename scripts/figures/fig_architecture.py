@@ -21,7 +21,7 @@ def _draw_environment(ax: plt.Axes) -> None:
         "Environment (Toroidal 2D, 100$\\times$100)",
         ha="center",
         va="center",
-        fontsize=10,
+        fontsize=6,
         fontweight="bold",
         color="#333333",
     )
@@ -33,7 +33,7 @@ def _draw_environment(ax: plt.Axes) -> None:
         "Resource Field",
         ha="left",
         va="center",
-        fontsize=7,
+        fontsize=5.5,
         fontstyle="italic",
         color="#666666",
     )
@@ -42,7 +42,7 @@ def _draw_environment(ax: plt.Axes) -> None:
 def _draw_organism_box(ax: plt.Axes, ox: float, oy: float) -> None:
     org_rect = mpatches.FancyBboxPatch(
         (ox, oy),
-        4.8,
+        5.4,
         4.2,
         boxstyle="round,pad=0.08",
         facecolor="#FFFFFF",
@@ -51,12 +51,12 @@ def _draw_organism_box(ax: plt.Axes, ox: float, oy: float) -> None:
     )
     ax.add_patch(org_rect)
     ax.text(
-        ox + 2.4,
+        ox + 2.7,
         oy + 3.85,
         "Organism (10-50 per environment)",
         ha="center",
         va="center",
-        fontsize=8,
+        fontsize=5,
         fontweight="bold",
         color="#0072B2",
     )
@@ -65,21 +65,21 @@ def _draw_organism_box(ax: plt.Axes, ox: float, oy: float) -> None:
 def _draw_organism_components(ax: plt.Axes, ox: float, oy: float) -> None:
     # Internal components (wider boxes for the single organism)
     components = [
-        ("Genome\n(7 segments, 256 floats)", ox + 0.2, oy + 2.7, 2.1, 0.85, "#E69F00"),
-        ("NN Controller\n(8>16>4, 212 wt)", ox + 2.5, oy + 2.7, 2.1, 0.85, "#009E73"),
+        ("Genome\n(7 seg, 256 floats)", ox + 0.2, oy + 2.7, 2.5, 0.85, "#E69F00"),
+        ("NN Controller\n(8>16>4, 212 wt)", ox + 2.85, oy + 2.7, 2.35, 0.85, "#009E73"),
         (
             "Graph Metabolism\n(2-4 nodes, directed)",
             ox + 0.2,
             oy + 1.3,
-            2.1,
+            2.5,
             0.85,
             "#D55E00",
         ),
         (
-            "Boundary Maintenance\n(10-50 swarm agents)",
-            ox + 2.5,
+            "Boundary Maint.\n(10-50 swarm agents)",
+            ox + 2.85,
             oy + 1.3,
-            2.1,
+            2.35,
             0.85,
             "#56B4E9",
         ),
@@ -112,7 +112,7 @@ def _draw_organism_components(ax: plt.Axes, ox: float, oy: float) -> None:
             label,
             ha="center",
             va="center",
-            fontsize=6,
+            fontsize=5,
             color="#333333",
         )
 
@@ -121,28 +121,28 @@ def _draw_organism_arrows(ax: plt.Axes, ox: float, oy: float) -> None:
     # Arrows: Genome -> NN, Genome -> Metabolism
     ax.annotate(
         "",
-        xy=(ox + 2.5, oy + 3.12),
-        xytext=(ox + 2.3, oy + 3.12),
+        xy=(ox + 2.85, oy + 3.12),
+        xytext=(ox + 2.7, oy + 3.12),
         arrowprops=dict(arrowstyle="->", color="#888", lw=0.8),
     )
     ax.annotate(
         "",
-        xy=(ox + 1.25, oy + 2.7),
-        xytext=(ox + 1.25, oy + 2.15),
+        xy=(ox + 1.45, oy + 2.7),
+        xytext=(ox + 1.45, oy + 2.15),
         arrowprops=dict(arrowstyle="->", color="#888", lw=0.8),
     )
     # NN -> Boundary (response to stimuli)
     ax.annotate(
         "",
-        xy=(ox + 3.55, oy + 2.7),
-        xytext=(ox + 3.55, oy + 2.15),
+        xy=(ox + 4.02, oy + 2.7),
+        xytext=(ox + 4.02, oy + 2.15),
         arrowprops=dict(arrowstyle="->", color="#888", lw=0.8),
     )
     # Metabolism <-> Boundary (energy <-> integrity)
     ax.annotate(
         "",
-        xy=(ox + 2.5, oy + 1.72),
-        xytext=(ox + 2.3, oy + 1.72),
+        xy=(ox + 2.85, oy + 1.72),
+        xytext=(ox + 2.7, oy + 1.72),
         arrowprops=dict(arrowstyle="<->", color="#888", lw=0.8),
     )
 
@@ -150,12 +150,12 @@ def _draw_organism_arrows(ax: plt.Axes, ox: float, oy: float) -> None:
 def _draw_internal_state_label(ax: plt.Axes, ox: float, oy: float) -> None:
     # Internal state label
     ax.text(
-        ox + 2.4,
+        ox + 2.7,
         oy + 0.45,
         "Internal State Vector (homeostatic regulation)",
         ha="center",
         va="center",
-        fontsize=6,
+        fontsize=5,
         fontstyle="italic",
         color="#666666",
     )
@@ -164,9 +164,9 @@ def _draw_internal_state_label(ax: plt.Axes, ox: float, oy: float) -> None:
 def _draw_criteria_sidebar(ax: plt.Axes, sidebar_x: float) -> None:
     # Criteria mapping sidebar (right side, clearly separated)
     sidebar_rect = mpatches.FancyBboxPatch(
-        (sidebar_x, 0.8),
-        3.2,
-        4.2,
+        (sidebar_x, 1.0),
+        2.9,
+        3.8,
         boxstyle="round,pad=0.08",
         facecolor="#FFFFFF",
         edgecolor="#999999",
@@ -175,10 +175,10 @@ def _draw_criteria_sidebar(ax: plt.Axes, sidebar_x: float) -> None:
     )
     ax.add_patch(sidebar_rect)
     ax.text(
-        sidebar_x + 1.6,
-        4.65,
+        sidebar_x + 1.45,
+        4.5,
         "7 Criteria",
-        fontsize=8,
+        fontsize=5,
         fontweight="bold",
         ha="center",
         color="#333333",
@@ -194,14 +194,14 @@ def _draw_criteria_sidebar(ax: plt.Axes, sidebar_x: float) -> None:
         ("(7) Evolution", "#E69F00"),
     ]
     for j, (label, color) in enumerate(criteria_items):
-        yy = 4.25 - j * 0.47
-        ax.plot(sidebar_x + 0.3, yy, "s", color=color, markersize=5)
-        ax.text(sidebar_x + 0.55, yy, label, fontsize=6.5, color="#333333", va="center")
+        yy = 4.15 - j * 0.42
+        ax.plot(sidebar_x + 0.25, yy, "s", color=color, markersize=3)
+        ax.text(sidebar_x + 0.48, yy, label, fontsize=4.5, color="#333333", va="center")
 
 
 def generate_architecture() -> None:
     """Figure 1: Architecture diagram showing two-layer hierarchy."""
-    fig, ax = plt.subplots(figsize=(7, 4.0))
+    fig, ax = plt.subplots(figsize=(3.5, 2.4))
     ax.set_xlim(0, 10)
     ax.set_ylim(0, 6.5)
     ax.set_aspect("equal")
@@ -217,8 +217,9 @@ def generate_architecture() -> None:
     _draw_internal_state_label(ax, ox, oy)
 
     # Criteria mapping sidebar (right side, clearly separated)
-    _draw_criteria_sidebar(ax, 6.2)
+    _draw_criteria_sidebar(ax, 6.6)
 
+    fig.tight_layout()
     fig.savefig(FIG_DIR / "fig_architecture.pdf", format="pdf")
     plt.close(fig)
     print(f"  Saved {FIG_DIR / 'fig_architecture.pdf'}")
