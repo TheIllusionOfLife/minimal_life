@@ -56,10 +56,11 @@ def generate_timeseries(data: list[dict]) -> None:
     ax.set_ylabel("Mean Alive Count ($n$=30)")
     ax.set_xlim(0, 2000)
     ax.set_ylim(bottom=0)
-    ax.legend(loc="upper left", ncol=2, framealpha=0.9, edgecolor="0.8", fontsize=5)
+    ax.legend(loc="upper left", ncol=2, framealpha=0.9, edgecolor="0.8", fontsize=6)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
+    fig.tight_layout()
     fig.savefig(FIG_DIR / "fig_timeseries.pdf", format="pdf")
     plt.close(fig)
     print(f"  Saved {FIG_DIR / 'fig_timeseries.pdf'}")

@@ -446,7 +446,8 @@ before held-out conditions are observed.
 Enet bootstrapped stability scores \citep{meinshausen_2010_stability}
 (500 subsamples, threshold 0.60) provide directional evidence:
 metabolism (0.678), response (0.641), and homeostasis (0.630) rank highest;
-evolution (0.374) and growth (0.492) rank lowest (Figure~\ref{fig:crit_stability}).
+evolution (0.374) and growth (0.492) rank lowest (Figure~\ref{fig:crit_stability};
+per-metric breakdown in Figure~\ref{fig:stab_heatmap}).
 No criterion clears 0.60 under LASSO (maximum: metabolism=0.53).
 PCA requires 4 components for 93\% variance (PC1=38\%, PC2=31\%);
 the biplot shows full-criteria and all-off at opposite poles
@@ -460,7 +461,7 @@ Enet stability rankings serve only as exploratory prioritization for Phase~2.
 \centering
 \IfFileExists{../figures/reduction/fig_criterion_stability.png}%
   {\includegraphics[width=\columnwidth]{../figures/reduction/fig_criterion_stability.png}}%
-  {\fbox{\parbox{0.9\columnwidth}{\centering\vspace{2em}[fig\_crit\_stability]\vspace{2em}}}}
+  {\fbox{\parbox{0.9\columnwidth}{\centering\vspace{2em}[fig\_crit\_stability]\vspace{2em}}}}%
 \caption{Criterion stability (500-bootstrap Enet vs LASSO; dashed line = 0.60
 threshold). Enet ranks metabolism$>$response$>$homeostasis; evolution lowest.}
 \label{fig:crit_stability}
@@ -470,7 +471,7 @@ threshold). Enet ranks metabolism$>$response$>$homeostasis; evolution lowest.}
 \centering
 \IfFileExists{../figures/reduction/fig_stability_heatmap.png}%
   {\includegraphics[width=\columnwidth]{../figures/reduction/fig_stability_heatmap.png}}%
-  {\fbox{\parbox{0.9\columnwidth}{\centering\vspace{2em}[fig\_stab\_heatmap]\vspace{2em}}}}
+  {\fbox{\parbox{0.9\columnwidth}{\centering\vspace{2em}[fig\_stab\_heatmap]\vspace{2em}}}}%
 \caption{Enet stability heatmap (7 criteria $\times$ 7 performance metrics).
 Cells $\geq$0.60 are marked with dashed borders. Rows sorted by mean stability.}
 \label{fig:stab_heatmap}
@@ -480,7 +481,7 @@ Cells $\geq$0.60 are marked with dashed borders. Rows sorted by mean stability.}
 \centering
 \IfFileExists{../figures/reduction/fig_pca_biplot.png}%
   {\includegraphics[width=\columnwidth]{../figures/reduction/fig_pca_biplot.png}}%
-  {\fbox{\parbox{0.9\columnwidth}{\centering\vspace{2em}[fig\_pca\_biplot]\vspace{2em}}}}
+  {\fbox{\parbox{0.9\columnwidth}{\centering\vspace{2em}[fig\_pca\_biplot]\vspace{2em}}}}%
 \caption{PCA biplot (PC1=38\%, PC2=31\%) of ablation conditions. Full-criteria
 and all-off sit at opposite poles; pairwise ablations cluster near all-off,
 reflecting multiplicative criterion interdependence.}
@@ -491,7 +492,7 @@ reflecting multiplicative criterion interdependence.}
 \centering
 \IfFileExists{../figures/reduction/fig_criterion_pareto.png}%
   {\includegraphics[width=\columnwidth]{../figures/reduction/fig_criterion_pareto.png}}%
-  {\fbox{\parbox{0.9\columnwidth}{\centering\vspace{2em}[fig\_crit\_pareto]\vspace{2em}}}}
+  {\fbox{\parbox{0.9\columnwidth}{\centering\vspace{2em}[fig\_crit\_pareto]\vspace{2em}}}}%
 \caption{Criterion Pareto curve (Ridge, $k$=1..7). All $R^2<0$, indicating
 insufficient statistical power for predictive modeling at $n$=24 training
 conditions. Enet stability rankings serve as the primary directional evidence.}
