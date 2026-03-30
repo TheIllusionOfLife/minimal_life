@@ -1,6 +1,6 @@
 # Minimal Life
 
-[![Dataset DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18780935.svg)](https://doi.org/10.5281/zenodo.18780935)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18780935.svg)](https://doi.org/10.5281/zenodo.18780935)
 
 Minimal Life is an artificial life research codebase investigating the minimal diagnostic principles of life: finding 2–4 surrogate observables that predict life-likeness as well as the full seven-criteria system does.
 
@@ -59,14 +59,9 @@ import minimal_life
 print(minimal_life.version())
 ```
 
-## Repository Docs
+## Citation
 
-- `AGENTS.md`: instructions for coding agents and contributors
-- `PRODUCT.md`: product goals and user value
-- `TECH.md`: technology stack and technical constraints
-- `STRUCTURE.md`: code/documentation layout and conventions
-- `docs/README.md`: documentation index
-- `docs/research/new_research_plan.md`: authoritative research plan
+If you use this software, please cite the accompanying paper. See `CITATION.cff` for details.
 
 ## Architecture (High-Level)
 
@@ -83,4 +78,4 @@ print(minimal_life.version())
 
 ## Current Status
 
-This is an active research prototype. APIs and model details may evolve quickly as experiments progress.
+Software accompanying the paper "Minimal Diagnostic Principles of Life: Criterion-Ablation and Observable Surrogate Selection in a Digital Ecosystem" submitted to ALIFE 2026.
