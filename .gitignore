@@ -48,6 +48,7 @@ build/
 
 # Generated paper artifacts
 paper/main.pdf
+paper/supplementary.pdf
 paper/figures/*.pdf
 
 # LaTeX build artifacts
@@ -74,7 +75,9 @@ TECH.md
 .claude/
 .jules/
 docs/archive/
-docs/research/
+docs/research/*
+!docs/research/final_graph_manifest_reference.json
+!docs/research/result_manifest_bindings.json
 docs/peer_reviews/
 docs/decision_rules.md
 paper/literature_scores.md
