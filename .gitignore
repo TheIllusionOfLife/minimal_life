@@ -46,9 +46,7 @@ build/
 !/experiments/threshold_sensitivity_analysis.json
 !/experiments/boundary_topology_analysis.json
 
-# Generated paper artifacts
-paper/main.pdf
-paper/supplementary.pdf
+# Generated paper artifacts (figures only; final PDFs are tracked)
 paper/figures/*.pdf
 
 # LaTeX build artifacts
