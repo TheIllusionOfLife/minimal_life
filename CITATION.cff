@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "minimal_life: Minimal Diagnostic Principles of Life"
+version: 1.0.0
+date-released: 2026-03-31
+authors:
+  - family-names: Mukai
+    given-names: Yuya
+    affiliation: Mukai Entertainment
+license: MIT
+repository-code: https://github.com/TheIllusionOfLife/minimal_life
+keywords:
+  - artificial life
+  - minimal criteria for life
+  - criterion ablation
+  - surrogate observables
+preferred-citation:
+  type: conference-paper
+  title: "Minimal Diagnostic Principles of Life: Criterion-Ablation and Observable Surrogate Selection in a Digital Ecosystem"
+  authors:
+    - family-names: Mukai
+      given-names: Yuya
+      affiliation: Mukai Entertainment
+  year: 2026
+  conference:
+    name: "The 2026 Conference on Artificial Life (ALIFE 2026)"

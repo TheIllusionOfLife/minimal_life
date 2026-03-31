@@ -46,8 +46,7 @@ build/
 !/experiments/threshold_sensitivity_analysis.json
 !/experiments/boundary_topology_analysis.json
 
-# Generated paper artifacts
-paper/main.pdf
+# Generated paper artifacts (figures only; final PDFs are tracked)
 paper/figures/*.pdf
 
 # LaTeX build artifacts
@@ -64,3 +63,24 @@ paper/*.synctex.gz
 *.swp
 *.swo
 out/
+
+# Internal project documents (not for public distribution)
+CLAUDE.md
+AGENTS.md
+PRODUCT.md
+STRUCTURE.md
+TECH.md
+.claude/
+.jules/
+docs/archive/
+docs/research/*
+!docs/research/decision_rules.md
+!docs/research/final_graph_manifest_reference.json
+!docs/research/result_manifest_bindings.json
+docs/peer_reviews/
+# docs/decision_rules.md -- kept: referenced by paper as pre-registered decision rules
+paper/literature_scores.md
+
+# AI tooling workflows
+.github/workflows/claude.yml
+.github/workflows/claude-code-review.yml

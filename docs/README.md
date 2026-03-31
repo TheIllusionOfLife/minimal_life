@@ -1,15 +1,11 @@
 # Documentation Index
 
-## Core Project Docs
+## Project
 
-- `../README.md`
-- `../AGENTS.md`
-- `../PRODUCT.md`
-- `../TECH.md`
-- `../STRUCTURE.md`
+- `../README.md` — project overview and quick start
+- `../CITATION.cff` — citation metadata
 
-## Research Docs
+## Conference Docs
 
-- `research/new_research_plan.md` — **Authoritative plan**: minimal diagnostic principles of life
-
-Old research artifacts are archived under `docs/archive/research/`.
+- `alife_official_docs/` — ALIFE 2026 templates and submission guidelines
+- `alife_submission_guide.md` — pre-filled submission form guide
