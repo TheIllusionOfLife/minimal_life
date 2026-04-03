@@ -1,6 +1,7 @@
 # Minimal Life
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18780935.svg)](https://doi.org/10.5281/zenodo.18780935)
+[![Software DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19351499.svg)](https://doi.org/10.5281/zenodo.19351499)
+[![Dataset DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18780935.svg)](https://doi.org/10.5281/zenodo.18780935)
 
 Minimal Life is an artificial life research codebase investigating the minimal diagnostic principles of life: finding 2–4 surrogate observables that predict life-likeness as well as the full seven-criteria system does.
 

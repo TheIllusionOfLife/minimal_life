@@ -9,6 +9,7 @@ authors:
     given-names: Yuya
     affiliation: Mukai Entertainment
 license: MIT
+doi: 10.5281/zenodo.19351500
 repository-code: https://github.com/TheIllusionOfLife/minimal_life
 keywords:
   - artificial life
